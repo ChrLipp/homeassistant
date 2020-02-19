@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/ChrLipp/ha-config.svg?branch=master)](https://travis-ci.org/ChrLipp/ha-config)
+
 # Local Home Assistant integration
 
 ## Integrations
