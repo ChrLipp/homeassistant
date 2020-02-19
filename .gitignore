@@ -1,0 +1,25 @@
+# Logs
+*.log
+
+# Ignore folders
+.storage
+.cloud
+.google.token
+
+# Ignore these YAML files with secret data/credentials
+ip_bans.yaml
+secrets.yaml
+known_devices.yaml
+
+# Configuration files
+home-assistant_v2.db
+tv-token.txt
+
+# Python-specific stuff
+**/__pycache__/
+*.pyc
+*.pyd
+*.pyo
+
+# Mac
+.DS_Store

@@ -1,0 +1,47 @@
+
+# Configure a default setup of Home Assistant (frontend, api, etc)
+default_config:
+
+# Uncomment this if you are using SSL/TLS, running in Docker container, etc.
+http:
+  base_url: !secret base_url
+  ssl_certificate: /ssl/fullchain.pem
+  ssl_key: /ssl/privkey.pem
+
+# Text to speech
+tts:
+  - platform: google_translate
+
+media_player:
+  - platform: enigma2
+    host: 10.0.0.104
+    mac_address: !secret vuplus_mac
+    password: !secret vusolo4k_password
+    name: "Vu+ Solo4K"
+#    use_channel_icon: true
+  - platform: samsungtv_custom
+    host: 10.0.0.103
+    mac: !secret sasmsung_mac
+    port: 8002
+    timeout: 30
+    protocol: ws
+    sourcelist: '{"AV-Receiver": "KEY_HDMI1", "Receiver": "KEY_HDMI2", "Switch": "KEY_HDMI3", "Mac": "KEY_HDMI4"}'
+
+switch:
+  - platform: wake_on_lan
+    host: 10.0.0.102
+    mac: !secret arbeitszimmer_mac
+    name: "Arbeitszimmer"
+  - platform: wake_on_lan
+    host: 10.0.0.101
+    mac: !secret diskstation_mac
+    name: "Diskstation"
+
+automower:
+  username: !secret husqvarna_username
+  password: !secret husqvarna_password
+
+group: !include groups.yaml
+automation: !include automations.yaml
+script: !include scripts.yaml
+scene: !include scenes.yaml
