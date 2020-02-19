@@ -14,5 +14,6 @@
 - Samba share
 
 ##  HACS
-- [Samsungtv Custom](https://github.com/roberodin/ha-samsungtv-custom)
 - [automower](https://github.com/walthowd/ha-automower)
+- [Custom header](https://github.com/maykar/custom-header)
+- [Samsungtv Custom](https://github.com/roberodin/ha-samsungtv-custom)
