@@ -1,0 +1,52 @@
+background: var(--background-image)
+custom_header:
+  background: 'rgba(155, 155, 155, 0.25)'
+  compact_mode: true
+  button_text:
+    options: '{{ hours24 }}:{{ minutesLZ }}'
+  default_tab: TOUCH
+  header_text: Zuhause
+resources:
+  - type: module
+    url: /community_plugin/custom-header/custom-header.js
+title: Home
+views:
+  - badges:
+      - entity: person.christian
+      - entity: person.anna_mavie
+    cards:
+      - entity: weather.home
+        type: weather-forecast
+      - entity: light.blumenlampe
+        hold_action:
+          action: more-info
+        name: Blumenlampe
+        show_icon: true
+        show_name: true
+        tap_action:
+          action: toggle
+        type: entity-button
+      - cards:
+          - entity: switch.arbeitszimmer
+            icon: 'mdi:desktop-mac'
+            type: entity-button
+          - entity: switch.diskstation
+            icon: 'mdi:nas'
+            type: entity-button
+        title: Computer
+        type: horizontal-stack
+      - entity: media_player.samsung_tv_remote
+        type: media-control
+      - entity: media_player.vu_solo4k
+        type: media-control
+      - entity: media_player.onkyo
+        type: media-control
+    icon: ''
+    panel: false
+    path: default_view
+    title: Überblick
+  - badges: []
+    cards: []
+    icon: mdiHomeAssistant
+    path: touch
+    title: Touch
