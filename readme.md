@@ -14,6 +14,7 @@
 - Pi-hole
 - SSH & Web Terminal
 - Samba share
+- ESP Home
 
 ##  HACS
 - [automower](https://github.com/walthowd/ha-automower)
