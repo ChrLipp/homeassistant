@@ -5,6 +5,7 @@
 .storage
 .cloud
 .google.token
+.esphome
 
 # Ignore these YAML files with secret data/credentials
 ip_bans.yaml
