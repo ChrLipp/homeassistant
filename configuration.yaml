@@ -2,11 +2,13 @@
 # Configure a default setup of Home Assistant (frontend, api, etc)
 default_config:
 
-# Uncomment this if you are using SSL/TLS, running in Docker container, etc.
+# SSL Access
 http:
   base_url: !secret base_url
   ssl_certificate: !secret ssl_certificate
   ssl_key: !secret ssl_key
+  ip_ban_enabled: True
+  login_attempts_threshold: 2
 
 # Text to speech
 tts:
@@ -18,7 +20,6 @@ media_player:
     mac_address: !secret vuplus_mac
     password: !secret vusolo4k_password
     name: "Vu+ Solo4K"
-#    use_channel_icon: true
   - platform: samsungtv_custom
     host: 10.0.0.103
     mac: !secret sasmsung_mac
@@ -37,12 +38,43 @@ switch:
     mac: !secret diskstation_mac
     name: "Diskstation"
 
+telegram_bot:
+  - platform: polling
+    api_key: !secret telegram_token
+    allowed_chat_ids:
+      - !secret telegram_chat_id
+
+notify:
+  - name: telegram
+    platform: telegram
+    chat_id: !secret telegram_chat_id
+
 automower:
   username: !secret husqvarna_username
   password: !secret husqvarna_password
 
+camera:
+  name: Miki
+  platform: generic
+  still_image_url: !secret husqvarna_maps_url
+  limit_refetch_to_url_change: true
+
+logbook:
+  exclude:
+    entities:
+      - device_tracker.automower_h_170805572_164914249
+      - device_tracker.christian_iphone
+
+history:
+  exclude:
+    entities:
+      - automation.update_available_notification
+      - binary_sensor.updater
+      - device_tracker.automower_h_170805572_164914249
+
 frontend:
   themes: !include_dir_merge_named themes
+
 lovelace:
   mode: yaml
 
@@ -50,5 +82,3 @@ group: !include groups.yaml
 automation: !include automations.yaml
 script: !include scripts.yaml
 scene: !include scenes.yaml
-
-telegram: !include include/telegram.yaml

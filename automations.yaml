@@ -1,1 +1,12 @@
-[]
+- id: '1582890671844'
+  alias: Update Available Notification
+  description: Sends a telegram message when an update is available
+  trigger:
+  - platform: state
+    entity_id: binary_sensor.updater
+    from: 'off'
+    to: 'on'
+  action:
+  - service: notify.telegram
+    data:
+      message: Home Assistant {{ state_attr('binary_sensor.updater', 'newest_version') }} is available.
