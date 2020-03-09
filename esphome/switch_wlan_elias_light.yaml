@@ -1,0 +1,83 @@
+# Name: LoraTop Tuya Smart Life Wifi Light Switch
+# Link to device: http://de.aliexpress.com/item/4000202499821.html
+# Flashed with Tuya-Convert, see
+# - https://www.youtube.com/watch?v=dt5-iZc4_qU
+# - https://www.heise.de/ct/artikel/Tuya-Convert-IoT-Geraete-ohne-Loeten-vom-Cloud-Zwang-befreien-4283623.html
+#
+# Link for GPIO layout: https://de.ibn.by/2020/02/25/dee-esp-module/
+#
+# GPIO  Mode  Done Description
+#  0    out   x    Red LED (1 – on, 0 – off)
+#  4    in    x    Switch (1 – released, 0 – pressed)
+# 12    in    -    Pairing button (1 – released, 0 – pressed) - no functionality
+# 13    out   x    Relay (0 – open, 1 – close)
+# 16    out   -    Blue LED (1 – off, 0 – on) - no functionality
+
+esphome:
+  name: switch_wlan_elias_light
+  platform: ESP8266
+  board: esp01_1m
+
+wifi:
+  ssid: !secret wlan_ssid
+  password: !secret wlan_password
+  manual_ip:
+    static_ip: 10.0.0.200
+    gateway: 10.0.0.138
+    subnet: 255.255.255.0
+    dns1: 10.0.0.134
+    dns2: 8.8.8.8
+
+  # Enable fallback hotspot (captive portal) in case wifi connection fails
+  ap:
+    ssid: "Switch Wlan Elias Light"
+    password: !secret captive_password
+
+captive_portal:
+
+# Enable logging
+logger:
+
+# Enable Home Assistant API
+api:
+
+# Enable Over The Air update (OTA)
+ota:
+
+# report WLAN strenght
+sensor:
+  - platform: wifi_signal
+    name: elias_light_wifi_sigal
+    update_interval: 60s
+
+# provide a reboot
+switch:
+- platform: restart
+  name: "Elias Light REBOOT"
+
+# Device Specific Config
+output:
+  - platform: gpio
+    pin: GPIO13
+    id: relay1
+
+light:
+  - platform: binary
+    name: "Elias Light"
+    id: light1
+    output: relay1
+
+binary_sensor:
+  - platform: gpio
+    pin:
+      number: GPIO4
+      inverted: True
+    name: "Switch Elias Light"
+    on_press:
+      then:
+        - light.toggle: light1
+    internal: true
+    id: switch1
+
+status_led:
+  pin: GPIO0
