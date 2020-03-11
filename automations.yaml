@@ -1,5 +1,5 @@
 - id: '1582890671844'
-  alias: Update Available Notification
+  alias: 'Notify: Update Available'
   description: Sends a telegram message when an update is available
   trigger:
   - platform: state
@@ -9,4 +9,43 @@
   action:
   - service: notify.telegram
     data:
-      message: Home Assistant {{ state_attr('binary_sensor.updater', 'newest_version') }} is available.
+      message: 'Home Assistant {{ state_attr("binary_sensor.updater", "newest_version")}} is available.'
+- id: '1583509362749'
+  alias: 'Notify: Garbage (Gelber Sack)'
+  description: Telegram notification when garbage "Gelber Sack" is collected tomorrow
+  trigger:
+  - at: '19:00'
+    platform: time
+  condition:
+  - condition: template
+    value_template: '{{ states.sensor.waste_gelber_sack.attributes.days <= 1 }}'
+  action:
+  - service: notify.telegram
+    data:
+      message: '*Gelber Sack* rausbringen. Abholung *morgen* am: {{states.sensor.waste_gelber_sack.attributes.display_text}}'
+- id: '1583509362750'
+  alias: 'Notify: Garbage (Papier)'
+  description: Telegram notification when garbage "Papier" is collected tomorrow
+  trigger:
+  - at: '19:00'
+    platform: time
+  condition:
+  - condition: template
+    value_template: '{{ states.sensor.waste_papier.attributes.days <= 1 }}'
+  action:
+  - service: notify.telegram
+    data:
+      message: '*Papier* rausbringen. Abholung *morgen* am: {{states.sensor.waste_papier.attributes.display_text}}'
+- id: '1583509362751'
+  alias: 'Notify: Garbage (Restmüll)'
+  description: Telegram notification when garbage "Restmüll" is collected tomorrow
+  trigger:
+  - at: '19:00'
+    platform: time
+  condition:
+  - condition: template
+    value_template: '{{ states.sensor.waste_restmull.attributes.days <= 1 }}'
+  action:
+  - service: notify.telegram
+    data:
+      message: '*Restmüll* rausbringen. Abholung *morgen* am: {{states.sensor.waste_restmull.attributes.display_text}}'

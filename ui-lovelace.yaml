@@ -16,16 +16,36 @@ views:
     cards:
       - entity: weather.home
         type: weather-forecast
-      - entity: light.blumenlampe
-        hold_action:
-          action: more-info
-        name: Blumenlampe
-        show_icon: true
-        show_name: true
-        state_color: true
-        tap_action:
-          action: toggle
-        type: entity-button
+      - type: entities
+        title: Abfalltermine
+        show_header_toggle: false
+        entities:
+        - entity: sensor.gelbersack_text
+        - entity: sensor.papiertonne_text
+        - entity: sensor.restmuell_text
+      - cards:
+          - entity: light.blumenlampe
+            hold_action:
+              action: more-info
+            name: Blumenlampe
+            show_icon: true
+            show_name: true
+            state_color: true
+            tap_action:
+              action: toggle
+            type: entity-button
+          - entity: light.elias_light
+            hold_action:
+              action: more-info
+            name: Elias Zimmer
+            show_icon: true
+            show_name: true
+            state_color: true
+            tap_action:
+              action: toggle
+            type: entity-button
+        title: Licht
+        type: horizontal-stack
       - cards:
           - entity: switch.arbeitszimmer
             icon: 'mdi:desktop-mac'
@@ -37,6 +57,9 @@ views:
             state_color: true
         title: Computer
         type: horizontal-stack
+      - type: picture-entity
+        entity: camera.miki
+        camera_view: live
       - entity: media_player.samsung_tv_remote
         type: media-control
         name: Samsung TV
@@ -45,9 +68,6 @@ views:
       - entity: media_player.onkyo
         type: media-control
         name: Onkyo
-      - type: picture-entity
-        entity: camera.miki
-        camera_view: live
     icon: 'mdi:home'
     panel: false
     path: default_view

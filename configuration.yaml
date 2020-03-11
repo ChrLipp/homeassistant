@@ -39,7 +39,7 @@ switch:
     name: "Diskstation"
 
 telegram_bot:
-  - platform: polling
+  - platform: broadcast
     api_key: !secret telegram_token
     allowed_chat_ids:
       - !secret telegram_chat_id
@@ -59,24 +59,78 @@ camera:
   still_image_url: !secret husqvarna_maps_url
   limit_refetch_to_url_change: true
 
-logbook:
-  exclude:
-    entities:
-      - device_tracker.automower_h_170805572_164914249
-      - device_tracker.christian_iphone
-
-history:
-  exclude:
-    entities:
-      - automation.update_available_notification
-      - binary_sensor.updater
-      - device_tracker.automower_h_170805572_164914249
+sensor:
+  - platform: waste_at_bmv
+    ort: !secret bmv_ort
+    strasse: !secret bmv_strasse
+    hausnummer: !secret bmv_hausnummer
+  - platform: template
+    sensors:
+      gelbersack_text:
+        value_template: "{{states.sensor.waste_gelber_sack.attributes.display_text_long}}"
+        friendly_name: 'Gelber Sack'
+        icon_template: mdi:sack
+      papiertonne_text:
+        value_template: "{{states.sensor.waste_papier.attributes.display_text_long}}"
+        friendly_name: 'Papier'
+        icon_template: mdi:delete-empty
+      restmuell_text:
+        value_template: "{{states.sensor.waste_restmull.attributes.display_text_long}}"
+        friendly_name: 'Restmüll'
+        icon_template: mdi:trash-can-outline
 
 frontend:
   themes: !include_dir_merge_named themes
 
 lovelace:
   mode: yaml
+  
+logger:
+  default: info
+  logs:
+    custom_components.waste_at_bmv: debug
+
+logbook:
+  exclude:
+    entities:
+#      - automation.*
+      - device_tracker.automower_h_170805572_164914249
+      - device_tracker.christian_iphone
+      - sensor.christian_activity
+      - sensor.christian_average_active_pace
+      - sensor.christian_battery_level
+      - sensor.christian_battery_state
+      - sensor.christian_bssid
+      - sensor.christian_connection_type
+      - sensor.christian_distance
+      - sensor.christian_floors_ascended
+      - sensor.christian_floors_descended
+      - sensor.christian_last_update_trigger
+      - sensor.christian_sim_1
+      - sensor.christian_ssid
+      - sensor.christian_steps
+
+history:
+  exclude:
+    entities:
+#      - automation.*
+      - binary_sensor.updater
+      - device_tracker.automower_h_170805572_164914249
+      - sensor.christian_average_active_pace
+      - sensor.christian_battery_level
+      - sensor.christian_battery_state
+      - sensor.christian_bssid
+      - sensor.christian_connection_type
+      - sensor.christian_distance
+      - sensor.christian_floors_ascended
+      - sensor.christian_floors_descended
+      - sensor.christian_last_update_trigger
+      - sensor.christian_sim_1
+      - sensor.christian_ssid
+      - sensor.christian_steps
+      - sensor.gelbersack_text
+      - sensor.papiertonne_text
+      - sensor.restmuell_text
 
 group: !include groups.yaml
 automation: !include automations.yaml
