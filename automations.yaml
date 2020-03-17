@@ -2,14 +2,14 @@
   alias: 'Notify: Update Available'
   description: Sends a telegram message when an update is available
   trigger:
-  - platform: state
-    entity_id: binary_sensor.updater
+  - entity_id: binary_sensor.updater
     from: 'off'
+    platform: state
     to: 'on'
   action:
-  - service: notify.telegram
-    data:
-      message: 'Home Assistant {{ state_attr("binary_sensor.updater", "newest_version")}} is available.'
+  - data:
+      message: Home Assistant {{states.binary_sensor.updater.newest_version}} is available.
+    service: notify.telegram
 - id: '1583509362749'
   alias: 'Notify: Garbage (Gelber Sack)'
   description: Telegram notification when garbage "Gelber Sack" is collected tomorrow
@@ -20,9 +20,9 @@
   - condition: template
     value_template: '{{ states.sensor.waste_gelber_sack.attributes.days <= 1 }}'
   action:
-  - service: notify.telegram
-    data:
-      message: '*Gelber Sack* rausbringen. Abholung *morgen* am: {{states.sensor.waste_gelber_sack.attributes.display_text}}'
+  - data:
+      message: '*Gelber Sack* rausbringen. Abholung *morgen* ( {{states.sensor.waste_gelber_sack.attributes.display_date}})'
+    service: notify.telegram
 - id: '1583509362750'
   alias: 'Notify: Garbage (Papier)'
   description: Telegram notification when garbage "Papier" is collected tomorrow
@@ -33,9 +33,9 @@
   - condition: template
     value_template: '{{ states.sensor.waste_papier.attributes.days <= 1 }}'
   action:
-  - service: notify.telegram
-    data:
-      message: '*Papier* rausbringen. Abholung *morgen* am: {{states.sensor.waste_papier.attributes.display_text}}'
+  - data:
+      message: '*Papier* rausbringen. Abholung *morgen* ( {{states.sensor.waste_papier.attributes.display_date}})'
+    service: notify.telegram
 - id: '1583509362751'
   alias: 'Notify: Garbage (Restmüll)'
   description: Telegram notification when garbage "Restmüll" is collected tomorrow
@@ -46,6 +46,6 @@
   - condition: template
     value_template: '{{ states.sensor.waste_restmull.attributes.days <= 1 }}'
   action:
-  - service: notify.telegram
-    data:
-      message: '*Restmüll* rausbringen. Abholung *morgen* am: {{states.sensor.waste_restmull.attributes.display_text}}'
+  - data:
+      message: '*Restmüll* rausbringen. Abholung *morgen* ( {{states.sensor.waste_restmull.attributes.display_date}})'
+    service: notify.telegram
