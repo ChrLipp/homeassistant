@@ -8,7 +8,8 @@
     to: 'on'
   action:
   - data:
-      message: Home Assistant {{states.binary_sensor.updater.newest_version}} is available.
+      message: Home Assistant version {{ states("sensor.last_ha_version") }} is available.
+        You are currently running version {{ states("sensor.current_ha_version") }}
     service: notify.telegram
 - id: '1583509362749'
   alias: 'Notify: Garbage (Gelber Sack)'

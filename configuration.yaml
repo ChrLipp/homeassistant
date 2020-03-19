@@ -60,6 +60,12 @@ camera:
   limit_refetch_to_url_change: true
 
 sensor:
+  - platform: version 
+    name: Current HA version
+    source: local
+  - platform: version 
+    name: Last HA version
+    source: hassio
   - platform: waste_at_bmv
     ort: !secret bmv_ort
     strasse: !secret bmv_strasse
