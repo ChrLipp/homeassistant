@@ -90,6 +90,9 @@ frontend:
 
 lovelace:
   mode: yaml
+  resources:
+    - type: module
+      url: /custom_components/custom-header/custom-header.js
   
 logger:
   default: info

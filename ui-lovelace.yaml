@@ -5,9 +5,6 @@ custom_header:
   button_text:
     options: '{{ hours24 }}:{{ minutesLZ }}'
   header_text: Zuhause
-resources:
-  - type: module
-    url: /community_plugin/custom-header/custom-header.js
 title: Home
 views:
   - badges:
