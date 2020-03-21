@@ -5,7 +5,6 @@
 .storage
 .cloud
 .google.token
-.esphome
 
 # Ignore these YAML files with secret data/credentials
 ip_bans.yaml
@@ -24,3 +23,12 @@ tv-token.txt
 
 # Mac
 .DS_Store
+
+# ESPHome
+.esphome
+**/.pioenvs/
+**/.piolibdeps/
+**/lib/
+**/src/
+**/platformio.ini
+

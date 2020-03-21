@@ -11,17 +11,17 @@
 # - BL0937 esphome issue: https://github.com/esphome/issues/issues/37
 #
 # GPIO  Mode  Description
-# 00    out   Led1i (red)
+# 00    out   Led1i (red, inverted)
 # 05    out   Power monitoring chip BL0937 CF
 # 12    in    Relay1
-# 13    in    Button1
+# 13    in    Button1 (inverted)
 # 14    out   Power monitoring HLWBL CF1, Voltage or Current based on SELi
-# 15    out   Led2i (blue)
+# 15    out   Led2i (blue, inverted)
 # 16    in    Power monitoring HLWBL SELi (selection pin  SEL pin to toggle the CF1 pin output between Voltage and Current)
 
 substitutions:
   device_name: plug_wlan_anna_chain_of_lights
-  device_description: Energy Monitoring Smart Plug with button, blue LED, and red LED.
+  device_description: Energy Monitoring Smart Plug with button, blue and red LED.
   friendly_name: Plug Wlan Anna Chain Of Lights
   short_name: Anna Chain Of Lights
 
@@ -57,13 +57,17 @@ api:
 # Enable Over The Air update (OTA)
 ota:
 
+# Enable web server
+web_server:
+  port: 80
+
 # Enable time component for use by daily power sensor
-time:
-  - platform: homeassistant
-    id: homeassistant_time
+#time:
+#  - platform: homeassistant
+#    id: homeassistant_time
 
 sensor:
-# Reports the WiFi signal strength
+# Reports the WiFi signalx strength
   - platform: wifi_signal
     name: ${friendly_name} Signal
     update_interval: 60s
@@ -93,9 +97,16 @@ switch:
 output:
 - platform: esp8266_pwm
   id: blue_output
-  pin: GPIO15
-  inverted: True
+  pin:
+    number: GPIO15
+    inverted: True
 
+light:
+- platform: monochromatic
+  name: ${friendly_name} Blue LED
+  output: blue_output
+  id: blue_led
+  
 binary_sensor:
 # Reports when the button is pressed
 - platform: gpio
@@ -105,56 +116,12 @@ binary_sensor:
     inverted: True
   name: ${friendly_name} Button
   on_press:
-    - switch.toggle: relay
-# Reports the Current, Voltage, and Power used by the plugged-in device (not counting this plug's own usage of about 0.8W/0.019A, so subtract those when calibrating with this plugged into a Kill-A-Watt type meter)
-- platform: hlw8012
-  sel_pin:
-    number: GPIO3
-    inverted: True
-  cf_pin: GPIO5
-  cf1_pin: GPIO14
-  current_resistor: 0.001 #The value of the shunt resistor for current measurement. Defaults to the Sonoff POW’s value 0.001 ohm. Verified on https://fccid.io/2ANOO-SM800/Internal-Photos/Internal-Photos-3601477 that we use "R001" = 0.001 ohm
-  voltage_divider: 2401 #The value of the voltage divider on the board as (R_upstream + R_downstream) / R_downstream. Defaults to the Sonoff POW’s value 2351. From the pic we use 2x "125" = 2x 1.2Mohm for R_upstream and "102" = 1kohm for R_downstream, so (1,200,000+1,200,000+1,000)/1,000 = 2401
-  # but those don't fix the measurement values, probably because we actually have a BL0937 chip instead of a HLW8012, (and part variance aswell) so we have to manually calibrate with a known load or a load and a Kill-A-Watt type meter. My values used below will only be +/-10% of yours I think.
-  power:
-    name: ${friendly_name} Power
-    unit_of_measurement: W
-    id: wattage
-    filters:
-      - calibrate_linear:
-          # Map 0.0 (from sensor) to 0.0 (true value)
-          - 0.0 -> 0.0 # Need to keep 0 mapped to 0 for when connected device is not drawing any power
-          - 4054.3 -> 721.2 # Tested using a meter and 722.0W toaster -0.8W from just this plug with toaster off
-  current:
-    name: ${friendly_name} Current
-    unit_of_measurement: A
-    filters:
-      - calibrate_linear:
-          # Map 0.0 (from sensor) to 0.0 (true value)
-          - 0.0 -> 0.0 # Need to keep 0 mapped to 0 for when connected device is not drawing any power
-          - 7.4 -> 6.103 # Tested using a meter and 6.122A toaster -0.019A from just this plug with toaster off
-  voltage:
-    name: ${friendly_name} Voltage
-    unit_of_measurement: V
-    filters:
-      - calibrate_linear:
-          # Map 0.0 (from sensor) to 0.0 (true value)
-          #- 0.0 -> 0.0 #Don't care if 0 reading aligns with 0 real Volts since we won't ever measure that
-          - 294.7 -> 117.8 # Tested using a meter, value while connected toaster was on
-          - 321.7 -> 121.6 # value while connected toaster was off
-  change_mode_every: 1 # Skips first reading after each change, so this will double the update interval. Default 8
-  update_interval: 10s # 20 second effective update rate for Power, 40 second for Current and Voltage. Default 60s
+    - switch.toggle: relay1
 
 text_sensor:
 # Reports the ESPHome Version with compile date
   - platform: version
     name: ${friendly_name} ESPHome Version
-
-light:
-- platform: monochromatic
-  name: ${friendly_name} Blue LED
-  output: blue_output
-  id: blue_led
 
 # red status led
 status_led:

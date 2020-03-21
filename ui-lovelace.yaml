@@ -9,6 +9,7 @@ title: Home
 views:
   - badges:
       - entity: person.christian
+      - entity: person.elias
       - entity: person.anna_mavie
     cards:
       - entity: weather.home

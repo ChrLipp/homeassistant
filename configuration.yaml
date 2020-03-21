@@ -14,6 +14,12 @@ http:
 tts:
   - platform: google_translate
 
+# Apple home kit
+homekit:
+  filter:
+    include_entities:
+      - light.elias_light
+
 media_player:
   - platform: enigma2
     host: 10.0.0.104
@@ -84,6 +90,16 @@ sensor:
         value_template: "{{states.sensor.waste_restmull.attributes.display_text_long}}"
         friendly_name: 'Restmüll'
         icon_template: mdi:trash-can-outline
+      update_available:
+        friendly_name: "Home assistant update available"
+        value_template: >-
+          {% if states("sensor.last_ha_version") ==  "unknown" %}
+            false
+          {% elif states("sensor.last_ha_version") ==  states("sensor.current_ha_version") %}
+            false
+          {% else %}
+            true
+          {% endif %}
 
 frontend:
   themes: !include_dir_merge_named themes
@@ -102,7 +118,6 @@ logger:
 logbook:
   exclude:
     entities:
-#      - automation.*
       - device_tracker.automower_h_170805572_164914249
       - device_tracker.christian_iphone
       - sensor.christian_activity
@@ -118,13 +133,25 @@ logbook:
       - sensor.christian_sim_1
       - sensor.christian_ssid
       - sensor.christian_steps
+      - sensor.gelbersack_text
+      - sensor.papiertonne_text
+      - sensor.restmuell_text
+      - sensor.waste_gelber_sack
+      - sensor.waste_papier
+      - sensor.waste_restmull
 
 history:
   exclude:
     entities:
-#      - automation.*
+      - automation.notify_garbage_gelber_sack
+      - automation.notify_garbage_papier
+      - automation.notify_garbage_restmull
+      - automation.update_available_notification
       - binary_sensor.updater
       - device_tracker.automower_h_170805572_164914249
+      - light.wohnzimmer
+      - persistent_notification.config_entry_discovery
+      - sensor.christian_activity
       - sensor.christian_average_active_pace
       - sensor.christian_battery_level
       - sensor.christian_battery_state
@@ -137,9 +164,17 @@ history:
       - sensor.christian_sim_1
       - sensor.christian_ssid
       - sensor.christian_steps
+      - sensor.current_ha_version
       - sensor.gelbersack_text
+      - sensor.last_ha_version
       - sensor.papiertonne_text
       - sensor.restmuell_text
+      - sensor.update_available
+      - sensor.waste_gelber_sack
+      - sensor.waste_papier
+      - sensor.waste_restmull
+      - switch.elias_light_reboot
+      - switch.plug_wlan_anna_chain_of_lights_reboot
 
 group: !include groups.yaml
 automation: !include automations.yaml

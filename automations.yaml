@@ -2,10 +2,10 @@
   alias: 'Notify: Update Available'
   description: Sends a telegram message when an update is available
   trigger:
-  - entity_id: binary_sensor.updater
-    from: 'off'
+  - entity_id: sensor.update_available
+    from: 'false'
     platform: state
-    to: 'on'
+    to: 'true'
   action:
   - data:
       message: Home Assistant version {{ states("sensor.last_ha_version") }} is available.
