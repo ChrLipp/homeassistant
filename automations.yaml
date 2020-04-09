@@ -8,8 +8,9 @@
     to: 'true'
   action:
   - data:
-      message: Home Assistant version {{ states("sensor.last_ha_version") }} is available.
-        You are currently running version {{ states("sensor.current_ha_version") }}
+      message: Home Assistant version *{{ states("sensor.last_ha_version") }}* is
+        available. You are currently running version {{ states("sensor.current_ha_version")
+        }}
     service: notify.telegram
 - id: '1583509362749'
   alias: 'Notify: Garbage (Gelber Sack)'
@@ -19,7 +20,7 @@
     platform: time
   condition:
   - condition: template
-    value_template: '{{ states.sensor.waste_gelber_sack.attributes.days <= 1 }}'
+    value_template: '{{ states.sensor.waste_gelber_sack.attributes.days == 1 }}'
   action:
   - data:
       message: '*Gelber Sack* rausbringen. Abholung *morgen* ( {{states.sensor.waste_gelber_sack.attributes.display_date}})'
@@ -32,7 +33,7 @@
     platform: time
   condition:
   - condition: template
-    value_template: '{{ states.sensor.waste_papier.attributes.days <= 1 }}'
+    value_template: '{{ states.sensor.waste_papier.attributes.days == 1 }}'
   action:
   - data:
       message: '*Papier* rausbringen. Abholung *morgen* ( {{states.sensor.waste_papier.attributes.display_date}})'
@@ -45,8 +46,22 @@
     platform: time
   condition:
   - condition: template
-    value_template: '{{ states.sensor.waste_restmull.attributes.days <= 1 }}'
+    value_template: '{{ states.sensor.waste_restmull.attributes.days == 1 }}'
   action:
   - data:
       message: '*Restmüll* rausbringen. Abholung *morgen* ( {{states.sensor.waste_restmull.attributes.display_date}})'
     service: notify.telegram
+- id: '1584961424173'
+  alias: 'Service: make full backup'
+  description: Erstellt jeden Sonntag ein volles Backup
+  trigger:
+  - at: 03:00:00
+    platform: time
+  condition:
+  - condition: time
+    weekday:
+    - sun
+  action:
+  - data_template:
+      name: "Backup {{ now().strftime('%Y-%m-%d') }}"
+    service: hassio.snapshot_full

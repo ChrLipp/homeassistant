@@ -100,6 +100,10 @@ sensor:
           {% else %}
             true
           {% endif %}
+      miki_status:
+        friendly_name: "Miki"
+        entity_picture_template: "{{state_attr('camera.miki', 'entity_picture')}}"
+        value_template: "{{states('device_tracker.automower_h_170805572_164914249')}}"
 
 frontend:
   themes: !include_dir_merge_named themes
@@ -108,7 +112,7 @@ lovelace:
   mode: yaml
   resources:
     - type: module
-      url: /custom_components/custom-header/custom-header.js
+      url: /hacsfiles/custom-header/custom-header.js
   
 logger:
   default: info
@@ -118,6 +122,11 @@ logger:
 logbook:
   exclude:
     entities:
+      - automation.notify_garbage_gelber_sack
+      - automation.notify_garbage_papier
+      - automation.notify_garbage_restmull
+      - automation.service_make_full_backup
+      - automation.update_available_notification
       - device_tracker.automower_h_170805572_164914249
       - device_tracker.christian_iphone
       - sensor.christian_activity
@@ -129,16 +138,34 @@ logbook:
       - sensor.christian_distance
       - sensor.christian_floors_ascended
       - sensor.christian_floors_descended
+      - sensor.christian_geocoded_location
       - sensor.christian_last_update_trigger
       - sensor.christian_sim_1
       - sensor.christian_ssid
       - sensor.christian_steps
+      - sensor.current_ha_version
+      - sensor.elias_iphone_activity
+      - sensor.elias_iphone_average_active_pace
+      - sensor.elias_iphone_battery_level
+      - sensor.elias_iphone_battery_state
+      - sensor.elias_iphone_bssid
+      - sensor.elias_iphone_connection_type
+      - sensor.elias_iphone_distance
+      - sensor.elias_iphone_floors_ascended
+      - sensor.elias_iphone_floors_descended
+      - sensor.elias_iphone_geocoded_location
+      - sensor.elias_iphone_last_update_trigger
+      - sensor.elias_iphone_sim_1
+      - sensor.elias_iphone_ssid
+      - sensor.elias_iphone_steps
       - sensor.gelbersack_text
+      - sensor.last_ha_version
       - sensor.papiertonne_text
       - sensor.restmuell_text
       - sensor.waste_gelber_sack
       - sensor.waste_papier
       - sensor.waste_restmull
+      - sun.sun
 
 history:
   exclude:
@@ -164,6 +191,20 @@ history:
       - sensor.christian_sim_1
       - sensor.christian_ssid
       - sensor.christian_steps
+      - sensor.elias_iphone_activity
+      - sensor.elias_iphone_average_active_pace
+      - sensor.elias_iphone_battery_level
+      - sensor.elias_iphone_battery_state
+      - sensor.elias_iphone_bssid
+      - sensor.elias_iphone_connection_type
+      - sensor.elias_iphone_distance
+      - sensor.elias_iphone_floors_ascended
+      - sensor.elias_iphone_floors_descended
+      - sensor.elias_iphone_geocoded_location
+      - sensor.elias_iphone_last_update_trigger
+      - sensor.elias_iphone_sim_1
+      - sensor.elias_iphone_ssid
+      - sensor.elias_iphone_steps
       - sensor.current_ha_version
       - sensor.gelbersack_text
       - sensor.last_ha_version
