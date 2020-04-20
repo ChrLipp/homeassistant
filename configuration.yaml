@@ -65,13 +65,32 @@ camera:
   still_image_url: !secret husqvarna_maps_url
   limit_refetch_to_url_change: true
 
+
+input_boolean:
+  elias_alarm_switch:
+    name: Elias Wecker einschalten
+    icon: mdi:alarm-check
+input_datetime:
+  elias_alarm_time:
+    name: Elias Wecker Uhrzeit
+    has_date: false
+    has_time: true
+    icon: mdi:alarm
+input_text:
+  last_known_version_update:
+    name: Last known (and notified) version available for update
+    icon: mdi:message-settings-variant-outline
+
 sensor:
-  - platform: version 
+  - platform: version
     name: Current HA version
     source: local
-  - platform: version 
+  - platform: version
     name: Last HA version
     source: hassio
+  - platform: time_date
+    display_options:
+      - 'time'
   - platform: waste_at_bmv
     ort: !secret bmv_ort
     strasse: !secret bmv_strasse
@@ -95,7 +114,7 @@ sensor:
         value_template: >-
           {% if states("sensor.last_ha_version") ==  "unknown" %}
             false
-          {% elif states("sensor.last_ha_version") ==  states("sensor.current_ha_version") %}
+          {% elif states("sensor.last_ha_version") ==  states("input_text.last_known_version_update") %}
             false
           {% else %}
             true
@@ -162,6 +181,7 @@ logbook:
       - sensor.last_ha_version
       - sensor.papiertonne_text
       - sensor.restmuell_text
+      - sensor.time
       - sensor.waste_gelber_sack
       - sensor.waste_papier
       - sensor.waste_restmull
@@ -173,11 +193,20 @@ history:
       - automation.notify_garbage_gelber_sack
       - automation.notify_garbage_papier
       - automation.notify_garbage_restmull
+      - automation.service_make_full_backup
       - automation.update_available_notification
       - binary_sensor.updater
       - device_tracker.automower_h_170805572_164914249
+      - input_text.last_known_version_update
+      - input_boolean.elias_alarm_switch
+      - input_datetime.elias_alarm_time
+      - light.plug_wlan_anna_chain_of_lights_blue_led
+      - light.plug_wlan_anna_chain_of_lights_red_led
       - light.wohnzimmer
       - persistent_notification.config_entry_discovery
+      - sensor.battery_level
+      - sensor.battery_state
+      - sensor.bssid
       - sensor.christian_activity
       - sensor.christian_average_active_pace
       - sensor.christian_battery_level
@@ -207,15 +236,22 @@ history:
       - sensor.elias_iphone_steps
       - sensor.current_ha_version
       - sensor.gelbersack_text
+      - sensor.geocoded_location
       - sensor.last_ha_version
+      - sensor.last_update_trigger
       - sensor.papiertonne_text
+      - sensor.plug_wlan_anna_chain_of_lights_esphome_version
       - sensor.restmuell_text
+      - sensor.sim_1
+      - sensor.ssid
+      - sensor.time
       - sensor.update_available
       - sensor.waste_gelber_sack
       - sensor.waste_papier
       - sensor.waste_restmull
       - switch.elias_light_reboot
       - switch.plug_wlan_anna_chain_of_lights_reboot
+      - switch.switch_wlan_elias_light_reboot
 
 group: !include groups.yaml
 automation: !include automations.yaml

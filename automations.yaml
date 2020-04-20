@@ -8,10 +8,12 @@
     to: 'true'
   action:
   - data:
-      message: Home Assistant version *{{ states("sensor.last_ha_version") }}* is
-        available. You are currently running version {{ states("sensor.current_ha_version")
-        }}
+      message: Meister, die Home Assistant version *{{ states("sensor.last_ha_version")}}* ist verfügbar. Derzeit läuft die Version {{ states("sensor.current_ha_version")}}.
     service: notify.telegram
+  - service: input_text.set_value
+    data_template:
+      entity_id: input_text.last_known_version_update
+      value: '{{ states(''sensor.last_ha_version'') }}'
 - id: '1583509362749'
   alias: 'Notify: Garbage (Gelber Sack)'
   description: Telegram notification when garbage "Gelber Sack" is collected tomorrow
@@ -63,5 +65,19 @@
     - sun
   action:
   - data_template:
-      name: "Backup {{ now().strftime('%Y-%m-%d') }}"
+      name: Backup {{ now().strftime('%Y-%m-%d') }}
     service: hassio.snapshot_full
+- id: '1587219866687'
+  alias: 'Service: alarm Elias'
+  description: Execute the alarm for Elias
+  trigger:
+    platform: template
+    value_template: "{{ states('sensor.time') == (state_attr('input_datetime.elias_alarm_time', 'timestamp') | int | timestamp_custom('%H:%M', False)) }}"
+  condition:
+  - condition: state
+    entity_id: input_boolean.elias_alarm_switch
+    state: 'on'
+  action:
+  - service: light.turn_on
+    data:
+      entity_id: light.elias_light

@@ -24,6 +24,12 @@ views:
         - entity: sensor.gelbersack_text
         - entity: sensor.papiertonne_text
         - entity: sensor.restmuell_text
+      - type: entities
+        title: Wecker Elias
+        show_header_toggle: false
+        entities:
+        - entity: input_boolean.elias_alarm_switch
+        - entity: input_datetime.elias_alarm_time
       - cards:
           - entity: light.blumenlampe
             hold_action:
@@ -45,6 +51,17 @@ views:
             tap_action:
               action: toggle
             type: entity-button
+          - entity: switch.plug_wlan_anna_chain_of_lights
+            hold_action:
+              action: more-info
+            name: Anna Lichterkette
+            show_icon: true
+            show_name: true
+            state_color: true
+            tap_action:
+              action: toggle
+            type: entity-button
+            icon: 'mdi:lightbulb'
         title: Licht
         type: horizontal-stack
       - cards:
@@ -59,20 +76,36 @@ views:
         title: Computer
         type: horizontal-stack
       - cards:
-        - type: picture-entity
-          entity: camera.miki
+        - type: picture-elements
+          camera_image: camera.miki
+          elements:
+            - type: state-icon
+              entity: vacuum.miki
+              style:
+                top: 30%
+                left: 50%
+                '--paper-item-icon-color': white
+            - type: state-label        
+              entity: vacuum.miki
+              attribute: status
+              style:
+                top: 30%
+                left: 65%
+                color: white
         - type: entities
           entities:
             - vacuum.miki
         type: vertical-stack
-      - entity: media_player.samsung_tv_remote
-        type: media-control
-        name: Samsung TV
-      - entity: media_player.vu_solo4k
-        type: media-control
-      - entity: media_player.onkyo
-        type: media-control
-        name: Onkyo
+      - cards:
+        - entity: media_player.samsung_tv_remote
+          type: media-control
+          name: Samsung TV
+        - entity: media_player.vu_solo4k
+          type: media-control
+        - entity: media_player.onkyo
+          type: media-control
+          name: Onkyo
+        type: vertical-stack
     icon: 'mdi:home'
     panel: false
     path: default_view
