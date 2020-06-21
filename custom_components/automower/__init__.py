@@ -11,10 +11,16 @@ import voluptuous as vol
 
 from datetime import datetime
 from homeassistant.const import CONF_ICON, CONF_PASSWORD, CONF_SCAN_INTERVAL, CONF_USERNAME
-from homeassistant.components.vacuum import (
+try:
+    from homeassistant.components.vacuum import (
     SUPPORT_BATTERY, SUPPORT_PAUSE, SUPPORT_RETURN_HOME,
     SUPPORT_STATUS, SUPPORT_STOP, SUPPORT_TURN_OFF,
-    SUPPORT_TURN_ON, VacuumDevice)
+    SUPPORT_TURN_ON, VacuumEntity)
+except ImportError:
+    from homeassistant.components.vacuum import (
+    SUPPORT_BATTERY, SUPPORT_PAUSE, SUPPORT_RETURN_HOME,
+    SUPPORT_STATUS, SUPPORT_STOP, SUPPORT_TURN_OFF,
+    SUPPORT_TURN_ON, VacuumDevice as VacuumEntity)
 
 from homeassistant.helpers import config_validation as cv
 from homeassistant.helpers import discovery
@@ -22,7 +28,7 @@ from homeassistant.util import slugify
 
 _LOGGER = logging.getLogger(__name__)
 
-DEFAULT_ICON = 'mdi:robot'
+DEFAULT_ICON = 'mdi:robot-mower'
 DOMAIN = 'automower'
 REQUIREMENTS = ['pyhusmow==0.1.1']
 VENDOR = 'Husqvarna'
@@ -50,12 +56,12 @@ STATUSES = {
     STATUS_OK_CHARGING:             { 'icon': 'mdi:power-plug',     'message': 'Charging' },
     STATUS_OK_CUTTING:              { 'icon': DEFAULT_ICON,         'message': 'Cutting' },
     STATUS_OK_CUTTING_MANUAL:       { 'icon': DEFAULT_ICON,         'message': 'Cutting (manual timer override)' },
-    STATUS_OK_LEAVING:              { 'icon': DEFAULT_ICON,         'message': 'Leaving base' },
+    STATUS_OK_LEAVING:              { 'icon': DEFAULT_ICON,         'message': 'Leaving charging station' },
     STATUS_PAUSED:                  { 'icon': 'mdi:pause',          'message': 'Paused' },
     STATUS_PARKED_TIMER:            { 'icon': 'mdi:timetable',      'message': 'Parked due to timer' },
     STATUS_PARKED_AUTOTIMER:        { 'icon': 'mdi:timetable',      'message': 'Parked due to weather timer' },
     STATUS_PARKED_PARKED_SELECTED:  { 'icon': 'mdi:sleep',          'message': 'Parked manually' },
-    STATUS_OK_SEARCHING:            { 'icon': 'mdi:magnify',        'message': 'Searching base' },
+    STATUS_OK_SEARCHING:            { 'icon': 'mdi:magnify',        'message': 'Going to charging station' },
     STATUS_EXECUTING_START:         { 'icon': 'mdi:dots-horizontal','message': 'Starting...' },
     STATUS_EXECUTING_STOP:          { 'icon': 'mdi:dots-horizontal','message': 'Stopping...' },
     STATUS_EXECUTING_PARK:          { 'icon': 'mdi:dots-horizontal','message': 'Preparing to park...' },
@@ -68,8 +74,11 @@ STATUSES = {
 ERROR_MESSAGES = {
     1:  'Outside working area',
     2:  'No loop signal',
+    9:  'Trapped',
     10: 'Upside down',
-    13: 'No drive'
+    12: 'Empty battery',
+    13: 'No drive',
+    25: 'Cutting system blocked'
 }
 
 # TODO: Add more models as we observe them
@@ -77,7 +86,7 @@ MODELS = {
     'E': 'Automower 420',
     'G': 'Automower 430X',
     'H': 'Automower 450X',
-    'L': 'Automower 315'
+    'L': 'Automower 315/X'
 }
 
 IGNORED_API_STATE_ATTRIBUTES = [
@@ -130,7 +139,7 @@ def setup(hass, base_config):
     return True
 
 
-class AutomowerDevice(VacuumDevice):
+class AutomowerDevice(VacuumEntity):
     """Representation of an Automower device."""
 
     def __init__(self, meta, api):
