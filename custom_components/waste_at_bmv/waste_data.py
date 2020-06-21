@@ -88,5 +88,8 @@ class WasteData:
 
     @Throttle(MIN_TIME_BETWEEN_UPDATES)
     def update(self):
+        self.force_update()
+
+    def force_update(self):
         _LOGGER.info("Updating waste dates using remote API")
         self.fetch_data()

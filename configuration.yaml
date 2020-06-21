@@ -4,7 +4,7 @@ default_config:
 
 # SSL Access
 http:
-  base_url: !secret base_url
+#  base_url: !secret base_url
   ssl_certificate: !secret ssl_certificate
   ssl_key: !secret ssl_key
   ip_ban_enabled: True
@@ -124,6 +124,47 @@ sensor:
         entity_picture_template: "{{state_attr('camera.miki', 'entity_picture')}}"
         value_template: "{{states('device_tracker.automower_h_170805572_164914249')}}"
 
+fan:
+  - platform: template
+    fans:
+      ventilation_fan:
+        friendly_name: "Wohnraumlüftung"
+        value_template: >-
+          {% if states('switch.switch_ventilation_relay_1') == 'on' %}
+            off
+          {% else %}
+            on
+          {% endif %}
+        speed_template: >-
+          {% if states('switch.switch_ventilation_relay_2') == 'on' %}
+            medium
+          {% elif states('switch.switch_ventilation_relay_3') == 'on' %}
+            high
+          {% else %}
+            low
+          {% endif %}
+        turn_on:
+          service: switch.turn_off
+          data:
+            entity_id: switch.switch_ventilation_relay_1
+        turn_off:
+          service: switch.turn_on
+          data:
+            entity_id: switch.switch_ventilation_relay_1
+        set_speed:
+          service_template: >-
+            {% if speed == 'low' %}
+              script.ventilation_fan_1
+            {% elif speed == 'medium' %}
+              script.ventilation_fan_2
+            {% elif speed == 'high' %}
+              script.ventilation_fan_3
+            {% endif %}
+        speeds:
+          - 'low'
+          - 'medium'
+          - 'high'
+
 frontend:
   themes: !include_dir_merge_named themes
 
@@ -132,7 +173,11 @@ lovelace:
   resources:
     - type: module
       url: /hacsfiles/custom-header/custom-header.js
-  
+    - type: module
+      url: /hacsfiles/lovelace-time-picker-card/time-picker-card.js
+    - type: module
+      url: /hacsfiles/fan-control-entity-row/fan-control-entity-row.js
+
 logger:
   default: info
   logs:
@@ -148,6 +193,7 @@ logbook:
       - automation.update_available_notification
       - device_tracker.automower_h_170805572_164914249
       - device_tracker.christian_iphone
+      - input_datetime.elias_alarm_time
       - sensor.christian_activity
       - sensor.christian_average_active_pace
       - sensor.christian_battery_level
@@ -180,12 +226,15 @@ logbook:
       - sensor.gelbersack_text
       - sensor.last_ha_version
       - sensor.papiertonne_text
+      - sensor.plug_wlan_anna_chain_of_lights_esphome_version
       - sensor.restmuell_text
       - sensor.time
       - sensor.waste_gelber_sack
       - sensor.waste_papier
       - sensor.waste_restmull
       - sun.sun
+      - switch.plug_wlan_anna_chain_of_lights_reboot
+      - switch.switch_wlan_elias_light_reboot
 
 history:
   exclude:

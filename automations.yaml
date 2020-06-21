@@ -81,3 +81,14 @@
   - service: light.turn_on
     data:
       entity_id: light.elias_light
+- id: '1583509362752'
+  alias: 'Notify: Miki error'
+  description: Telegram notification when Miki encounters an error
+  trigger:
+  - entity_id: vacuum.miki
+    platform: state
+    to: 'Error'
+  action:
+  - data:
+      message: '*Achtung:* Miki steckt!'
+    service: notify.telegram

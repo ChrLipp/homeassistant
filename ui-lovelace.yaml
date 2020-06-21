@@ -25,11 +25,30 @@ views:
         - entity: sensor.papiertonne_text
         - entity: sensor.restmuell_text
       - type: entities
-        title: Wecker Elias
+        title: Belüftung
         show_header_toggle: false
         entities:
+        - entity: fan.ventilation_fan
+          type: custom:fan-control-entity-row
+          name: Wohnraumlüftung
+          customHiText: 3
+          customMedText: 2
+          customLowText: 1
+          customOffText: AUS
+      - cards:
         - entity: input_boolean.elias_alarm_switch
-        - entity: input_datetime.elias_alarm_time
+          type: entity-button
+          name: Ein/Aus
+        - type: 'custom:time-picker-card'
+          entity: input_datetime.elias_alarm_time
+          name: 'Choose a time'
+          hour_mode: 24
+          hour_step: 1
+          minute_step: 5
+          hide:
+            name: true
+        title: Wecker Elias
+        type: horizontal-stack
       - cards:
           - entity: light.blumenlampe
             hold_action:

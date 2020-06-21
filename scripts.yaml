@@ -1,0 +1,30 @@
+ventilation_fan_1:
+  alias: Set ventilation speed to low
+  icon: "mdi:fan"
+  description: 'Set the ventilation speed to low (1)'
+  sequence:
+    - service: switch.turn_off
+      data:
+        entity_id: switch.switch_ventilation_relay_1
+    - service: switch.turn_off
+      data:
+        entity_id: switch.switch_ventilation_relay_2
+    - service: switch.turn_off
+      data:
+        entity_id: switch.switch_ventilation_relay_3
+ventilation_fan_2:
+  alias: Set ventilation speed to medium
+  icon: "mdi:fan"
+  description: 'Set the ventilation speed to medium (2)'
+  sequence:
+    - service: switch.turn_on
+      data:
+        entity_id: switch.switch_ventilation_relay_2
+ventilation_fan_3:
+  alias: Set ventilation speed to high
+  icon: "mdi:fan"
+  description: 'Set the ventilation speed to high (3)'
+  sequence:
+    - service: switch.turn_on
+      data:
+        entity_id: switch.switch_ventilation_relay_3

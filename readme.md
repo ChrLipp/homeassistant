@@ -28,7 +28,6 @@
 
 ##  Known problems (way to much)
 
-- Elias switch restart turns off the light
 - Login from Web sometimes doesn't work (plugin, theme)
   403 401 https://poettelsdorf.duckdns.org:8123/api/camera_proxy_stream/camera.miki?token=90456fee3bd9b10d12e94110a3c5e9fda7fe31461b64336a362a74d1012528b0
   Mehrfach, führt zum Aussperren
@@ -37,6 +36,4 @@
 
 ## Fixed
 
-- Update notification shows only the first update
-- Stecker Anna-Mavie
-- Automower status is empty
+- Elias switch restart turns off the light (won't fix)

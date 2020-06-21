@@ -1,0 +1,123 @@
+# Name: Jules V
+# Energy Monitoring Smart Plug with button, blue and red LED.
+# Link to device: https://www.amazon.de/gp/product/B07V2MWBNG
+# The device is labeled as "Smart Plug NX-SM200", this device is available with many different brands (Anccy, cDream, Panamalar, Slitinto, ..)
+#
+# Flashed with Tuya-Convert, see
+# - https://www.youtube.com/watch?v=dt5-iZc4_qU
+# - https://www.heise.de/ct/artikel/Tuya-Convert-IoT-Geraete-ohne-Loeten-vom-Cloud-Zwang-befreien-4283623.html
+#
+# Link for GPIO layout:
+# - Jules   : https://templates.blakadder.com/jules_v.html
+# - NX-SM200: https://templates.blakadder.com/NX-SM200.html
+#
+# Additional links:
+# - compatile plugs: https://github.com/xoseperez/espurna/issues/737
+#                    https://esphome-configs.io/devices/awp04l/
+# - BL0937 esphome issue: https://github.com/esphome/issues/issues/37
+#
+# Template from blackadder (wrong)
+# GPIO  Mode  Description
+# 00    out   Led1i (red, inverted)
+# 05    out   Power monitoring chip BL0937 CF
+# 12    out   Relay1
+# 13    in    Button1 (inverted)
+# 14    out   Power monitoring HLWBL CF1, Voltage or Current based on SELi
+# 15    out   Led2i (blue, inverted)
+# 16    in    Power monitoring HLWBL SELi (selection pin  SEL pin to toggle the CF1 pin output between Voltage and Current)
+#
+# My working template
+# If you enumberate pins (as I did), mind this advice: WARNING ESP8266: Pin 6 (6-11) might already be used by the flash interface. Be warned.
+# I killed one device by not following it.
+# 00    out   Led1i (blue, inverted)
+# 13    in    Button1 (inverted)
+# 15    out   Led1i (red) and Relay
+# I am not interested in power monitoring, so I did not implement it.
+
+esphome:
+  name: ${device_name}
+  comment: ${device_description}
+  platform: ESP8266
+  board: esp01_1m
+
+wifi:
+  ssid: !secret wlan_ssid
+  password: !secret wlan_password
+  manual_ip:
+    static_ip: ${ip_adress}
+    gateway: 10.0.0.138
+    subnet: 255.255.255.0
+    dns1: 10.0.0.134
+    dns2: 8.8.8.8
+
+  # Enable fallback hotspot (captive portal) in case wifi connection fails
+  ap:
+    ssid: "${short_name} AP"
+    password: !secret captive_password
+
+captive_portal:
+
+# Enable logging
+logger:
+
+# Enable Home Assistant API
+api:
+
+# Enable Over The Air update (OTA)
+ota:
+
+# Enable web server
+web_server:
+  port: 80
+
+# Enable time component for use by daily power sensor
+#time:
+#  - platform: homeassistant
+#    id: homeassistant_time
+
+sensor:
+# report WLAN strength
+  - platform: wifi_signal
+    name: ${friendly_name} Signal
+    update_interval: 60s
+# Reports how long the device has been powered (in minutes)
+  - platform: uptime
+    name: ${friendly_name} Uptime
+    filters:
+      - lambda: return x / 60.0;
+    unit_of_measurement: minutes
+
+switch:
+# provide a reboot
+- platform: restart
+  name: "${friendly_name} REBOOT"
+# Relay action
+- platform: gpio
+  name: ${friendly_name}
+  pin: GPIO15
+  id: relay1
+  restore_mode: ALWAYS_OFF
+
+binary_sensor:
+# Reports when the button is pressed
+- platform: gpio
+  device_class: power
+  pin:
+    number: GPIO13
+    inverted: True
+  name: ${friendly_name} Button
+  on_press:
+    - switch.toggle: relay1
+  internal: true
+
+text_sensor:
+# Reports the ESPHome Version with compile date
+  - platform: version
+    name: ${friendly_name} ESPHome Version
+
+# blue status led (red is not possible, since red triggers the relay)
+status_led:
+  pin:
+    number: GPIO0
+    inverted: True
+

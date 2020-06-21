@@ -1,0 +1,135 @@
+# Sonoff 4CH Pro R2
+# Link to device: https://de.aliexpress.com/item/33059063659.html
+# How to install: https://reid-projects.com/how-to-install-esphome-on-sonoff-4ch-pro-r2/
+# Config: https://esphome-configs.io/devices/sonoff-4ch-pro-r2/
+
+substitutions:
+  device_name: switch_wlan_ventilation
+  device_description: Schalter Kontrollierte Wohnraumlüftung
+  friendly_name: Switch ventilation
+  short_name: Ventilation
+
+esphome:
+  name: ${device_name}
+  comment: ${device_description}
+  platform: ESP8266
+  board: esp01_1m
+
+wifi:
+  ssid: !secret wlan_ssid
+  password: !secret wlan_password
+  manual_ip:
+    static_ip: 10.0.0.205
+    gateway: 10.0.0.138
+    subnet: 255.255.255.0
+    dns1: 10.0.0.134
+    dns2: 8.8.8.8
+
+  # Enable fallback hotspot (captive portal) in case wifi connection fails
+  ap:
+    ssid: "${short_name} AP"
+    password: !secret captive_password
+
+captive_portal:
+
+# Enable logging
+logger:
+
+# Enable Home Assistant API
+api:
+
+# Enable Over The Air update (OTA)
+ota:
+
+# Enable web server
+web_server:
+  port: 80
+
+sensor:
+# report WLAN strength
+  - platform: wifi_signal
+    name: ${friendly_name} Signal
+    update_interval: 60s
+# Reports how long the device has been powered (in minutes)
+  - platform: uptime
+    name: ${friendly_name} Uptime
+    filters:
+      - lambda: return x / 60.0;
+    unit_of_measurement: minutes
+
+binary_sensor:
+  - platform: gpio
+    on_press:
+      then:
+        - switch.toggle: relay1
+    pin:
+      number: GPIO0
+      mode: INPUT_PULLUP
+      inverted: True
+    name: "${friendly_name} Button 1"
+    internal: true
+  - platform: gpio
+    on_press:
+      then:
+        - switch.toggle: relay2
+    pin:
+      number: GPIO9
+      mode: INPUT_PULLUP
+      inverted: True
+    name: "${friendly_name} Button 2"
+    internal: true
+  - platform: gpio
+    on_press:
+      then:
+        - switch.toggle: relay3
+    pin:
+      number: GPIO10
+      mode: INPUT_PULLUP
+      inverted: True
+    name: "${friendly_name} Button 3"
+    internal: true
+  - platform: gpio
+    on_press:
+      then:
+        - switch.toggle: relay4
+    pin:
+      number: GPIO14
+      mode: INPUT_PULLUP
+      inverted: True
+    name: "${friendly_name} Button 4"
+    internal: true
+
+switch:
+  - platform: gpio
+    id: relay1
+    name: "${friendly_name} Relay 1"
+    pin: GPIO12
+    icon: mdi:electric-switch
+    interlock: &interlock_group [relay1, relay2, relay3]
+  - platform: gpio
+    id: relay2
+    name: "${friendly_name} Relay 2"
+    pin: GPIO5
+    icon: mdi:electric-switch
+    interlock: *interlock_group
+  - platform: gpio
+    id: relay3
+    name: "${friendly_name} Relay 3"
+    pin: GPIO4
+    icon: mdi:electric-switch
+    interlock: *interlock_group
+  - platform: gpio
+    id: relay4
+    name: "${friendly_name} Relay 4"
+    pin: GPIO15
+    icon: mdi:electric-switch
+
+text_sensor:
+# Reports the ESPHome Version with compile date
+  - platform: version
+    name: ${friendly_name} ESPHome Version
+
+status_led:
+  pin:
+    number: GPIO13
+    inverted: True
