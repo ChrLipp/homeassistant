@@ -5,6 +5,8 @@
 .storage
 .cloud
 .google.token
+tts/
+custom_components/.translations
 
 # Ignore these YAML files with secret data/credentials
 ip_bans.yaml
@@ -31,4 +33,3 @@ tv-token.txt
 **/lib/
 **/src/
 **/platformio.ini
-

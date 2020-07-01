@@ -4,7 +4,6 @@ default_config:
 
 # SSL Access
 http:
-#  base_url: !secret base_url
   ssl_certificate: !secret ssl_certificate
   ssl_key: !secret ssl_key
   ip_ban_enabled: True
@@ -43,6 +42,12 @@ switch:
     host: 10.0.0.101
     mac: !secret diskstation_mac
     name: "Diskstation"
+  - platform: modbus
+    coils:
+    - name: modbus_switch_01
+      hub: hub1
+      slave: 1
+      coil: 800
 
 telegram_bot:
   - platform: broadcast
@@ -98,16 +103,16 @@ sensor:
   - platform: template
     sensors:
       gelbersack_text:
-        value_template: "{{states.sensor.waste_gelber_sack.attributes.display_text_long}}"
-        friendly_name: 'Gelber Sack'
+        value_template: "{{states.sensor.waste_gelber_sack.attributes.display_text}}"
+        friendly_name_template: "Gelber Sack - {{states.sensor.waste_gelber_sack.attributes.display_date}}"
         icon_template: mdi:sack
       papiertonne_text:
-        value_template: "{{states.sensor.waste_papier.attributes.display_text_long}}"
-        friendly_name: 'Papier'
+        value_template: "{{states.sensor.waste_papier.attributes.display_text}}"
+        friendly_name_template: "Papier - {{states.sensor.waste_papier.attributes.display_date}}"
         icon_template: mdi:delete-empty
       restmuell_text:
-        value_template: "{{states.sensor.waste_restmull.attributes.display_text_long}}"
-        friendly_name: 'Restmüll'
+        value_template: "{{states.sensor.waste_restmull.attributes.display_text}}"
+        friendly_name_template: "Restmüll - {{states.sensor.waste_restmull.attributes.display_date}}"
         icon_template: mdi:trash-can-outline
       update_available:
         friendly_name: "Home assistant update available"
@@ -123,6 +128,12 @@ sensor:
         friendly_name: "Miki"
         entity_picture_template: "{{state_attr('camera.miki', 'entity_picture')}}"
         value_template: "{{states('device_tracker.automower_h_170805572_164914249')}}"
+
+modbus:
+  name: hub1
+  type: tcp
+  host: 10.0.0.211
+  port: 502
 
 fan:
   - platform: template
@@ -182,6 +193,8 @@ logger:
   default: info
   logs:
     custom_components.waste_at_bmv: debug
+    homeassistant.components.modbus: debug
+    pymodbus.client: debug
 
 logbook:
   exclude:

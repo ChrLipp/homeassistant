@@ -1,0 +1,11 @@
+# Name: Jules V
+# Energy Monitoring Smart Plug with button, blue and red LED.
+
+substitutions:
+  device_name: plug_wlan_02
+  device_description: Stecker 02
+  friendly_name: Plug Wlan 02
+  short_name: Plug 02
+  ip_adress: 10.0.0.202
+
+<<: !include .yules.yaml
