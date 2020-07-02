@@ -1,0 +1,42 @@
+automower:
+  username: !secret husqvarna_username
+  password: !secret husqvarna_password
+
+camera:
+  name: Miki
+  platform: generic
+  still_image_url: !secret husqvarna_maps_url
+  limit_refetch_to_url_change: true
+
+sensor:
+  - platform: template
+    sensors:
+      miki_status:
+        friendly_name: "Miki"
+        entity_picture_template: "{{state_attr('camera.miki', 'entity_picture')}}"
+        value_template: "{{states('device_tracker.automower_h_170805572_164914249')}}"
+
+automation:
+- id: '1583509362752'
+  alias: 'Notify: Miki error'
+  description: Telegram notification when Miki encounters an error
+  trigger:
+  - entity_id: vacuum.miki
+    platform: state
+    to: 'Error'
+  action:
+  - data:
+      message: '*Achtung:* Miki steckt!'
+    service: notify.telegram
+
+logbook:
+  exclude:
+    entities:
+      - automation.notify_miki_error
+      - device_tracker.automower_h_170805572_164914249
+
+history:
+  exclude:
+    entities:
+      - automation.notify_miki_error
+      - device_tracker.automower_h_170805572_164914249

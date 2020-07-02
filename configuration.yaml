@@ -1,6 +1,10 @@
-
-# Configure a default setup of Home Assistant (frontend, api, etc)
+# Configure a default set of integrations for Home Assistant to load
+# see https://www.home-assistant.io/integrations/default_config/
 default_config:
+
+# Enable configuration through packages
+homeassistant:
+  packages: !include_dir_named packages/
 
 # SSL Access
 http:
@@ -60,27 +64,6 @@ notify:
     platform: telegram
     chat_id: !secret telegram_chat_id
 
-automower:
-  username: !secret husqvarna_username
-  password: !secret husqvarna_password
-
-camera:
-  name: Miki
-  platform: generic
-  still_image_url: !secret husqvarna_maps_url
-  limit_refetch_to_url_change: true
-
-
-input_boolean:
-  elias_alarm_switch:
-    name: Elias Wecker einschalten
-    icon: mdi:alarm-check
-input_datetime:
-  elias_alarm_time:
-    name: Elias Wecker Uhrzeit
-    has_date: false
-    has_time: true
-    icon: mdi:alarm
 input_text:
   last_known_version_update:
     name: Last known (and notified) version available for update
@@ -96,24 +79,8 @@ sensor:
   - platform: time_date
     display_options:
       - 'time'
-  - platform: waste_at_bmv
-    ort: !secret bmv_ort
-    strasse: !secret bmv_strasse
-    hausnummer: !secret bmv_hausnummer
   - platform: template
     sensors:
-      gelbersack_text:
-        value_template: "{{states.sensor.waste_gelber_sack.attributes.display_text}}"
-        friendly_name_template: "Gelber Sack - {{states.sensor.waste_gelber_sack.attributes.display_date}}"
-        icon_template: mdi:sack
-      papiertonne_text:
-        value_template: "{{states.sensor.waste_papier.attributes.display_text}}"
-        friendly_name_template: "Papier - {{states.sensor.waste_papier.attributes.display_date}}"
-        icon_template: mdi:delete-empty
-      restmuell_text:
-        value_template: "{{states.sensor.waste_restmull.attributes.display_text}}"
-        friendly_name_template: "Restmüll - {{states.sensor.waste_restmull.attributes.display_date}}"
-        icon_template: mdi:trash-can-outline
       update_available:
         friendly_name: "Home assistant update available"
         value_template: >-
@@ -124,11 +91,14 @@ sensor:
           {% else %}
             true
           {% endif %}
-      miki_status:
-        friendly_name: "Miki"
-        entity_picture_template: "{{state_attr('camera.miki', 'entity_picture')}}"
-        value_template: "{{states('device_tracker.automower_h_170805572_164914249')}}"
 
+# Conneting Siemens Logo via modbus
+# Port 502 ist der Standard für Modbus-TCP
+# How to enable modbus on Sienems Logo
+# - Tools -> Ethernet Connections…
+# - Enter IP address of your LOGO…
+# - Right click on Etnernet Connections -> Add server connection -> Modbus Connection
+# - Upload your program to LOGO
 modbus:
   name: hub1
   type: tcp
@@ -199,14 +169,9 @@ logger:
 logbook:
   exclude:
     entities:
-      - automation.notify_garbage_gelber_sack
-      - automation.notify_garbage_papier
-      - automation.notify_garbage_restmull
       - automation.service_make_full_backup
       - automation.update_available_notification
-      - device_tracker.automower_h_170805572_164914249
       - device_tracker.christian_iphone
-      - input_datetime.elias_alarm_time
       - sensor.christian_activity
       - sensor.christian_average_active_pace
       - sensor.christian_battery_level
@@ -236,15 +201,9 @@ logbook:
       - sensor.elias_iphone_sim_1
       - sensor.elias_iphone_ssid
       - sensor.elias_iphone_steps
-      - sensor.gelbersack_text
       - sensor.last_ha_version
-      - sensor.papiertonne_text
       - sensor.plug_wlan_anna_chain_of_lights_esphome_version
-      - sensor.restmuell_text
       - sensor.time
-      - sensor.waste_gelber_sack
-      - sensor.waste_papier
-      - sensor.waste_restmull
       - sun.sun
       - switch.plug_wlan_anna_chain_of_lights_reboot
       - switch.switch_wlan_elias_light_reboot
@@ -252,16 +211,10 @@ logbook:
 history:
   exclude:
     entities:
-      - automation.notify_garbage_gelber_sack
-      - automation.notify_garbage_papier
-      - automation.notify_garbage_restmull
       - automation.service_make_full_backup
       - automation.update_available_notification
       - binary_sensor.updater
-      - device_tracker.automower_h_170805572_164914249
       - input_text.last_known_version_update
-      - input_boolean.elias_alarm_switch
-      - input_datetime.elias_alarm_time
       - light.plug_wlan_anna_chain_of_lights_blue_led
       - light.plug_wlan_anna_chain_of_lights_red_led
       - light.wohnzimmer
@@ -297,20 +250,14 @@ history:
       - sensor.elias_iphone_ssid
       - sensor.elias_iphone_steps
       - sensor.current_ha_version
-      - sensor.gelbersack_text
       - sensor.geocoded_location
       - sensor.last_ha_version
       - sensor.last_update_trigger
-      - sensor.papiertonne_text
       - sensor.plug_wlan_anna_chain_of_lights_esphome_version
-      - sensor.restmuell_text
       - sensor.sim_1
       - sensor.ssid
       - sensor.time
       - sensor.update_available
-      - sensor.waste_gelber_sack
-      - sensor.waste_papier
-      - sensor.waste_restmull
       - switch.elias_light_reboot
       - switch.plug_wlan_anna_chain_of_lights_reboot
       - switch.switch_wlan_elias_light_reboot

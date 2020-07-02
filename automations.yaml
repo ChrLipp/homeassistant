@@ -14,45 +14,6 @@
     data_template:
       entity_id: input_text.last_known_version_update
       value: '{{ states(''sensor.last_ha_version'') }}'
-- id: '1583509362749'
-  alias: 'Notify: Garbage (Gelber Sack)'
-  description: Telegram notification when garbage "Gelber Sack" is collected tomorrow
-  trigger:
-  - at: '19:00'
-    platform: time
-  condition:
-  - condition: template
-    value_template: '{{ states.sensor.waste_gelber_sack.attributes.days == 1 }}'
-  action:
-  - data:
-      message: '*Gelber Sack* rausbringen. Abholung *morgen* ( {{states.sensor.waste_gelber_sack.attributes.display_date}})'
-    service: notify.telegram
-- id: '1583509362750'
-  alias: 'Notify: Garbage (Papier)'
-  description: Telegram notification when garbage "Papier" is collected tomorrow
-  trigger:
-  - at: '19:00'
-    platform: time
-  condition:
-  - condition: template
-    value_template: '{{ states.sensor.waste_papier.attributes.days == 1 }}'
-  action:
-  - data:
-      message: '*Papier* rausbringen. Abholung *morgen* ( {{states.sensor.waste_papier.attributes.display_date}})'
-    service: notify.telegram
-- id: '1583509362751'
-  alias: 'Notify: Garbage (Restmüll)'
-  description: Telegram notification when garbage "Restmüll" is collected tomorrow
-  trigger:
-  - at: '19:00'
-    platform: time
-  condition:
-  - condition: template
-    value_template: '{{ states.sensor.waste_restmull.attributes.days == 1 }}'
-  action:
-  - data:
-      message: '*Restmüll* rausbringen. Abholung *morgen* ( {{states.sensor.waste_restmull.attributes.display_date}})'
-    service: notify.telegram
 - id: '1584961424173'
   alias: 'Service: make full backup'
   description: Erstellt jeden Sonntag ein volles Backup
@@ -67,28 +28,3 @@
   - data_template:
       name: Backup {{ now().strftime('%Y-%m-%d') }}
     service: hassio.snapshot_full
-- id: '1587219866687'
-  alias: 'Service: alarm Elias'
-  description: Execute the alarm for Elias
-  trigger:
-    platform: template
-    value_template: "{{ states('sensor.time') == (state_attr('input_datetime.elias_alarm_time', 'timestamp') | int | timestamp_custom('%H:%M', False)) }}"
-  condition:
-  - condition: state
-    entity_id: input_boolean.elias_alarm_switch
-    state: 'on'
-  action:
-  - service: light.turn_on
-    data:
-      entity_id: light.elias_light
-- id: '1583509362752'
-  alias: 'Notify: Miki error'
-  description: Telegram notification when Miki encounters an error
-  trigger:
-  - entity_id: vacuum.miki
-    platform: state
-    to: 'Error'
-  action:
-  - data:
-      message: '*Achtung:* Miki steckt!'
-    service: notify.telegram

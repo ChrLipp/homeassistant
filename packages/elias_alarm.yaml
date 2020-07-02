@@ -1,0 +1,46 @@
+# Alarm clock for Elias
+#
+# Needs the following sensor
+# sensor:
+#  - platform: time_date
+#    display_options:
+#     - 'time'
+
+input_boolean:
+  elias_alarm_switch:
+    name: Elias Wecker einschalten
+    icon: mdi:alarm-check
+input_datetime:
+  elias_alarm_time:
+    name: Elias Wecker Uhrzeit
+    has_date: false
+    has_time: true
+    icon: mdi:alarm
+
+logbook:
+  exclude:
+    entities:
+      - input_boolean.elias_alarm_switch
+      - input_datetime.elias_alarm_time
+
+history:
+  exclude:
+    entities:
+      - input_boolean.elias_alarm_switch
+      - input_datetime.elias_alarm_time
+
+automation:
+- id: '1587219866687'
+  alias: 'Service: alarm Elias'
+  description: Execute the alarm for Elias
+  trigger:
+    platform: template
+    value_template: "{{ states('sensor.time') == (state_attr('input_datetime.elias_alarm_time', 'timestamp') | int | timestamp_custom('%H:%M', False)) }}"
+  condition:
+  - condition: state
+    entity_id: input_boolean.elias_alarm_switch
+    state: 'on'
+  action:
+  - service: light.turn_on
+    data:
+      entity_id: light.elias_light

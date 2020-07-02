@@ -1,0 +1,86 @@
+sensor:
+  - platform: waste_at_bmv
+    ort: !secret bmv_ort
+    strasse: !secret bmv_strasse
+    hausnummer: !secret bmv_hausnummer
+  - platform: template
+    sensors:
+      gelbersack_text:
+        value_template: "{{states.sensor.waste_gelber_sack.attributes.display_text}}"
+        friendly_name_template: "Gelber Sack - {{states.sensor.waste_gelber_sack.attributes.display_date}}"
+        icon_template: mdi:sack
+      papiertonne_text:
+        value_template: "{{states.sensor.waste_papier.attributes.display_text}}"
+        friendly_name_template: "Papier - {{states.sensor.waste_papier.attributes.display_date}}"
+        icon_template: mdi:delete-empty
+      restmuell_text:
+        value_template: "{{states.sensor.waste_restmull.attributes.display_text}}"
+        friendly_name_template: "Restmüll - {{states.sensor.waste_restmull.attributes.display_date}}"
+        icon_template: mdi:trash-can-outline
+
+automation:
+- id: '1583509362749'
+  alias: 'Notify: Garbage (Gelber Sack)'
+  description: Telegram notification when garbage "Gelber Sack" is collected tomorrow
+  trigger:
+  - at: '19:00'
+    platform: time
+  condition:
+  - condition: template
+    value_template: '{{ states.sensor.waste_gelber_sack.attributes.days == 1 }}'
+  action:
+  - data:
+      message: '*Gelber Sack* rausbringen. Abholung *morgen* ( {{states.sensor.waste_gelber_sack.attributes.display_date}})'
+    service: notify.telegram
+- id: '1583509362750'
+  alias: 'Notify: Garbage (Papier)'
+  description: Telegram notification when garbage "Papier" is collected tomorrow
+  trigger:
+  - at: '19:00'
+    platform: time
+  condition:
+  - condition: template
+    value_template: '{{ states.sensor.waste_papier.attributes.days == 1 }}'
+  action:
+  - data:
+      message: '*Papier* rausbringen. Abholung *morgen* ( {{states.sensor.waste_papier.attributes.display_date}})'
+    service: notify.telegram
+- id: '1583509362751'
+  alias: 'Notify: Garbage (Restmüll)'
+  description: Telegram notification when garbage "Restmüll" is collected tomorrow
+  trigger:
+  - at: '19:00'
+    platform: time
+  condition:
+  - condition: template
+    value_template: '{{ states.sensor.waste_restmull.attributes.days == 1 }}'
+  action:
+  - data:
+      message: '*Restmüll* rausbringen. Abholung *morgen* ( {{states.sensor.waste_restmull.attributes.display_date}})'
+    service: notify.telegram
+
+logbook:
+  exclude:
+    entities:
+      - automation.notify_garbage_gelber_sack
+      - automation.notify_garbage_papier
+      - automation.notify_garbage_restmull
+      - sensor.gelbersack_text
+      - sensor.papiertonne_text
+      - sensor.restmuell_text
+      - sensor.waste_gelber_sack
+      - sensor.waste_papier
+      - sensor.waste_restmull
+
+history:
+  exclude:
+    entities:
+      - automation.notify_garbage_gelber_sack
+      - automation.notify_garbage_papier
+      - automation.notify_garbage_restmull
+      - sensor.gelbersack_text
+      - sensor.papiertonne_text
+      - sensor.restmuell_text
+      - sensor.waste_gelber_sack
+      - sensor.waste_papier
+      - sensor.waste_restmull

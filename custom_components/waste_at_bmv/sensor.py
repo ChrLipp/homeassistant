@@ -109,7 +109,7 @@ class WasteSensor(Entity):
                     self.data.force_update()
                     self.update()
                 else:
-                    printtext = 'in {} Tagen'.format(self._attributes['days'])
+                    printtext = '{} Tage'.format(self._attributes['days'])
                 self._attributes['display_text'] = printtext
                 self._attributes['display_text_long'] = self._state.strftime(
                     '{} ({}, %d.%m.)').format(printtext, weekdays[self._state.weekday()])
