@@ -1,0 +1,74 @@
+# Conneting Siemens Logo via modbus
+# Port 502 ist der Standard für Modbus-TCP
+#
+# How to enable modbus on Sienems Logo
+# - Tools -> Ethernet Connections…
+# - Enter IP address of your LOGO…
+# - Right click on Etnernet Connections -> Add server connection -> Modbus Connection
+# - Upload your program to LOGO
+#
+# Coil = VB-adress * 8 + bit (V100.0 = 8 * 100 + 0 = 800)
+
+modbus:
+  name: hub1
+  type: tcp
+  host: 10.0.0.211
+  port: 502
+
+switch:
+  - platform: modbus
+    coils:
+    - name: modbus_switch_01
+      hub: hub1
+      slave: 1
+      coil: 800
+    - name: modbus_switch_02
+      hub: hub1
+      slave: 1
+      coil: 801
+  - platform: template
+    switches:
+      blind_kitchen_left_up:
+        friendly_name: "Blind Kitchen Left Up"
+        value_template: "{{ is_state('switch.modbus_switch_01', 'on') }}"
+        turn_on:
+        - service: switch.turn_on
+          data:
+            entity_id: switch.modbus_switch_01
+        - delay:
+            milliseconds: 250
+        - service: switch.turn_off
+          data:
+            entity_id: switch.modbus_switch_01
+        turn_off:
+        - service: switch.turn_off
+          data:
+            entity_id: switch.modbus_switch_01
+        icon_template: "mdi:blinds"
+      blind_kitchen_left_down:
+        friendly_name: "Blind Kitchen Left Down"
+        value_template: "{{ is_state('switch.modbus_switch_02', 'on') }}"
+        turn_on:
+        - service: switch.turn_on
+          data:
+            entity_id: switch.modbus_switch_02
+        - delay:
+            milliseconds: 250
+        - service: switch.turn_off
+          data:
+            entity_id: switch.modbus_switch_02
+        turn_off:
+        - service: switch.turn_off
+          data:
+            entity_id: switch.modbus_switch_02
+        icon_template: "mdi:blinds"
+
+logbook:
+  exclude:
+    entities:
+      - switch.modbus_switch_01
+
+history:
+  exclude:
+    entities:
+      - switch.modbus_switch_01

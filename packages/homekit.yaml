@@ -1,0 +1,5 @@
+# Apple homekit settings
+homekit:
+  filter:
+    include_entities:
+      - light.elias_light

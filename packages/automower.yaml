@@ -28,15 +28,21 @@ automation:
   - data:
       message: '*Achtung:* Miki steckt!'
     service: notify.telegram
+  - data_template:
+      message: "{{ states.vacuum.miki }}"
+#      message: states.vacuum.miki
+    service: system_log.write
 
 logbook:
   exclude:
     entities:
       - automation.notify_miki_error
       - device_tracker.automower_h_170805572_164914249
+      - sensor.miki_status
 
 history:
   exclude:
     entities:
       - automation.notify_miki_error
       - device_tracker.automower_h_170805572_164914249
+      - sensor.miki_status

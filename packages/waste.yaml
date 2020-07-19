@@ -7,15 +7,15 @@ sensor:
     sensors:
       gelbersack_text:
         value_template: "{{states.sensor.waste_gelber_sack.attributes.display_text}}"
-        friendly_name_template: "Gelber Sack - {{states.sensor.waste_gelber_sack.attributes.display_date}}"
+        friendly_name_template: "Gelber Sack - am {{states.sensor.waste_gelber_sack.attributes.display_date}}"
         icon_template: mdi:sack
       papiertonne_text:
         value_template: "{{states.sensor.waste_papier.attributes.display_text}}"
-        friendly_name_template: "Papier - {{states.sensor.waste_papier.attributes.display_date}}"
+        friendly_name_template: "Papier - am {{states.sensor.waste_papier.attributes.display_date}}"
         icon_template: mdi:delete-empty
       restmuell_text:
         value_template: "{{states.sensor.waste_restmull.attributes.display_text}}"
-        friendly_name_template: "Restmüll - {{states.sensor.waste_restmull.attributes.display_date}}"
+        friendly_name_template: "Restmüll - am {{states.sensor.waste_restmull.attributes.display_date}}"
         icon_template: mdi:trash-can-outline
 
 automation:

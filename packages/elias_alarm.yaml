@@ -17,18 +17,6 @@ input_datetime:
     has_time: true
     icon: mdi:alarm
 
-logbook:
-  exclude:
-    entities:
-      - input_boolean.elias_alarm_switch
-      - input_datetime.elias_alarm_time
-
-history:
-  exclude:
-    entities:
-      - input_boolean.elias_alarm_switch
-      - input_datetime.elias_alarm_time
-
 automation:
 - id: '1587219866687'
   alias: 'Service: alarm Elias'
@@ -44,3 +32,17 @@ automation:
   - service: light.turn_on
     data:
       entity_id: light.elias_light
+
+logbook:
+  exclude:
+    entities:
+      - automation.service_alarm_elias
+      - input_boolean.elias_alarm_switch
+      - input_datetime.elias_alarm_time
+
+history:
+  exclude:
+    entities:
+      - automation.service_alarm_elias
+      - input_boolean.elias_alarm_switch
+      - input_datetime.elias_alarm_time

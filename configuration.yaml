@@ -17,25 +17,22 @@ http:
 tts:
   - platform: google_translate
 
-# Apple home kit
-homekit:
-  filter:
-    include_entities:
-      - light.elias_light
-
 media_player:
   - platform: enigma2
     host: 10.0.0.104
     mac_address: !secret vuplus_mac
     password: !secret vusolo4k_password
     name: "Vu+ Solo4K"
-  - platform: samsungtv_custom
+  - platform: samsungtv_tizen
     host: 10.0.0.103
     mac: !secret sasmsung_mac
     port: 8002
-    timeout: 30
-    protocol: ws
-    sourcelist: '{"AV-Receiver": "KEY_HDMI1", "Receiver": "KEY_HDMI2", "Switch": "KEY_HDMI3", "Mac": "KEY_HDMI4"}'
+#    timeout: 30
+#    protocol: ws
+    api_key: !secret api_key
+    device_id: !secret device_id
+    source_list: '{"AV-Receiver": "KEY_HDMI1", "Receiver": "KEY_HDMI2", "Switch": "KEY_HDMI3", "Mac": "KEY_HDMI4"}'
+    app_list: '{"Netflix": "11101200001/org.tizen.netflix-app", "Prime Video": "3201512006785/org.tizen.ignition", "YouTube": "111299001912", "Spotify": "3201606009684"}'
 
 switch:
   - platform: wake_on_lan
@@ -46,12 +43,6 @@ switch:
     host: 10.0.0.101
     mac: !secret diskstation_mac
     name: "Diskstation"
-  - platform: modbus
-    coils:
-    - name: modbus_switch_01
-      hub: hub1
-      slave: 1
-      coil: 800
 
 telegram_bot:
   - platform: broadcast
@@ -64,100 +55,10 @@ notify:
     platform: telegram
     chat_id: !secret telegram_chat_id
 
-input_text:
-  last_known_version_update:
-    name: Last known (and notified) version available for update
-    icon: mdi:message-settings-variant-outline
-
 sensor:
-  - platform: version
-    name: Current HA version
-    source: local
-  - platform: version
-    name: Last HA version
-    source: hassio
   - platform: time_date
     display_options:
       - 'time'
-  - platform: template
-    sensors:
-      update_available:
-        friendly_name: "Home assistant update available"
-        value_template: >-
-          {% if states("sensor.last_ha_version") ==  "unknown" %}
-            false
-          {% elif states("sensor.last_ha_version") ==  states("input_text.last_known_version_update") %}
-            false
-          {% else %}
-            true
-          {% endif %}
-
-# Conneting Siemens Logo via modbus
-# Port 502 ist der Standard für Modbus-TCP
-# How to enable modbus on Sienems Logo
-# - Tools -> Ethernet Connections…
-# - Enter IP address of your LOGO…
-# - Right click on Etnernet Connections -> Add server connection -> Modbus Connection
-# - Upload your program to LOGO
-modbus:
-  name: hub1
-  type: tcp
-  host: 10.0.0.211
-  port: 502
-
-fan:
-  - platform: template
-    fans:
-      ventilation_fan:
-        friendly_name: "Wohnraumlüftung"
-        value_template: >-
-          {% if states('switch.switch_ventilation_relay_1') == 'on' %}
-            off
-          {% else %}
-            on
-          {% endif %}
-        speed_template: >-
-          {% if states('switch.switch_ventilation_relay_2') == 'on' %}
-            medium
-          {% elif states('switch.switch_ventilation_relay_3') == 'on' %}
-            high
-          {% else %}
-            low
-          {% endif %}
-        turn_on:
-          service: switch.turn_off
-          data:
-            entity_id: switch.switch_ventilation_relay_1
-        turn_off:
-          service: switch.turn_on
-          data:
-            entity_id: switch.switch_ventilation_relay_1
-        set_speed:
-          service_template: >-
-            {% if speed == 'low' %}
-              script.ventilation_fan_1
-            {% elif speed == 'medium' %}
-              script.ventilation_fan_2
-            {% elif speed == 'high' %}
-              script.ventilation_fan_3
-            {% endif %}
-        speeds:
-          - 'low'
-          - 'medium'
-          - 'high'
-
-frontend:
-  themes: !include_dir_merge_named themes
-
-lovelace:
-  mode: yaml
-  resources:
-    - type: module
-      url: /hacsfiles/custom-header/custom-header.js
-    - type: module
-      url: /hacsfiles/lovelace-time-picker-card/time-picker-card.js
-    - type: module
-      url: /hacsfiles/fan-control-entity-row/fan-control-entity-row.js
 
 logger:
   default: info
@@ -170,7 +71,6 @@ logbook:
   exclude:
     entities:
       - automation.service_make_full_backup
-      - automation.update_available_notification
       - device_tracker.christian_iphone
       - sensor.christian_activity
       - sensor.christian_average_active_pace
@@ -186,7 +86,6 @@ logbook:
       - sensor.christian_sim_1
       - sensor.christian_ssid
       - sensor.christian_steps
-      - sensor.current_ha_version
       - sensor.elias_iphone_activity
       - sensor.elias_iphone_average_active_pace
       - sensor.elias_iphone_battery_level
@@ -201,7 +100,6 @@ logbook:
       - sensor.elias_iphone_sim_1
       - sensor.elias_iphone_ssid
       - sensor.elias_iphone_steps
-      - sensor.last_ha_version
       - sensor.plug_wlan_anna_chain_of_lights_esphome_version
       - sensor.time
       - sun.sun
@@ -212,9 +110,6 @@ history:
   exclude:
     entities:
       - automation.service_make_full_backup
-      - automation.update_available_notification
-      - binary_sensor.updater
-      - input_text.last_known_version_update
       - light.plug_wlan_anna_chain_of_lights_blue_led
       - light.plug_wlan_anna_chain_of_lights_red_led
       - light.wohnzimmer
@@ -249,15 +144,12 @@ history:
       - sensor.elias_iphone_sim_1
       - sensor.elias_iphone_ssid
       - sensor.elias_iphone_steps
-      - sensor.current_ha_version
       - sensor.geocoded_location
-      - sensor.last_ha_version
       - sensor.last_update_trigger
       - sensor.plug_wlan_anna_chain_of_lights_esphome_version
       - sensor.sim_1
       - sensor.ssid
       - sensor.time
-      - sensor.update_available
       - switch.elias_light_reboot
       - switch.plug_wlan_anna_chain_of_lights_reboot
       - switch.switch_wlan_elias_light_reboot

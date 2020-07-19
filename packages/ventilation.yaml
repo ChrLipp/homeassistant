@@ -1,0 +1,125 @@
+########
+# Package for my heat-recovery ventilation (kontrollierte Wohnraumlüftung).
+# The ventilation is controlled by esphome / switch_wlan_ventilation, a Sonoff 4CH Pro R2.
+# Relay 4 is unused by the moment.
+########
+
+# A home assistant fan entity to control the Wohnraumlüftung
+fan:
+  - platform: template
+    fans:
+      ventilation_fan:
+        friendly_name: "Ventilator Wohnraumlüftung"
+        value_template: >-
+          {% if states('switch.switch_ventilation_relay_1') == 'on' %}
+            off
+          {% else %}
+            on
+          {% endif %}
+        speed_template: >-
+          {% if states('switch.switch_ventilation_relay_2') == 'on' %}
+            medium
+          {% elif states('switch.switch_ventilation_relay_3') == 'on' %}
+            high
+          {% else %}
+            low
+          {% endif %}
+        turn_on:
+          service: switch.turn_off
+          data:
+            entity_id: switch.switch_ventilation_relay_1
+        turn_off:
+          service: switch.turn_on
+          data:
+            entity_id: switch.switch_ventilation_relay_1
+        set_speed:
+          service_template: >-
+            {% if speed == 'low' %}
+              script.ventilation_fan_1
+            {% elif speed == 'medium' %}
+              script.ventilation_fan_2
+            {% elif speed == 'high' %}
+              script.ventilation_fan_3
+            {% endif %}
+        speeds:
+          - 'low'
+          - 'medium'
+          - 'high'
+
+# One sensor to display the state of the Wohnraumlüftung
+sensor:
+  - platform: template
+    sensors:
+      ventilation_state:
+        friendly_name: "Wohnraumlüftung"
+        icon_template: mdi:fan
+        value_template: >-
+          {% if states('switch.switch_ventilation_relay_1') == 'on' %}
+            off
+          {% elif states('switch.switch_ventilation_relay_2') == 'on' %}
+            medium
+          {% elif states('switch.switch_ventilation_relay_3') == 'on' %}
+            high
+          {% else %}
+            low
+          {% endif %}
+
+# Scripts for setting the speed
+script:
+  ventilation_fan_1:
+    alias: Set ventilation speed to low
+    icon: "mdi:fan"
+    description: 'Set the ventilation speed to low (1)'
+    sequence:
+      - service: switch.turn_off
+        data:
+          entity_id: switch.switch_ventilation_relay_1
+      - service: switch.turn_off
+        data:
+          entity_id: switch.switch_ventilation_relay_2
+      - service: switch.turn_off
+        data:
+          entity_id: switch.switch_ventilation_relay_3
+  ventilation_fan_2:
+    alias: Set ventilation speed to medium
+    icon: "mdi:fan"
+    description: 'Set the ventilation speed to medium (2)'
+    sequence:
+      - service: switch.turn_on
+        data:
+          entity_id: switch.switch_ventilation_relay_2
+  ventilation_fan_3:
+    alias: Set ventilation speed to high
+    icon: "mdi:fan"
+    description: 'Set the ventilation speed to high (3)'
+    sequence:
+      - service: switch.turn_on
+        data:
+          entity_id: switch.switch_ventilation_relay_3
+
+# Exclude the low level entities from logbook and history
+logbook:
+  exclude:
+    entities:
+      - script.ventilation_fan_1
+      - script.ventilation_fan_2
+      - script.ventilation_fan_3
+      - sensor.switch_ventilation_esphome_version
+      - switch.switch_ventilation_relay_1
+      - switch.switch_ventilation_relay_2
+      - switch.switch_ventilation_relay_3
+      - switch.switch_ventilation_relay_4
+      - fan.ventilation_fan
+
+history:
+  exclude:
+    entities:
+      - script.ventilation_fan_1
+      - script.ventilation_fan_2
+      - script.ventilation_fan_3
+      - sensor.switch_ventilation_esphome_version
+      - switch.switch_ventilation_relay_1
+      - switch.switch_ventilation_relay_2
+      - switch.switch_ventilation_relay_3
+      - switch.switch_ventilation_relay_4
+      - fan.ventilation_fan

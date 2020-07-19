@@ -1,0 +1,62 @@
+input_text:
+  last_known_version_update:
+    name: Last known (and notified) version available for update
+    icon: mdi:message-settings-variant-outline
+
+sensor:
+  - platform: version
+    name: Current HA version
+    source: local
+  - platform: version
+    name: Last HA version
+    source: hassio
+  - platform: template
+    sensors:
+      update_available:
+        friendly_name: "Home assistant update available"
+        value_template: >-
+          {% if states("sensor.last_ha_version") ==  "unknown" %}
+            false
+          {% elif states("sensor.last_ha_version") ==  states("input_text.last_known_version_update") %}
+            false
+          {% else %}
+            true
+          {% endif %}
+
+automation:
+- id: '1582890671844'
+  alias: 'Notify: Update Available'
+  description: Sends a telegram message when an update is available
+  trigger:
+  - entity_id: sensor.update_available
+    from: 'false'
+    platform: state
+    to: 'true'
+  action:
+  - data:
+      message: Meister, die Home Assistant version *{{ states("sensor.last_ha_version")}}* ist verfügbar. Derzeit läuft die Version {{ states("sensor.current_ha_version")}}.
+    service: notify.telegram
+  - service: input_text.set_value
+    data_template:
+      entity_id: input_text.last_known_version_update
+      value: '{{ states(''sensor.last_ha_version'') }}'
+
+logbook:
+  exclude:
+    entities:
+      - automation.update_available_notification
+      - binary_sensor.updater
+      - input_text.last_known_version_update
+      - sensor.current_ha_version
+      - sensor.last_ha_version
+      - sensor.update_available
+
+history:
+  exclude:
+    entities:
+      - automation.update_available_notification
+      - binary_sensor.updater
+      - input_text.last_known_version_update
+      - sensor.current_ha_version
+      - sensor.last_ha_version
+      - sensor.update_available
