@@ -14,16 +14,18 @@ on:
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
-  # This workflow contains a single job called "build"
-  build:
+  # This workflow contains a single job called "check"
+  check:
     # The type of runner that the job will run on
+    name: Home Assistant Config Check
     runs-on: ubuntu-latest
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      - uses: actions/checkout@v2
+      - name: Checkout
+        uses: actions/checkout@master
 
       # Runs the configuration check
-      - name: Home Assistant Configuration Check
+      - name: Run Home Assistant Config Check
         uses: ludeeus/action-ha-config-check@1.1.0
