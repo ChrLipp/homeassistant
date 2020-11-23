@@ -19,8 +19,12 @@
 
 ##  HACS
 - [automower](https://github.com/walthowd/ha-automower)
-- [Custom header](https://github.com/maykar/custom-header)
-- [Samsungtv Custom](https://github.com/roberodin/ha-samsungtv-custom)
+- [SamsungTV Custom](https://github.com/roberodin/ha-samsungtv-custom)
+- [SamsungTV Tizen](https://github.com/jaruba/ha-samsungtv-tizen)
+- [Google Dark Theme](https://github.com/JuanMTech/google_dark_theme)
+- [Atomic Calendar Revive](https://github.com/marksie1988/atomic-calendar-revive)
+- [Time Picker Card](https://github.com/GeorgeSG/lovelace-time-picker-card)
+- [Fan Control Entity Row](https://github.com/finity69x2/fan-control-entity-row)
 
 ##  Custom components
 - [BMV](https://www.bmv.at/service/muellabfuhrtermine.html)
@@ -33,6 +37,9 @@
   Mehrfach, führt zum Aussperren
 - Hue light turns on itself during the night
 - Presence detection
+- Switch to Local Tuya
+- Remove Hue
+- Test Husqvarna Automower
 
 ## Fixed
 

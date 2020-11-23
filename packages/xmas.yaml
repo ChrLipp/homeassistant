@@ -1,0 +1,28 @@
+automation:
+- id: '1606158583656'
+  alias: 'Service: turn on x-mas lights'
+  description: 'Schaltet die Weihnachtsbeleuchtung ein'
+  trigger:
+  - platform: time
+    at: '17:00'
+  action:
+  action:
+    service: switch.turn_on
+    entity_id:
+      - switch.plug_wlan_04
+- id: '1606158583657'
+  alias: 'Service: turn off x-mas lights'
+  description: 'Schaltet die Weihnachtsbeleuchtung aus'
+  trigger:
+  - platform: time
+    at: '23:00'
+  action:
+    service: switch.turn_off
+    entity_id:
+      - switch.plug_wlan_04
+
+history:
+  exclude:
+    entities:
+      - automation.service_turn_on_x_mas_lights
+      - automation.service_turn_off_x_mas_lights
