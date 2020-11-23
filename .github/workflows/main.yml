@@ -24,8 +24,13 @@ jobs:
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - name: Checkout
-        uses: actions/checkout@master
+        uses: actions/checkout@main
 
+      # Provides secrets.yaml
+      - run: mv travis_secrets.yaml secrets.yaml
+        
       # Runs the configuration check
       - name: Run Home Assistant Config Check
         uses: ludeeus/action-ha-config-check@1.1.0
+        with:
+          ha_version: "latest"
