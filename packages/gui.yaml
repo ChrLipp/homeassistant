@@ -5,8 +5,8 @@ lovelace:
   mode: yaml
   resources:
     - type: module
-      url: /hacsfiles/custom-header/custom-header.js
-    - type: module
       url: /hacsfiles/lovelace-time-picker-card/time-picker-card.js
     - type: module
       url: /hacsfiles/fan-control-entity-row/fan-control-entity-row.js
+    - type: module
+      url: /hacsfiles/atomic-calendar-revive/atomic-calendar-revive.js

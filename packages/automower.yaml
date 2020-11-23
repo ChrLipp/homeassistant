@@ -1,3 +1,10 @@
+# Error State
+#
+# lastErrorCode | lastErrorMessage
+#             2 | No loop signal (Kein Schleifensignal)
+#            10 | Upside down (Umgedreht)
+#            13 | No drive (kein Antrieb)
+
 automower:
   username: !secret husqvarna_username
   password: !secret husqvarna_password
@@ -24,13 +31,13 @@ automation:
   - entity_id: vacuum.miki
     platform: state
     to: 'Error'
+    for: "00:01:00"
   action:
-  - data:
-      message: '*Achtung:* Miki steckt!'
+  - data_template:
+      message: "*Achtung:* Miki steckt! ({{state_attr('vacuum.miki', 'lastErrorMessage')}})"
     service: notify.telegram
   - data_template:
       message: "{{ states.vacuum.miki }}"
-#      message: states.vacuum.miki
     service: system_log.write
 
 logbook:

@@ -1,0 +1,10 @@
+# Google account for calendar
+# Set track_new_calendar to true during setup
+google:
+  client_id: !secret google_client_id
+  client_secret: !secret google_client_secret
+  track_new_calendar: false
+
+# Text to speech
+tts:
+  - platform: google_translate

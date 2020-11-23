@@ -1,13 +1,4 @@
 background: var(--background-image)
-custom_header:
-  compact_mode: true
-  background: var(--app-header-background-color)
-  elements_color: var(--app-header-text-color)
-  active_tab_color: var(--state-icon-active-color)
-  tab_indicator_color: var(--state-icon-active-color)
-  header_text: Zuhause
-  button_text:
-    options: '{{ hours24 }}:{{ minutesLZ }}'
 title: Home
 views:
   - badges:
@@ -17,6 +8,12 @@ views:
     cards:
       - entity: weather.home
         type: weather-forecast
+      - type: "custom:atomic-calendar-revive"
+        fullDayEventText: "Ganzer Tag"
+        noEventsForNextDaysText: "Keine Ereignisse in den nächsten Tagen"
+        untilText: "bis"
+        entities:
+        - entity: calendar.familie      
       - type: entities
         title: Abfalltermine
         show_header_toggle: false

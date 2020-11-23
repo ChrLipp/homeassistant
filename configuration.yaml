@@ -6,17 +6,6 @@ default_config:
 homeassistant:
   packages: !include_dir_named packages/
 
-# SSL Access
-http:
-  ssl_certificate: !secret ssl_certificate
-  ssl_key: !secret ssl_key
-  ip_ban_enabled: True
-  login_attempts_threshold: 2
-
-# Text to speech
-tts:
-  - platform: google_translate
-
 media_player:
   - platform: enigma2
     host: 10.0.0.104
@@ -43,17 +32,6 @@ switch:
     host: 10.0.0.101
     mac: !secret diskstation_mac
     name: "Diskstation"
-
-telegram_bot:
-  - platform: broadcast
-    api_key: !secret telegram_token
-    allowed_chat_ids:
-      - !secret telegram_chat_id
-
-notify:
-  - name: telegram
-    platform: telegram
-    chat_id: !secret telegram_chat_id
 
 sensor:
   - platform: time_date

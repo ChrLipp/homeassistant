@@ -16,6 +16,7 @@ known_devices.yaml
 # Configuration files
 home-assistant_v2.db
 tv-token.txt
+google_calendars.yaml
 
 # Python-specific stuff
 **/__pycache__/
