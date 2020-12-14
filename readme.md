@@ -43,4 +43,4 @@
 
 ## Fixed
 
-- Elias switch restart turns off the light (won't fix)
+- Renamed master branch to main, see https://dev.to/rhymu8354/git-renaming-the-master-branch-137b
