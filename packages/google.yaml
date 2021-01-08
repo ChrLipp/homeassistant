@@ -8,3 +8,10 @@ google:
 # Text to speech
 tts:
   - platform: google_translate
+
+# exclude from history
+history:
+  exclude:
+    entities:
+      - calendar.familie
+      - calendar.feiertage_in_osterreich

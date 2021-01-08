@@ -1,4 +1,4 @@
-# Conneting Siemens Logo via modbus
+# Connecting Siemens Logo via modbus
 # Port 502 ist der Standard für Modbus-TCP
 #
 # How to enable modbus on Sienems Logo
@@ -16,6 +16,7 @@ modbus:
   port: 502
 
 switch:
+# Modbus switches, do not use directly as they have to be pulsed
   - platform: modbus
     coils:
     - name: modbus_switch_01
@@ -26,10 +27,61 @@ switch:
       hub: hub1
       slave: 1
       coil: 801
+    - name: modbus_switch_03
+      hub: hub1
+      slave: 1
+      coil: 802
+    - name: modbus_switch_04
+      hub: hub1
+      slave: 1
+      coil: 803
+    - name: modbus_switch_05
+      hub: hub1
+      slave: 1
+      coil: 804
+    - name: modbus_switch_06
+      hub: hub1
+      slave: 1
+      coil: 805
+    - name: modbus_switch_07
+      hub: hub1
+      slave: 1
+      coil: 806
+    - name: modbus_switch_08
+      hub: hub1
+      slave: 1
+      coil: 807
+    - name: modbus_switch_09
+      hub: hub1
+      slave: 1
+      coil: 808
+    - name: modbus_switch_10
+      hub: hub1
+      slave: 1
+      coil: 809
+    - name: modbus_switch_11
+      hub: hub1
+      slave: 1
+      coil: 810
+    - name: modbus_switch_12
+      hub: hub1
+      slave: 1
+      coil: 811
+    - name: modbus_switch_13
+      hub: hub1
+      slave: 1
+      coil: 812
+    - name: modbus_switch_14
+      hub: hub1
+      slave: 1
+      coil: 814
+
+# Template switches for direct use (250ms pulse)
   - platform: template
     switches:
-      blind_kitchen_left_up:
-        friendly_name: "Blind Kitchen Left Up"
+
+      blind_livingroom_window_up:
+        friendly_name: "Blind living room window up"
         value_template: "{{ is_state('switch.modbus_switch_01', 'on') }}"
         turn_on:
         - service: switch.turn_on
@@ -45,8 +97,8 @@ switch:
           data:
             entity_id: switch.modbus_switch_01
         icon_template: "mdi:blinds"
-      blind_kitchen_left_down:
-        friendly_name: "Blind Kitchen Left Down"
+      blind_livingroom_window_down:
+        friendly_name: "Blind living room window down"
         value_template: "{{ is_state('switch.modbus_switch_02', 'on') }}"
         turn_on:
         - service: switch.turn_on
@@ -62,13 +114,263 @@ switch:
           data:
             entity_id: switch.modbus_switch_02
         icon_template: "mdi:blinds"
+        
+      blind_livingroom_door_up:
+        friendly_name: "Blind living room door up"
+        value_template: "{{ is_state('switch.modbus_switch_03', 'on') }}"
+        turn_on:
+        - service: switch.turn_on
+          data:
+            entity_id: switch.modbus_switch_03
+        - delay:
+            milliseconds: 250
+        - service: switch.turn_off
+          data:
+            entity_id: switch.modbus_switch_03
+        turn_off:
+        - service: switch.turn_off
+          data:
+            entity_id: switch.modbus_switch_03
+        icon_template: "mdi:blinds"
+      blind_livingroom_door_down:
+        friendly_name: "Blind living room door down"
+        value_template: "{{ is_state('switch.modbus_switch_04', 'on') }}"
+        turn_on:
+        - service: switch.turn_on
+          data:
+            entity_id: switch.modbus_switch_04
+        - delay:
+            milliseconds: 250
+        - service: switch.turn_off
+          data:
+            entity_id: switch.modbus_switch_04
+        turn_off:
+        - service: switch.turn_off
+          data:
+            entity_id: switch.modbus_switch_04
+        icon_template: "mdi:blinds"
+        
+      blind_kitchen_door_up:
+        friendly_name: "Blind kitchen door up"
+        value_template: "{{ is_state('switch.modbus_switch_05', 'on') }}"
+        turn_on:
+        - service: switch.turn_on
+          data:
+            entity_id: switch.modbus_switch_05
+        - delay:
+            milliseconds: 250
+        - service: switch.turn_off
+          data:
+            entity_id: switch.modbus_switch_05
+        turn_off:
+        - service: switch.turn_off
+          data:
+            entity_id: switch.modbus_switch_05
+        icon_template: "mdi:blinds"
+      blind_kitchen_door_down:
+        friendly_name: "Blind kitchen door down"
+        value_template: "{{ is_state('switch.modbus_switch_06', 'on') }}"
+        turn_on:
+        - service: switch.turn_on
+          data:
+            entity_id: switch.modbus_switch_06
+        - delay:
+            milliseconds: 250
+        - service: switch.turn_off
+          data:
+            entity_id: switch.modbus_switch_06
+        turn_off:
+        - service: switch.turn_off
+          data:
+            entity_id: switch.modbus_switch_06
+        icon_template: "mdi:blinds"
+
+      blind_kitchen_left_up:
+        friendly_name: "Blind kitchen left up"
+        value_template: "{{ is_state('switch.modbus_switch_07', 'on') }}"
+        turn_on:
+        - service: switch.turn_on
+          data:
+            entity_id: switch.modbus_switch_07
+        - delay:
+            milliseconds: 250
+        - service: switch.turn_off
+          data:
+            entity_id: switch.modbus_switch_07
+        turn_off:
+        - service: switch.turn_off
+          data:
+            entity_id: switch.modbus_switch_07
+        icon_template: "mdi:blinds"
+      blind_kitchen_left_down:
+        friendly_name: "Blind kitchen left down"
+        value_template: "{{ is_state('switch.modbus_switch_08', 'on') }}"
+        turn_on:
+        - service: switch.turn_on
+          data:
+            entity_id: switch.modbus_switch_08
+        - delay:
+            milliseconds: 250
+        - service: switch.turn_off
+          data:
+            entity_id: switch.modbus_switch_08
+        turn_off:
+        - service: switch.turn_off
+          data:
+            entity_id: switch.modbus_switch_08
+        icon_template: "mdi:blinds"
+
+      blind_kitchen_right_up:
+        friendly_name: "Blind kitchen right up"
+        value_template: "{{ is_state('switch.modbus_switch_09', 'on') }}"
+        turn_on:
+        - service: switch.turn_on
+          data:
+            entity_id: switch.modbus_switch_09
+        - delay:
+            milliseconds: 250
+        - service: switch.turn_off
+          data:
+            entity_id: switch.modbus_switch_09
+        turn_off:
+        - service: switch.turn_off
+          data:
+            entity_id: switch.modbus_switch_09
+        icon_template: "mdi:blinds"
+      blind_kitchen_right_down:
+        friendly_name: "Blind kitchen right down"
+        value_template: "{{ is_state('switch.modbus_switch_10', 'on') }}"
+        turn_on:
+        - service: switch.turn_on
+          data:
+            entity_id: switch.modbus_switch_10
+        - delay:
+            milliseconds: 250
+        - service: switch.turn_off
+          data:
+            entity_id: switch.modbus_switch_10
+        turn_off:
+        - service: switch.turn_off
+          data:
+            entity_id: switch.modbus_switch_10
+        icon_template: "mdi:blinds"
+
+      blind_bedroom_up:
+        friendly_name: "Blind bedroom up"
+        value_template: "{{ is_state('switch.modbus_switch_11', 'on') }}"
+        turn_on:
+        - service: switch.turn_on
+          data:
+            entity_id: switch.modbus_switch_11
+        - delay:
+            milliseconds: 250
+        - service: switch.turn_off
+          data:
+            entity_id: switch.modbus_switch_11
+        turn_off:
+        - service: switch.turn_off
+          data:
+            entity_id: switch.modbus_switch_11
+        icon_template: "mdi:blinds"
+      blind_bedroom_down:
+        friendly_name: "Blind bedroom down"
+        value_template: "{{ is_state('switch.modbus_switch_12', 'on') }}"
+        turn_on:
+        - service: switch.turn_on
+          data:
+            entity_id: switch.modbus_switch_12
+        - delay:
+            milliseconds: 250
+        - service: switch.turn_off
+          data:
+            entity_id: switch.modbus_switch_12
+        turn_off:
+        - service: switch.turn_off
+          data:
+            entity_id: switch.modbus_switch_12
+        icon_template: "mdi:blinds"
+
+      blind_all_up:
+        friendly_name: "All blinds up"
+        value_template: "{{ is_state('switch.modbus_switch_13', 'on') }}"
+        turn_on:
+        - service: switch.turn_on
+          data:
+            entity_id: switch.modbus_switch_13
+        - delay:
+            milliseconds: 250
+        - service: switch.turn_off
+          data:
+            entity_id: switch.modbus_switch_13
+        turn_off:
+        - service: switch.turn_off
+          data:
+            entity_id: switch.modbus_switch_13
+        icon_template: "mdi:blinds"
+      blind_all_down:
+        friendly_name: "All Blinds down"
+        value_template: "{{ is_state('switch.modbus_switch_14', 'on') }}"
+        turn_on:
+        - service: switch.turn_on
+          data:
+            entity_id: switch.modbus_switch_14
+        - delay:
+            milliseconds: 250
+        - service: switch.turn_off
+          data:
+            entity_id: switch.modbus_switch_14
+        turn_off:
+        - service: switch.turn_off
+          data:
+            entity_id: switch.modbus_switch_14
+        icon_template: "mdi:blinds"
 
 logbook:
   exclude:
     entities:
       - switch.modbus_switch_01
+      - switch.modbus_switch_02
+      - switch.modbus_switch_03
+      - switch.modbus_switch_04
+      - switch.modbus_switch_05
+      - switch.modbus_switch_06
+      - switch.modbus_switch_07
+      - switch.modbus_switch_08
+      - switch.modbus_switch_09
+      - switch.modbus_switch_10
+      - switch.modbus_switch_11
+      - switch.modbus_switch_12
+      - switch.modbus_switch_13
+      - switch.modbus_switch_14
 
 history:
   exclude:
     entities:
       - switch.modbus_switch_01
+      - switch.modbus_switch_02
+      - switch.modbus_switch_03
+      - switch.modbus_switch_04
+      - switch.modbus_switch_05
+      - switch.modbus_switch_06
+      - switch.modbus_switch_07
+      - switch.modbus_switch_08
+      - switch.modbus_switch_09
+      - switch.modbus_switch_10
+      - switch.modbus_switch_11
+      - switch.modbus_switch_12
+      - switch.modbus_switch_13
+      - switch.modbus_switch_14
+      - switch.blind_livingroom_window_up
+      - switch.blind_livingroom_window_down
+      - switch.blind_livingroom_door_up
+      - switch.blind_livingroom_door_down
+      - switch.blind_kitchen_door_up
+      - switch.blind_kitchen_door_down
+      - switch.blind_kitchen_left_up
+      - switch.blind_kitchen_left_down
+      - switch.blind_kitchen_right_up
+      - switch.blind_kitchen_right_down
+      - switch.blind_bedroom_up
+      - switch.blind_bedroom_down
+      - switch.blind_all_up
+      - switch.blind_all_down

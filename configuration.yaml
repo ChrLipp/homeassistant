@@ -40,10 +40,10 @@ sensor:
 
 logger:
   default: info
-  logs:
-    custom_components.waste_at_bmv: debug
-    homeassistant.components.modbus: debug
-    pymodbus.client: debug
+#  logs:
+#    custom_components.waste_at_bmv: debug
+#    homeassistant.components.modbus: debug
+#    pymodbus.client: debug
 
 logbook:
   exclude:

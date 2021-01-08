@@ -24,16 +24,20 @@ automation:
   - platform: time
     at: '23:00'
   action:
-    service: switch.turn_off
-    entity_id:
-      - switch.plug_wlan_02
-      - switch.plug_wlan_03
-      - switch.plug_wlan_04
-      - switch.plug_wlan_05
-      - switch.plug_wlan_06
-      - switch.plug_wlan_07
-      - switch.plug_wlan_08
-      - switch.plug_wlan_anna_chain_of_lights
+    - service: switch.turn_on
+      entity_id: switch.blind_livingroom_window_down
+    - service: switch.turn_on
+      entity_id: switch.blind_bedroom_down
+    - service: switch.turn_off
+      entity_id:
+        - switch.plug_wlan_02
+        - switch.plug_wlan_03
+        - switch.plug_wlan_04
+        - switch.plug_wlan_05
+        - switch.plug_wlan_06
+        - switch.plug_wlan_07
+        - switch.plug_wlan_08
+        - switch.plug_wlan_anna_chain_of_lights
 
 history:
   exclude:
