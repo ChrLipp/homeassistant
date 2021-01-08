@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/ChrLipp/ha-config.svg?branch=master)](https://travis-ci.org/ChrLipp/ha-config)
+[![Build Status](https://travis-ci.org/ChrLipp/ha-config.svg)](https://travis-ci.org/ChrLipp/ha-config)
 
 # My Home Assistant installation
 
