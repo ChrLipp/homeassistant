@@ -34,3 +34,6 @@ google_calendars.yaml
 **/lib/
 **/src/
 **/platformio.ini
+
+# Backups
+/siemens_logo/UDF.rar
