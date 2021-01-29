@@ -40,11 +40,12 @@ sensor:
 
 logger:
   default: info
-#  logs:
+  logs:
+    custom_components.localtuya: debug
 #    custom_components.waste_at_bmv: debug
 #    homeassistant.components.modbus: debug
 #    pymodbus.client: debug
-
+     
 logbook:
   exclude:
     entities:
@@ -78,11 +79,8 @@ logbook:
       - sensor.elias_iphone_sim_1
       - sensor.elias_iphone_ssid
       - sensor.elias_iphone_steps
-      - sensor.plug_wlan_anna_chain_of_lights_esphome_version
       - sensor.time
       - sun.sun
-      - switch.plug_wlan_anna_chain_of_lights_reboot
-      - switch.switch_wlan_elias_light_reboot
 
 history:
   exclude:
@@ -124,13 +122,9 @@ history:
       - sensor.elias_iphone_steps
       - sensor.geocoded_location
       - sensor.last_update_trigger
-      - sensor.plug_wlan_anna_chain_of_lights_esphome_version
       - sensor.sim_1
       - sensor.ssid
       - sensor.time
-      - switch.elias_light_reboot
-      - switch.plug_wlan_anna_chain_of_lights_reboot
-      - switch.switch_wlan_elias_light_reboot
 
 group: !include groups.yaml
 automation: !include automations.yaml

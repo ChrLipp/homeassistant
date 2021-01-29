@@ -1,19 +1,19 @@
 Connector;name
-I1;Rollo WZ rauf
-I2;Rollo WZ runter
-I3;Rollo  rauf
-I4;Rollo  runter
-I5;Rollo  rauf
-I6;Rollo  runter
-I7;Rollo  rauf
-I8;Rollo  runter
-I9;Rollo  rauf
-I10;Rollo  runter
-I11;Rollo  rauf
-I12;Rollo  runter
-I13;Rollo  rauf
+I1;Rollo WZ Fenster rauf
+I2;Rollo WZ Fenster runter
+I3;Rollo WZ Tür rauf
+I4;Rollo WZ Tür runter
+I5;Rollo KÜ Tür rauf
+I6;Rollo KÜ Tür runter
+I7;Rollo KÜ Fenster links rauf
+I8;Rollo KÜ Fenster links runter
+I9;Rollo KÜ Fenster rechts rauf
+I10;Rollo KÜ Fenster rechts runter
+I11;Rollo SZ Fenster rauf
+I12;Rollo SZ Fenster runter
+I13;Rollo Alles rauf
 I14;Rollo  runter
-I15;Rollo  rauf
+I15;Rollo Alles runter
 I16;Rollo  runter
 I17;Rollo  rauf
 I18;Rollo  runter
@@ -23,21 +23,21 @@ I21;I 02/21
 I22;I 02/22
 I23;I 02/23
 I24;I 02/24
-NI1;Rollo WZ rauf
-NI2;Rollo WZ runter
-NI3;Rollo  rauf
-NI4;Rollo  runter
-NI5;Rollo  rauf
-NI6;Rollo  runter
-NI7;Rollo  rauf
-NI8;Rollo  runter
-NI9;Rollo  rauf
-NI10;Rollo  runter
-NI11;Rollo  rauf
-NI12;Rollo  runter
-NI13;Rollo  rauf
+NI1;Rollo WZ Fenster rauf
+NI2;Rollo WZ Fenster runter
+NI3;Rollo WZ Tür rauf
+NI4;Rollo WZ Tür runter
+NI5;Rollo KÜ Tür rauf
+NI6;Rollo KÜ Tür runter
+NI7;Rollo KÜ Fenster links rauf
+NI8;Rollo KÜ Fenster links runter
+NI9;Rollo KÜ Fenster rechts rauf
+NI10;Rollo KÜ Fenster rechts runter
+NI11;Rollo SZ Fenster rauf
+NI12;Rollo SZ Fenster runter
+NI13;Rollo Alles rauf
 NI14;Rollo  runter
-NI15;Rollo  rauf
+NI15;Rollo Alles runter
 NI16;Rollo  runter
 NI17;102.0
 NI18;102.1
@@ -167,18 +167,18 @@ AI5;AI 02/05
 AI6;AI 02/06
 AI7;AI 02/07
 AI8;AI 02/08
-Q1;Rollo WZ rauf
-Q2;Rollo WZ runter
-Q3;Rollo  rauf
-Q4;Rollo  runter
-Q5;Rollo  rauf
-Q6;Rollo  runter
-Q7;Rollo  rauf
-Q8;Rollo  runter
-Q9;Rollo  rauf
-Q10;Rollo  runter
-Q11;Rollo  rauf
-Q12;Rollo  runter
+Q1;Rollo WZ Fenster rauf
+Q2;Rollo WZ Fenster runter
+Q3;Rollo WZ Tür rauf
+Q4;Rollo WZ Tür runter
+Q5;Rollo KÜ Tür rauf
+Q6;Rollo KÜ Tür runter
+Q7;Rollo KÜ Fenster links rauf
+Q8;Rollo KÜ Fenster links runter
+Q9;Rollo KÜ Fenster rechts rauf
+Q10;Rollo KÜ Fenster rechts runter
+Q11;Rollo SZ rauf
+Q12;Rollo SZ runter
 Q13;Rollo  rauf
 Q14;Rollo  runter
 Q15;Rollo  rauf
@@ -323,12 +323,12 @@ NQ61;215.4
 NQ62;215.5
 NQ63;215.6
 NQ64;215.7
-NAQ1;216
-NAQ2;218
-NAQ3;220
-NAQ4;222
-NAQ5;224
-NAQ6;226
+NAQ1;Rollo KÜ Fenster rechts
+NAQ2;Rollo SZ
+NAQ3;Rollo WZ Fenster
+NAQ4;Rollo KÜ Fenster links
+NAQ5;Rollo WZ Tür
+NAQ6;Rollo KÜ Tür
 NAQ7;228
 NAQ8;230
 NAQ9;232

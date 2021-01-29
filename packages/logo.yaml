@@ -7,13 +7,44 @@
 # - Right click on Etnernet Connections -> Add server connection -> Modbus Connection
 # - Upload your program to LOGO
 #
-# Coil = VB-adress * 8 + bit (V100.0 = 8 * 100 + 0 = 800)
+# Coil = VB-address * 8 + bit (V100.0 = 8 * 100 + 0 = 800)
+# Register = VW-address / 2 (VW124 / 2 = register 62)
+# See https://community.home-assistant.io/t/siemens-logo-8/129281/18
 
 modbus:
   name: hub1
   type: tcp
   host: 10.0.0.211
   port: 502
+
+sensor:
+  - platform: modbus
+    scan_interval: 10
+    registers:
+      - name: modbus_sensor_01
+        hub: hub1
+        slave: 1
+        register: 58
+      - name: modbus_sensor_02
+        hub: hub1
+        slave: 1
+        register: 59
+      - name: modbus_sensor_03
+        hub: hub1
+        slave: 1
+        register: 60
+      - name: modbus_sensor_04
+        hub: hub1
+        slave: 1
+        register: 61
+      - name: modbus_sensor_05
+        hub: hub1
+        slave: 1
+        register: 62
+      - name: modbus_sensor_06
+        hub: hub1
+        slave: 1
+        register: 63
 
 switch:
 # Modbus switches, do not use directly as they have to be pulsed
@@ -328,6 +359,12 @@ switch:
 logbook:
   exclude:
     entities:
+      - sensor.modbus_sensor_01
+      - sensor.modbus_sensor_02
+      - sensor.modbus_sensor_03
+      - sensor.modbus_sensor_04
+      - sensor.modbus_sensor_05
+      - sensor.modbus_sensor_06
       - switch.modbus_switch_01
       - switch.modbus_switch_02
       - switch.modbus_switch_03
@@ -346,6 +383,12 @@ logbook:
 history:
   exclude:
     entities:
+      - sensor.modbus_sensor_01
+      - sensor.modbus_sensor_02
+      - sensor.modbus_sensor_03
+      - sensor.modbus_sensor_04
+      - sensor.modbus_sensor_05
+      - sensor.modbus_sensor_06
       - switch.modbus_switch_01
       - switch.modbus_switch_02
       - switch.modbus_switch_03

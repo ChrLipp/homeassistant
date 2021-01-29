@@ -47,16 +47,6 @@ views:
         title: Wecker Elias
         type: horizontal-stack
       - cards:
-          - entity: light.blumenlampe
-            hold_action:
-              action: more-info
-            name: Blumenlampe
-            show_icon: true
-            show_name: true
-            state_color: true
-            tap_action:
-              action: toggle
-            type: entity-button
           - entity: light.elias_light
             hold_action:
               action: more-info
@@ -91,6 +81,19 @@ views:
             state_color: true
         title: Computer
         type: horizontal-stack
+      - type: entities
+        entities:
+          - cover.rain
+          - cover.all
+          - type: divider
+          - cover.kitchen_door
+          - cover.kitchen_window
+          - type: divider
+          - cover.livingroom_door
+          - cover.livingroom_window
+          - type: divider
+          - cover.bedroom_window
+        title: Rollos
       - cards:
         - type: picture-elements
           camera_image: camera.miki

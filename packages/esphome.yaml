@@ -1,0 +1,37 @@
+# Additional configs for ESPHome devices
+
+logbook:
+  exclude:
+    entities:
+      - sensor.plug_wlan_02_esphome_version
+      - switch.plug_wlan_02_reboot
+      
+      - sensor.plug_wlan_03_esphome_version
+      - switch.plug_wlan_03_reboot
+      
+      - sensor.plug_wlan_anna_chain_of_lights_esphome_version
+      - switch.plug_wlan_anna_chain_of_lights_reboot
+      
+      - sensor.switch_ventilation_esphome_version
+      - switch.switch_ventilation_reboot
+      
+      - sensor.switch_wlan_elias_light_esphome_version
+      - switch.switch_wlan_elias_light_reboot
+
+history:
+  exclude:
+    entities:
+      - sensor.plug_wlan_02_esphome_version
+      - switch.plug_wlan_02_reboot
+      
+      - sensor.plug_wlan_03_esphome_version
+      - switch.plug_wlan_03_reboot
+      
+      - sensor.plug_wlan_anna_chain_of_lights_esphome_version
+      - switch.plug_wlan_anna_chain_of_lights_reboot
+      
+      - sensor.switch_ventilation_esphome_version
+      - switch.switch_ventilation_reboot
+      
+      - sensor.switch_wlan_elias_light_esphome_version
+      - switch.switch_wlan_elias_light_reboot

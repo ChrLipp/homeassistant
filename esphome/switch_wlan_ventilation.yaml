@@ -99,6 +99,11 @@ binary_sensor:
     name: "${friendly_name} Button 4"
     internal: true
 
+text_sensor:
+# Reports the ESPHome Version with compile date
+  - platform: version
+    name: ${friendly_name} ESPHome Version
+
 switch:
   - platform: gpio
     id: relay1
@@ -123,11 +128,8 @@ switch:
     name: "${friendly_name} Relay 4"
     pin: GPIO15
     icon: mdi:electric-switch
-
-text_sensor:
-# Reports the ESPHome Version with compile date
-  - platform: version
-    name: ${friendly_name} ESPHome Version
+  - platform: restart
+    name: "${friendly_name} REBOOT"
 
 status_led:
   pin:
