@@ -214,6 +214,8 @@ automation:
       entity_id: cover.kitchen_window
     - service: cover.close_cover
       entity_id: cover.livingroom_door
+    - service: cover.close_cover
+      entity_id: cover.bedroom_window
   mode: single
 
 history:

@@ -1,0 +1,184 @@
+# Device: 2-Channel Wi-Fi Switch Module (QS-WIFI-S04-2C)
+# Link to device: https://de.aliexpress.com/item/4000402866869.html
+# Link to wiring diagram: https://ae01.alicdn.com/kf/H5e94d23ffe344f72beebc0ed45abf9c6g.jpg
+# Switch pins can handle 220V. Device has a buzzer instead of a LED for status info.
+#
+# Flashed with Tuya-Convert, see
+# - https://www.youtube.com/watch?v=dt5-iZc4_qU
+# - https://www.heise.de/ct/artikel/Tuya-Convert-IoT-Geraete-ohne-Loeten-vom-Cloud-Zwang-befreien-4283623.html
+#
+# Config: 
+# - https://templates.blakadder.com/moes-MS-104B.html
+# - https://community.home-assistant.io/t/qs-wifi-s04-2c/195663
+# - https://youtu.be/cBtZAbc9_q8
+#
+# GPIO  Mode  Done Description
+#  2    in    -    Button (only accessible when case is removed)
+#  4    out   -    Buzzer (works with PWM @ 800hz)
+# 12    in    -    Switch 2
+# 13    in    -    Switch 1
+# 14    out   -    Relay 1
+# 15    out   -    Relay 2
+
+
+substitutions:
+  device_name: switch_wlan_elias_cover
+  device_description: Schalter Dachflächenfenster Rollo Elias
+  friendly_name: Switch Elias Cover
+  short_name: elias_cover
+
+esphome:
+  name: ${device_name}
+  comment: ${device_description}
+  platform: ESP8266
+  board: esp01_1m
+  on_boot:
+    priority: -100
+    then:
+      - delay: 1s
+      - lambda: 'id(wait_on_init) = true;'
+
+# At power on, a on_click of the binary sensors is triggered.
+# To handle this, I introduced a global variable (a gate) which is opened 1s after boot is completed.
+globals:
+  - id: wait_on_init
+    type: bool
+    restore_value: no
+
+wifi:
+  ssid: !secret wlan_ssid
+  password: !secret wlan_password
+  manual_ip:
+    static_ip: 10.0.0.212
+    gateway: 10.0.0.138
+    subnet: 255.255.255.0
+    dns1: 10.0.0.134
+    dns2: 8.8.8.8
+
+  # Enable fallback hotspot (captive portal) in case wifi connection fails
+  ap:
+    ssid: "${short_name} AP"
+    password: !secret captive_password
+
+captive_portal:
+
+# Enable logging
+logger:
+#  level: DEBUG
+  logs:
+    sensor: ERROR
+    duty_cycle: ERROR
+
+# Enable Home Assistant API
+api:
+
+# Enable Over The Air update (OTA)
+ota:
+#  password: "adsf".  ## ToDo: protect ota with password
+
+# Enable web server
+web_server:
+  port: 80
+
+text_sensor:
+# Reports the ESPHome Version with compile date
+  - platform: version
+    name: ${friendly_name} ESPHome Version
+
+sensor:
+# report WLAN strength
+  - platform: wifi_signal
+    name: ${friendly_name} Signal
+    update_interval: 60s
+# Reports how long the device has been powered (in minutes)
+  - platform: uptime
+    name: ${friendly_name} Uptime
+    filters:
+      - lambda: return x / 60.0;
+    unit_of_measurement: minutes
+# Duty cycle sensors for switch inputs "S1" and "S2"
+  - platform: duty_cycle
+    pin: GPIO13
+    internal: true
+    id: ${short_name}_in_switch1_sensor
+    name: "${short_name} Switch 1 Sensor"
+    update_interval: 20ms
+  - platform: duty_cycle
+    pin: GPIO12
+    internal: true
+    id: ${short_name}_in_switch2_sensor
+    name: "${short_name} Switch 2 Sensor"
+    update_interval: 20ms
+
+binary_sensor:
+# Template binary switch sensors monitor duty cycle sensors on GPIO pins.
+  - platform: template
+    id: ${short_name}_switch_1
+    name: "${friendly_name} Switch 1"
+    internal: true
+    lambda: |-
+      if (id(wait_on_init) == false) {
+          return false;
+      } else {
+        if (id(${short_name}_in_switch1_sensor).state < 95.0) {
+          return true;
+        } else {
+          return false;
+        }
+      }
+# on_click for momentatry (push) switch
+# on_state for std rocker switch
+    on_click:
+      then:
+        - if:
+            condition:
+              lambda: 'return id(wait_on_init) == true;'
+            then:
+              - light.toggle: ${short_name}_1
+  - platform: template
+    id: ${short_name}_switch_2
+    name: "${friendly_name} Switch 2"
+    internal: true
+    lambda: |-
+      if (id(wait_on_init) == false) {
+          return false;
+      } else {
+        if (id(${short_name}_in_switch2_sensor).state < 95.0) {
+          return true;
+        } else {
+          return false;
+        }
+      }
+# on_click for momentatry (push) switch
+# on_state for std rocker switch
+    on_click:
+      then:
+        - if:
+            condition:
+              lambda: 'return id(wait_on_init) == true;'
+            then:
+              - light.toggle: ${short_name}_2
+        
+light:
+  - platform: binary
+    name: "${friendly_name} 1"
+    id: "${short_name}_1"
+    output: relay1
+    restore_mode: ALWAYS_OFF
+  - platform: binary
+    name: "${friendly_name} 2"
+    id: "${short_name}_2"
+    output: relay2
+    restore_mode: ALWAYS_OFF
+
+output:
+  - platform: esp8266_pwm
+    pin: GPIO4
+    id: buzzer
+    frequency: 800 Hz
+  - platform: gpio
+    pin: GPIO14
+    id: relay1
+  - platform: gpio
+    pin: GPIO15
+    id: relay2
