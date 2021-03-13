@@ -8,12 +8,12 @@ homeassistant:
 
 media_player:
   - platform: enigma2
-    host: 10.0.0.104
+    host: vusolo4k.lan
     mac_address: !secret vuplus_mac
     password: !secret vusolo4k_password
     name: "Vu+ Solo4K"
   - platform: samsungtv_tizen
-    host: 10.0.0.103
+    host: samsung.lan
     mac: !secret sasmsung_mac
     port: 8002
 #    timeout: 30
@@ -25,11 +25,11 @@ media_player:
 
 switch:
   - platform: wake_on_lan
-    host: 10.0.0.102
+    host: arbeitszimmer.lan
     mac: !secret arbeitszimmer_mac
     name: "Arbeitszimmer"
   - platform: wake_on_lan
-    host: 10.0.0.101
+    host: diskstation.lan
     mac: !secret diskstation_mac
     name: "Diskstation"
 
@@ -45,7 +45,7 @@ logger:
 #    custom_components.waste_at_bmv: debug
 #    homeassistant.components.modbus: debug
 #    pymodbus.client: debug
-     
+
 logbook:
   exclude:
     entities:

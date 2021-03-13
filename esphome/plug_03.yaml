@@ -2,9 +2,9 @@
 # Energy Monitoring Smart Plug with button, blue and red LED.
 
 substitutions:
-  device_name: plug_wlan_03
+  device_name: plug_03
   device_description: Stecker 03
-  friendly_name: Plug Wlan 03
+  friendly_name: Plug 03
   short_name: Plug 03
   ip_adress: 10.0.0.203
 

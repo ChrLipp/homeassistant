@@ -11,15 +11,15 @@ fan:
       ventilation_fan:
         friendly_name: "Ventilator Wohnraumlüftung"
         value_template: >-
-          {% if states('switch.switch_ventilation_relay_1') == 'on' %}
+          {% if states('switch.ventilation_relay_1') == 'on' %}
             off
           {% else %}
             on
           {% endif %}
         speed_template: >-
-          {% if states('switch.switch_ventilation_relay_2') == 'on' %}
+          {% if states('switch.ventilation_relay_2') == 'on' %}
             medium
-          {% elif states('switch.switch_ventilation_relay_3') == 'on' %}
+          {% elif states('switch.ventilation_relay_3') == 'on' %}
             high
           {% else %}
             low
@@ -27,11 +27,11 @@ fan:
         turn_on:
           service: switch.turn_off
           data:
-            entity_id: switch.switch_ventilation_relay_1
+            entity_id: switch.ventilation_relay_1
         turn_off:
           service: switch.turn_on
           data:
-            entity_id: switch.switch_ventilation_relay_1
+            entity_id: switch.ventilation_relay_1
         set_speed:
           service_template: >-
             {% if speed == 'low' %}
@@ -54,11 +54,11 @@ sensor:
         friendly_name: "Wohnraumlüftung"
         icon_template: mdi:fan
         value_template: >-
-          {% if states('switch.switch_ventilation_relay_1') == 'on' %}
+          {% if states('switch.ventilation_relay_1') == 'on' %}
             off
-          {% elif states('switch.switch_ventilation_relay_2') == 'on' %}
+          {% elif states('switch.ventilation_relay_2') == 'on' %}
             medium
-          {% elif states('switch.switch_ventilation_relay_3') == 'on' %}
+          {% elif states('switch.ventilation_relay_3') == 'on' %}
             high
           {% else %}
             low
@@ -73,13 +73,13 @@ script:
     sequence:
       - service: switch.turn_off
         data:
-          entity_id: switch.switch_ventilation_relay_1
+          entity_id: switch.ventilation_relay_1
       - service: switch.turn_off
         data:
-          entity_id: switch.switch_ventilation_relay_2
+          entity_id: switch.ventilation_relay_2
       - service: switch.turn_off
         data:
-          entity_id: switch.switch_ventilation_relay_3
+          entity_id: switch.ventilation_relay_3
   ventilation_fan_2:
     alias: Set ventilation speed to medium
     icon: "mdi:fan"
@@ -87,7 +87,7 @@ script:
     sequence:
       - service: switch.turn_on
         data:
-          entity_id: switch.switch_ventilation_relay_2
+          entity_id: switch.ventilation_relay_2
   ventilation_fan_3:
     alias: Set ventilation speed to high
     icon: "mdi:fan"
@@ -95,7 +95,7 @@ script:
     sequence:
       - service: switch.turn_on
         data:
-          entity_id: switch.switch_ventilation_relay_3
+          entity_id: switch.ventilation_relay_3
 
 # Exclude the low level entities from logbook and history
 logbook:
@@ -104,11 +104,12 @@ logbook:
       - script.ventilation_fan_1
       - script.ventilation_fan_2
       - script.ventilation_fan_3
-      - sensor.switch_ventilation_esphome_version
-      - switch.switch_ventilation_relay_1
-      - switch.switch_ventilation_relay_2
-      - switch.switch_ventilation_relay_3
-      - switch.switch_ventilation_relay_4
+      - sensor.ventilation_esphome_version
+      - switch.ventilation_reboot
+      - switch.ventilation_relay_1
+      - switch.ventilation_relay_2
+      - switch.ventilation_relay_3
+      - switch.ventilation_relay_4
       - fan.ventilation_fan
 
 history:
@@ -117,9 +118,15 @@ history:
       - script.ventilation_fan_1
       - script.ventilation_fan_2
       - script.ventilation_fan_3
-      - sensor.switch_ventilation_esphome_version
-      - switch.switch_ventilation_relay_1
-      - switch.switch_ventilation_relay_2
-      - switch.switch_ventilation_relay_3
-      - switch.switch_ventilation_relay_4
+      - sensor.ventilation_esphome_version
+      - sensor.ventilation_uptime
+      - switch.ventilation_reboot
+      - switch.ventilation_relay_1
+      - switch.ventilation_relay_2
+      - switch.ventilation_relay_3
+      - switch.ventilation_relay_4
       - fan.ventilation_fan
+
+logger:
+  logs:
+    fan.ventilation_fan: debug

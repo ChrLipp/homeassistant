@@ -8,14 +8,14 @@ automation:
   action:
     service: switch.turn_on
     entity_id:
-      - switch.plug_wlan_02
-      - switch.plug_wlan_03
-      - switch.plug_wlan_04
-      - switch.plug_wlan_05
-      - switch.plug_wlan_06
-      - switch.plug_wlan_07
-      - switch.plug_wlan_08
-      - switch.plug_wlan_anna_chain_of_lights
+      - switch.plug_02
+      - switch.plug_03
+      - switch.plug_04
+      - switch.plug_05
+      - switch.plug_06
+      - switch.plug_07
+      - switch.plug_08
+      - switch.anna_chain_of_lights
 
 - id: '1606158583657'
   alias: 'Service: turn off x-mas lights'
@@ -30,14 +30,14 @@ automation:
       entity_id: cover.livingroom_window
     - service: switch.turn_off
       entity_id:
-        - switch.plug_wlan_02
-        - switch.plug_wlan_03
-        - switch.plug_wlan_04
-        - switch.plug_wlan_05
-        - switch.plug_wlan_06
-        - switch.plug_wlan_07
-        - switch.plug_wlan_08
-        - switch.plug_wlan_anna_chain_of_lights
+        - switch.plug_02
+        - switch.plug_03
+        - switch.plug_04
+        - switch.plug_05
+        - switch.plug_06
+        - switch.plug_07
+        - switch.plug_08
+        - switch.anna_chain_of_lights
 
 history:
   exclude:

@@ -22,10 +22,12 @@
 
 
 substitutions:
-  device_name: switch_wlan_elias_cover
+  device_name: switch_elias_cover
   device_description: Schalter Dachflächenfenster Rollo Elias
   friendly_name: Switch Elias Cover
-  short_name: elias_cover
+  short_name: Elias Cover
+  cover_name: Elias Dachflächenfenster
+  ip_adress: 10.0.0.212
 
 esphome:
   name: ${device_name}
@@ -45,22 +47,8 @@ globals:
     type: bool
     restore_value: no
 
-wifi:
-  ssid: !secret wlan_ssid
-  password: !secret wlan_password
-  manual_ip:
-    static_ip: 10.0.0.212
-    gateway: 10.0.0.138
-    subnet: 255.255.255.0
-    dns1: 10.0.0.134
-    dns2: 8.8.8.8
-
-  # Enable fallback hotspot (captive portal) in case wifi connection fails
-  ap:
-    ssid: "${short_name} AP"
-    password: !secret captive_password
-
-captive_portal:
+# Network settings
+<<: !include .network.yaml
 
 # Enable logging
 logger:
@@ -69,33 +57,7 @@ logger:
     sensor: ERROR
     duty_cycle: ERROR
 
-# Enable Home Assistant API
-api:
-
-# Enable Over The Air update (OTA)
-ota:
-#  password: "adsf".  ## ToDo: protect ota with password
-
-# Enable web server
-web_server:
-  port: 80
-
-text_sensor:
-# Reports the ESPHome Version with compile date
-  - platform: version
-    name: ${friendly_name} ESPHome Version
-
 sensor:
-# report WLAN strength
-  - platform: wifi_signal
-    name: ${friendly_name} Signal
-    update_interval: 60s
-# Reports how long the device has been powered (in minutes)
-  - platform: uptime
-    name: ${friendly_name} Uptime
-    filters:
-      - lambda: return x / 60.0;
-    unit_of_measurement: minutes
 # Duty cycle sensors for switch inputs "S1" and "S2"
   - platform: duty_cycle
     pin: GPIO13
@@ -110,8 +72,10 @@ sensor:
     name: "${short_name} Switch 2 Sensor"
     update_interval: 20ms
 
-binary_sensor:
 # Template binary switch sensors monitor duty cycle sensors on GPIO pins.
+# on_click for momentatry (push) switch
+# on_state for std rocker switch
+binary_sensor:
   - platform: template
     id: ${short_name}_switch_1
     name: "${friendly_name} Switch 1"
@@ -126,15 +90,17 @@ binary_sensor:
           return false;
         }
       }
-# on_click for momentatry (push) switch
-# on_state for std rocker switch
     on_click:
       then:
-        - if:
-            condition:
-              lambda: 'return id(wait_on_init) == true;'
-            then:
-              - light.toggle: ${short_name}_1
+        - lambda: |-
+            if (id(wait_on_init) == true) {
+              if (id(${short_name}).current_operation == COVER_OPERATION_IDLE) {
+                id(${short_name}).open();
+              } else {
+                id(${short_name}).stop();
+              }
+            }
+
   - platform: template
     id: ${short_name}_switch_2
     name: "${friendly_name} Switch 2"
@@ -149,27 +115,16 @@ binary_sensor:
           return false;
         }
       }
-# on_click for momentatry (push) switch
-# on_state for std rocker switch
     on_click:
       then:
-        - if:
-            condition:
-              lambda: 'return id(wait_on_init) == true;'
-            then:
-              - light.toggle: ${short_name}_2
-        
-light:
-  - platform: binary
-    name: "${friendly_name} 1"
-    id: "${short_name}_1"
-    output: relay1
-    restore_mode: ALWAYS_OFF
-  - platform: binary
-    name: "${friendly_name} 2"
-    id: "${short_name}_2"
-    output: relay2
-    restore_mode: ALWAYS_OFF
+        - lambda: |-
+            if (id(wait_on_init) == true) {
+              if (id(${short_name}).current_operation == COVER_OPERATION_IDLE) {
+                id(${short_name}).close();
+              } else {
+                id(${short_name}).stop();
+              }
+            }
 
 output:
   - platform: esp8266_pwm
@@ -182,3 +137,24 @@ output:
   - platform: gpio
     pin: GPIO15
     id: relay2
+
+cover:
+  - platform: time_based
+    id: ${short_name}
+    name: ${cover_name}
+    device_class: shutter
+    has_built_in_endstop: false
+
+    open_action:
+      - output.turn_off: relay2
+      - output.turn_on: relay1
+    open_duration: 50s
+
+    close_action:
+      - output.turn_off: relay1
+      - output.turn_on: relay2
+    close_duration: 50s
+
+    stop_action:
+      - output.turn_off: relay1
+      - output.turn_off: relay2

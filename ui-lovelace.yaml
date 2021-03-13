@@ -57,7 +57,7 @@ views:
             tap_action:
               action: toggle
             type: entity-button
-          - entity: switch.plug_wlan_anna_chain_of_lights
+          - entity: switch.anna_chain_of_lights
             hold_action:
               action: more-info
             name: Anna Lichterkette
@@ -68,6 +68,12 @@ views:
               action: toggle
             type: entity-button
             icon: 'mdi:lightbulb'
+          - entity: light.hochbett
+            name: Anna Hochbett
+            show_icon: true
+            show_name: true
+            state_color: true
+            type: entity-button
         title: Licht
         type: horizontal-stack
       - cards:

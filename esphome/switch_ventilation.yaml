@@ -4,10 +4,11 @@
 # Config: https://esphome-configs.io/devices/sonoff-4ch-pro-r2/
 
 substitutions:
-  device_name: switch_wlan_ventilation
+  device_name: switch_ventilation
   device_description: Schalter Kontrollierte Wohnraumlüftung
   friendly_name: Switch ventilation
-  short_name: Ventilation
+  short_name: ventilation
+  ip_adress: 10.0.0.205
 
 esphome:
   name: ${device_name}
@@ -15,47 +16,11 @@ esphome:
   platform: ESP8266
   board: esp01_1m
 
-wifi:
-  ssid: !secret wlan_ssid
-  password: !secret wlan_password
-  manual_ip:
-    static_ip: 10.0.0.205
-    gateway: 10.0.0.138
-    subnet: 255.255.255.0
-    dns1: 10.0.0.134
-    dns2: 8.8.8.8
-
-  # Enable fallback hotspot (captive portal) in case wifi connection fails
-  ap:
-    ssid: "${short_name} AP"
-    password: !secret captive_password
-
-captive_portal:
+# Network settings
+<<: !include .network.yaml
 
 # Enable logging
 logger:
-
-# Enable Home Assistant API
-api:
-
-# Enable Over The Air update (OTA)
-ota:
-
-# Enable web server
-web_server:
-  port: 80
-
-sensor:
-# report WLAN strength
-  - platform: wifi_signal
-    name: ${friendly_name} Signal
-    update_interval: 60s
-# Reports how long the device has been powered (in minutes)
-  - platform: uptime
-    name: ${friendly_name} Uptime
-    filters:
-      - lambda: return x / 60.0;
-    unit_of_measurement: minutes
 
 binary_sensor:
   - platform: gpio
@@ -66,7 +31,7 @@ binary_sensor:
       number: GPIO0
       mode: INPUT_PULLUP
       inverted: True
-    name: "${friendly_name} Button 1"
+    name: "${short_name} Button 1"
     internal: true
   - platform: gpio
     on_press:
@@ -76,7 +41,7 @@ binary_sensor:
       number: GPIO9
       mode: INPUT_PULLUP
       inverted: True
-    name: "${friendly_name} Button 2"
+    name: "${short_name} Button 2"
     internal: true
   - platform: gpio
     on_press:
@@ -86,7 +51,7 @@ binary_sensor:
       number: GPIO10
       mode: INPUT_PULLUP
       inverted: True
-    name: "${friendly_name} Button 3"
+    name: "${short_name} Button 3"
     internal: true
   - platform: gpio
     on_press:
@@ -96,40 +61,33 @@ binary_sensor:
       number: GPIO14
       mode: INPUT_PULLUP
       inverted: True
-    name: "${friendly_name} Button 4"
+    name: "${short_name} Button 4"
     internal: true
-
-text_sensor:
-# Reports the ESPHome Version with compile date
-  - platform: version
-    name: ${friendly_name} ESPHome Version
 
 switch:
   - platform: gpio
     id: relay1
-    name: "${friendly_name} Relay 1"
+    name: "${short_name} Relay 1"
     pin: GPIO12
     icon: mdi:electric-switch
     interlock: &interlock_group [relay1, relay2, relay3]
   - platform: gpio
     id: relay2
-    name: "${friendly_name} Relay 2"
+    name: "${short_name} Relay 2"
     pin: GPIO5
     icon: mdi:electric-switch
     interlock: *interlock_group
   - platform: gpio
     id: relay3
-    name: "${friendly_name} Relay 3"
+    name: "${short_name} Relay 3"
     pin: GPIO4
     icon: mdi:electric-switch
     interlock: *interlock_group
   - platform: gpio
     id: relay4
-    name: "${friendly_name} Relay 4"
+    name: "${short_name} Relay 4"
     pin: GPIO15
     icon: mdi:electric-switch
-  - platform: restart
-    name: "${friendly_name} REBOOT"
 
 status_led:
   pin:

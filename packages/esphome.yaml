@@ -1,37 +1,35 @@
-# Additional configs for ESPHome devices
+# Additional configs for ESPHome devices, which don't have a custom package file
 
 logbook:
   exclude:
     entities:
-      - sensor.plug_wlan_02_esphome_version
-      - switch.plug_wlan_02_reboot
-      
-      - sensor.plug_wlan_03_esphome_version
-      - switch.plug_wlan_03_reboot
-      
-      - sensor.plug_wlan_anna_chain_of_lights_esphome_version
-      - switch.plug_wlan_anna_chain_of_lights_reboot
-      
-      - sensor.switch_ventilation_esphome_version
-      - switch.switch_ventilation_reboot
-      
-      - sensor.switch_wlan_elias_light_esphome_version
-      - switch.switch_wlan_elias_light_reboot
+      - sensor.plug_02_esphome_version
+      - switch.plug_02_reboot
 
+      - sensor.plug_03_esphome_version
+      - switch.plug_03_reboot
+      
+      - sensor.anna_chain_of_lights_esphome_version
+      - switch.anna_chain_of_lights_reboot
+      
+      - sensor.elias_light_esphome_version
+      - switch.elias_light_reboot
+    
 history:
   exclude:
     entities:
-      - sensor.plug_wlan_02_esphome_version
-      - switch.plug_wlan_02_reboot
+      - sensor.plug_02_esphome_version
+      - sensor.plug_02_uptime
+      - switch.plug_02_reboot
       
-      - sensor.plug_wlan_03_esphome_version
-      - switch.plug_wlan_03_reboot
+      - sensor.plug_03_esphome_version
+      - sensor.plug_03_uptime
+      - switch.plug_03_reboot
       
-      - sensor.plug_wlan_anna_chain_of_lights_esphome_version
-      - switch.plug_wlan_anna_chain_of_lights_reboot
+      - sensor.anna_chain_of_lights_esphome_version
+      - sensor.anna_chain_of_lights_uptime
+      - switch.anna_chain_of_lights_reboot
       
-      - sensor.switch_ventilation_esphome_version
-      - switch.switch_ventilation_reboot
-      
-      - sensor.switch_wlan_elias_light_esphome_version
-      - switch.switch_wlan_elias_light_reboot
+      - sensor.elias_light_esphome_version
+      - sensor.elias_light_uptime
+      - switch.elias_light_reboot

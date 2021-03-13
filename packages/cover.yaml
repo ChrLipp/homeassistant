@@ -206,9 +206,10 @@ automation:
   alias: Covers down on sundown
   description: 'Fährt die Rollos am Abend runter'
   trigger:
-    - platform: sun
-      event: sunset
-      offset: "+00:15:00"
+    - platform: numeric_state
+      entity_id: sun.sun
+      value_template: "{{ state_attr('sun.sun', 'elevation') }}"
+      below: -6.0
   action:
     - service: cover.close_cover
       entity_id: cover.kitchen_window
@@ -216,7 +217,18 @@ automation:
       entity_id: cover.livingroom_door
     - service: cover.close_cover
       entity_id: cover.bedroom_window
+    - service: cover.close_cover
+      entity_id: cover.livingroom_window
   mode: single
+
+logbook:
+  exclude:
+    entities:
+      - cover.all
+      - cover.kitchen_window
+      - cover.rain
+      - sensor.cover_all
+      - sensor.cover_rain
 
 history:
   exclude:
@@ -225,3 +237,5 @@ history:
       - cover.all
       - cover.kitchen_window
       - cover.rain
+      - sensor.cover_all
+      - sensor.cover_rain
