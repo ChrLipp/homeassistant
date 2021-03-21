@@ -12,15 +12,15 @@
 ##  HACS
 
 - Integrationen
--- [automower](https://github.com/walthowd/ha-automower)
--- [Govee](https://github.com/LaggAt/hacs-govee)
--- [Local Tuya](https://github.com/rospogrigio/localtuya)
--- [SamsungTV Smart](https://github.com/ollo69/ha-samsungtv-smart)
+    - [automower](https://github.com/walthowd/ha-automower)
+    - [Govee](https://github.com/LaggAt/hacs-govee)
+    - [Local Tuya](https://github.com/rospogrigio/localtuya)
+    - [SamsungTV Smart](https://github.com/ollo69/ha-samsungtv-smart)
 - Frontend
--- [Atomic Calendar Revive](https://github.com/marksie1988/atomic-calendar-revive)
--- [Fan Control Entity Row](https://github.com/finity69x2/fan-control-entity-row)
--- [Google Dark Theme](https://github.com/JuanMTech/google_dark_theme)
--- [Time Picker Card](https://github.com/GeorgeSG/lovelace-time-picker-card)
+    - [Atomic Calendar Revive](https://github.com/marksie1988/atomic-calendar-revive)
+    - [Fan Control Entity Row](https://github.com/finity69x2/fan-control-entity-row)
+    - [Google Dark Theme](https://github.com/JuanMTech/google_dark_theme)
+    - [Time Picker Card](https://github.com/GeorgeSG/lovelace-time-picker-card)
 
 ##  Custom components
 

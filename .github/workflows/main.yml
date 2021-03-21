@@ -1,7 +1,7 @@
 # This is a basic workflow to help you get started with Actions
 name: CI
 
-# Controls when the action will run. 
+# Controls when the action will run.
 on:
   # Triggers the workflow on push or pull request events but only for the main branch
   push:
@@ -26,11 +26,10 @@ jobs:
       - name: Checkout
         uses: actions/checkout@main
 
-      # Provides secrets.yaml
-      - run: mv travis_secrets.yaml secrets.yaml
-        
       # Runs the configuration check
-      - name: Run Home Assistant Config Check
-        uses: ludeeus/action-ha-config-check@1.1.0
+      - name: 🚀 Run Home Assistant Configuration Check
+        uses: frenck/action-home-assistant@v1
         with:
-          ha_version: "latest"
+          path: "./config"
+          secrets: travis_secrets.yaml
+          version: stable
