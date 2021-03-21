@@ -2,6 +2,7 @@ wifi:
   # Which WLAN
   ssid: !secret wlan_ssid
   password: !secret wlan_password
+  domain: .lan
   
   # Static IP
   manual_ip:

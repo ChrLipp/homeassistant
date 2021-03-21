@@ -1,0 +1,28 @@
+version: "3"
+
+services:
+  home_assistant:
+    container_name: HomeAssistant
+    image: homeassistant/home-assistant:stable
+    volumes:
+      - /volume1/docker/homeassistant/config:/config
+    # host for network discovery, see https://www.home-assistant.io/integrations/discovery/
+    network_mode: host
+    environment:
+      - TZ=Europe/Vienna
+    restart: unless-stopped
+    sysctls:
+      - net.ipv6.conf.all.disable_ipv6=1
+
+  esphome:
+    container_name: ESPHome
+    image: esphome/esphome
+    volumes:
+      - /volume1/docker/homeassistant/esphome:/config
+      - /etc/localtime:/etc/localtime:ro
+    network_mode: host
+    environment:
+      - TZ=Europe/Vienna
+    restart: unless-stopped
+
+

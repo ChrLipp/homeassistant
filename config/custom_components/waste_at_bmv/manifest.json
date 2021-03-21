@@ -1,0 +1,9 @@
+{
+  "domain": "waste_AT_BMV",
+  "name": "Abfall Sensor Burgenländischer Müllverband (BMV)",
+  "documentation": "https://github.com/home-assistant/example-custom-config/tree/master/custom_components/example_sensor/",
+  "version": "1.0",
+  "dependencies": [],
+  "codeowners": [],
+  "requirements": []
+}

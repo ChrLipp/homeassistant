@@ -1,0 +1,141 @@
+background: var(--background-image)
+title: Home
+views:
+  - cards:
+      - type: entities
+        title: Familie
+        show_header_toggle: false
+        entities:
+          - person.christian
+          - person.anita
+          - person.elias
+          - person.anna_mavie
+      - entity: weather.home
+        type: weather-forecast
+      - type: "custom:atomic-calendar-revive"
+        fullDayEventText: "Ganzer Tag"
+        noEventsForNextDaysText: "Keine Ereignisse in den nächsten Tagen"
+        untilText: "bis"
+        entities:
+        - entity: calendar.familie      
+      - type: entities
+        title: Abfalltermine
+        show_header_toggle: false
+        entities:
+        - entity: sensor.gelbersack_text
+        - entity: sensor.papiertonne_text
+        - entity: sensor.restmuell_text
+      - type: entities
+        title: Belüftung
+        show_header_toggle: false
+        entities:
+        - entity: fan.ventilation_fan
+          type: custom:fan-control-entity-row
+          name: Wohnraumlüftung
+          customHiText: 3
+          customMedText: 2
+          customLowText: 1
+          customOffText: AUS
+      - cards:
+        - entity: input_boolean.elias_alarm_switch
+          type: entity-button
+          name: Ein/Aus
+        - type: 'custom:time-picker-card'
+          entity: input_datetime.elias_alarm_time
+          name: 'Choose a time'
+          hour_mode: 24
+          hour_step: 1
+          minute_step: 5
+          hide:
+            name: true
+        title: Wecker Elias
+        type: horizontal-stack
+      - cards:
+          - entity: light.elias_light
+            hold_action:
+              action: more-info
+            name: Elias Zimmer
+            show_icon: true
+            show_name: true
+            state_color: true
+            tap_action:
+              action: toggle
+            type: entity-button
+          - entity: switch.anna_chain_of_lights
+            hold_action:
+              action: more-info
+            name: Anna Lichterkette
+            show_icon: true
+            show_name: true
+            state_color: true
+            tap_action:
+              action: toggle
+            type: entity-button
+            icon: 'mdi:lightbulb'
+          - entity: light.hochbett
+            name: Anna Hochbett
+            show_icon: true
+            show_name: true
+            state_color: true
+            type: entity-button
+        title: Licht
+        type: horizontal-stack
+      - cards:
+          - entity: switch.arbeitszimmer
+            icon: 'mdi:desktop-mac'
+            type: entity-button
+            state_color: true
+          - entity: switch.diskstation
+            icon: 'mdi:nas'
+            type: entity-button
+            state_color: true
+        title: Computer
+        type: horizontal-stack
+      - type: entities
+        entities:
+          - cover.rain
+          - cover.all
+          - type: divider
+          - cover.kitchen_door
+          - cover.kitchen_window
+          - type: divider
+          - cover.livingroom_door
+          - cover.livingroom_window
+          - type: divider
+          - cover.bedroom_window
+        title: Rollos
+      - cards:
+        - type: picture-elements
+          camera_image: camera.miki
+          elements:
+            - type: state-icon
+              entity: vacuum.miki
+              style:
+                top: 30%
+                left: 50%
+                '--paper-item-icon-color': white
+            - type: state-label        
+              entity: vacuum.miki
+              attribute: status
+              style:
+                top: 30%
+                left: 65%
+                color: white
+        - type: entities
+          entities:
+            - vacuum.miki
+        type: vertical-stack
+      - cards:
+        - entity: media_player.samsung
+          type: media-control
+          name: Samsung TV
+        - entity: media_player.vu_solo4k
+          type: media-control
+        - entity: media_player.onkyo
+          type: media-control
+          name: Onkyo
+        type: vertical-stack
+    icon: 'mdi:home'
+    panel: false
+    path: default_view
+    title: Überblick

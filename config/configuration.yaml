@@ -1,0 +1,104 @@
+# Configure a default set of integrations for Home Assistant to load
+# see https://www.home-assistant.io/integrations/default_config/
+default_config:
+
+# Enable configuration through packages
+homeassistant:
+  packages: !include_dir_named packages/
+
+media_player:
+  - platform: enigma2
+    host: vusolo4k.lan
+    mac_address: !secret vuplus_mac
+    password: !secret vusolo4k_password
+    name: "Vu+ Solo4K"
+#  - platform: samsungtv_smart
+#    host: samsung.lan
+#    mac: !secret sasmsung_mac
+#    port: 8002
+#    timeout: 30
+#    protocol: ws
+#    api_key: !secret api_key
+#    device_id: !secret device_id
+#    source_list: '{"AV-Receiver": "KEY_HDMI1", "Receiver": "KEY_HDMI2", "Switch": "KEY_HDMI3", "Mac": "KEY_HDMI4"}'
+#    app_list: '{"Netflix": "11101200001/org.tizen.netflix-app", "Prime Video": "3201512006785/org.tizen.ignition", "YouTube": "111299001912", "Spotify": "3201606009684"}'
+
+switch:
+  - platform: wake_on_lan
+    host: arbeitszimmer.lan
+    mac: !secret arbeitszimmer_mac
+    name: "Arbeitszimmer"
+  - platform: wake_on_lan
+    host: diskstation.lan
+    mac: !secret diskstation_mac
+    name: "Diskstation"
+
+sensor:
+  - platform: time_date
+    display_options:
+      - 'time'
+
+logger:
+  default: info
+  logs:
+    custom_components.localtuya: debug
+#    custom_components.waste_at_bmv: debug
+#    homeassistant.components.modbus: debug
+#    pymodbus.client: debug
+
+logbook:
+  exclude:
+    entities:
+      - automation.service_make_full_backup
+      - sensor.elias_iphone_activity
+      - sensor.elias_iphone_average_active_pace
+      - sensor.elias_iphone_battery_level
+      - sensor.elias_iphone_battery_state
+      - sensor.elias_iphone_bssid
+      - sensor.elias_iphone_connection_type
+      - sensor.elias_iphone_distance
+      - sensor.elias_iphone_floors_ascended
+      - sensor.elias_iphone_floors_descended
+      - sensor.elias_iphone_geocoded_location
+      - sensor.elias_iphone_last_update_trigger
+      - sensor.elias_iphone_sim_1
+      - sensor.elias_iphone_ssid
+      - sensor.elias_iphone_steps
+      - sensor.time
+      - sun.sun
+
+history:
+  exclude:
+    entities:
+      - automation.service_make_full_backup
+      - persistent_notification.config_entry_discovery
+      - sensor.elias_iphone_activity
+      - sensor.elias_iphone_average_active_pace
+      - sensor.elias_iphone_battery_level
+      - sensor.elias_iphone_battery_state
+      - sensor.elias_iphone_bssid
+      - sensor.elias_iphone_connection_type
+      - sensor.elias_iphone_distance
+      - sensor.elias_iphone_floors_ascended
+      - sensor.elias_iphone_floors_descended
+      - sensor.elias_iphone_geocoded_location
+      - sensor.elias_iphone_last_update_trigger
+      - sensor.elias_iphone_sim_1
+      - sensor.elias_iphone_ssid
+      - sensor.elias_iphone_steps
+      - sensor.geocoded_location
+      - sensor.last_update_trigger
+      - sensor.hacs
+      - sensor.time
+
+panel_iframe:
+  esphome:
+    title: "ESPHome"
+    url: "http://HomeServer.lan:6052"
+    icon: mdi:chip
+    require_admin: true
+
+group: !include groups.yaml
+automation: !include automations.yaml
+script: !include scripts.yaml
+scene: !include scenes.yaml

@@ -1,0 +1,27 @@
+device_tracker:
+  - platform: fritz
+    host: fritzbox.lan
+    username: dummy
+    password: !secret fritzbox_password
+    new_device_defaults:
+      track_new_devices: false
+
+logbook:
+  exclude:
+    entities:
+      - device_tracker.christian
+      - device_tracker.christian_iphone
+      - device_tracker.anita_iphone
+      - device_tracker.elias_iphone
+      - device_tracker.elias_ipad
+      - device_tracker.anna_mavie_iphone
+
+history:
+  exclude:
+    entities:
+      - device_tracker.christian
+      - device_tracker.christian_iphone
+      - device_tracker.anita_iphone
+      - device_tracker.elias_iphone
+      - device_tracker.elias_ipad
+      - device_tracker.anna_mavie_iphone
