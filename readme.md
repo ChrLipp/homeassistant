@@ -1,4 +1,4 @@
-[![Build Status](https://github.com/ChrLipp/homeassistant/actions/workflows/main.yml/badge.svg)](https://travis-ci.org/ChrLipp/ha-config)
+[![Build Status](https://github.com/ChrLipp/homeassistant/actions/workflows/main.yml/badge.svg)](https://github.com/ChrLipp/homeassistant/actions/workflows/main.yml)
 
 # My Home Assistant installation
 
