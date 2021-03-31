@@ -31,5 +31,5 @@ jobs:
         uses: frenck/action-home-assistant@v1
         with:
           path: "./config"
-          secrets: travis_secrets.yaml
+          secrets: test_secrets.yaml
           version: stable

@@ -209,7 +209,7 @@ automation:
     - platform: numeric_state
       entity_id: sun.sun
       value_template: "{{ state_attr('sun.sun', 'elevation') }}"
-      below: -5.8
+      below: -5.6
   action:
     - service: cover.close_cover
       entity_id: cover.kitchen_window

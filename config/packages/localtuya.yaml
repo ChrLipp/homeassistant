@@ -1,0 +1,46 @@
+localtuya:
+  - host: 10.0.0.206
+    device_id: !secret tuya_plug_04_device_id
+    local_key: !secret tuya_plug_04_local_key
+    friendly_name: plug_04
+    protocol_version: "3.3"
+    entities:
+      - platform: switch
+        friendly_name: plug_04
+        id: 1
+  - host: 10.0.0.207
+    device_id: !secret tuya_plug_05_device_id
+    local_key: !secret tuya_plug_05_local_key
+    friendly_name: plug_05
+    protocol_version: "3.3"
+    entities:
+      - platform: switch
+        friendly_name: plug_05
+        id: 1
+  - host: 10.0.0.208
+    device_id: !secret tuya_plug_06_device_id
+    local_key: !secret tuya_plug_06_local_key
+    friendly_name: plug_06
+    protocol_version: "3.3"
+    entities:
+      - platform: switch
+        friendly_name: plug_06
+        id: 1
+  - host: 10.0.0.209
+    device_id: !secret tuya_plug_07_device_id
+    local_key: !secret tuya_plug_07_local_key
+    friendly_name: plug_07
+    protocol_version: "3.3"
+    entities:
+      - platform: switch
+        friendly_name: plug_07
+        id: 1
+  - host: 10.0.0.210
+    device_id: !secret tuya_plug_08_device_id
+    local_key: !secret tuya_plug_08_local_key
+    friendly_name: plug_08
+    protocol_version: "3.3"
+    entities:
+      - platform: switch
+        friendly_name: plug_08
+        id: 1

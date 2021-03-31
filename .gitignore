@@ -3,20 +3,21 @@
 
 # Ignore folders
 .storage
-.cloud
+#.cloud
 .google.token
-tts/
-custom_components/.translations
+#tts/
+#custom_components/.translations
 
 # Ignore these YAML files with secret data/credentials
-ip_bans.yaml
 secrets.yaml
-known_devices.yaml
+config/google_calendars.yaml
+config/govee_learning.yaml
+config/ip_bans.yaml
+config/known_devices.yaml
+#config/tv-token.txt
 
-# Configuration files
-home-assistant_v2.db
-tv-token.txt
-google_calendars.yaml
+# Database
+config/home-assistant_v2.db
 
 # Python-specific stuff
 **/__pycache__/
@@ -28,6 +29,7 @@ google_calendars.yaml
 .DS_Store
 
 # ESPHome
+esphome/.gitignore
 .esphome
 **/.pioenvs/
 **/.piolibdeps/
@@ -36,4 +38,4 @@ google_calendars.yaml
 **/platformio.ini
 
 # Backups
-/siemens_logo/UDF.rar
+config/siemens_logo/UDF.rar
