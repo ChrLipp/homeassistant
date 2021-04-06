@@ -25,11 +25,11 @@
 
 ##  Custom components
 
-- [BMV](https://www.bmv.at/service/muellabfuhrtermine.html)
-  Custom integration of BMV waste service.
+- Custom integration of "Burgenländischer Müllverband" ([BMV](https://www.bmv.at/service/muellabfuhrtermine.html)) waste service.
 
 ##  Open issues and known problems
 
+- none
 
 ## Fixed
 

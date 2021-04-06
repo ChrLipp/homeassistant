@@ -1,0 +1,13 @@
+logger:
+  default: info
+#  logs:
+#    custom_components.localtuya: debug
+#
+#    custom_components.waste_at_bmv: debug
+#
+#    homeassistant.components.modbus: debug
+#    pymodbus.client: debug
+#
+#    homeassistant.components.govee: debug
+#    custom_components.govee: debug
+#    govee_api_laggat: debug

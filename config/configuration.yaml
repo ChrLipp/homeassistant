@@ -38,14 +38,6 @@ sensor:
     display_options:
       - 'time'
 
-logger:
-  default: info
-  logs:
-    custom_components.localtuya: debug
-#    custom_components.waste_at_bmv: debug
-#    homeassistant.components.modbus: debug
-#    pymodbus.client: debug
-
 logbook:
   exclude:
     entities:
