@@ -29,9 +29,11 @@
 
 ##  Open issues and known problems
 
-- none
+- Remove version warning for waste_bmv
+- Remove template fan depricated warning
+- Fix Miki GPS
+- Send updates telegram messages to different chat
 
 ## Fixed
 
-- Removed travis build
-- Switch to Local Tuya
+- Updated modbus to remove depricated warning

@@ -16,98 +16,73 @@ modbus:
   type: tcp
   host: 10.0.0.211
   port: 502
+  sensors:
+    - name: modbus_sensor_01
+      address: 58
+      scan_interval: 10
+    - name: modbus_sensor_02
+      address: 59
+      scan_interval: 10
+    - name: modbus_sensor_03
+      address: 60
+      scan_interval: 10
+    - name: modbus_sensor_04
+      address: 61
+      scan_interval: 10
+    - name: modbus_sensor_05
+      address: 62
+      scan_interval: 10
+    - name: modbus_sensor_06
+      address: 63
+      scan_interval: 10
 
-sensor:
-  - platform: modbus
-    scan_interval: 10
-    registers:
-      - name: modbus_sensor_01
-        hub: hub1
-        slave: 1
-        register: 58
-      - name: modbus_sensor_02
-        hub: hub1
-        slave: 1
-        register: 59
-      - name: modbus_sensor_03
-        hub: hub1
-        slave: 1
-        register: 60
-      - name: modbus_sensor_04
-        hub: hub1
-        slave: 1
-        register: 61
-      - name: modbus_sensor_05
-        hub: hub1
-        slave: 1
-        register: 62
-      - name: modbus_sensor_06
-        hub: hub1
-        slave: 1
-        register: 63
-
-switch:
 # Modbus switches, do not use directly as they have to be pulsed
-  - platform: modbus
-    coils:
+  switches:
     - name: modbus_switch_01
-      hub: hub1
-      slave: 1
-      coil: 800
+      address: 800
+      input_type: coil
     - name: modbus_switch_02
-      hub: hub1
-      slave: 1
-      coil: 801
+      address: 801
+      input_type: coil
     - name: modbus_switch_03
-      hub: hub1
-      slave: 1
-      coil: 802
+      address: 802
+      input_type: coil
     - name: modbus_switch_04
-      hub: hub1
-      slave: 1
-      coil: 803
+      address: 803
+      input_type: coil
     - name: modbus_switch_05
-      hub: hub1
-      slave: 1
-      coil: 804
+      address: 804
+      input_type: coil
     - name: modbus_switch_06
-      hub: hub1
-      slave: 1
-      coil: 805
+      address: 805
+      input_type: coil
     - name: modbus_switch_07
-      hub: hub1
-      slave: 1
-      coil: 806
+      address: 806
+      input_type: coil
     - name: modbus_switch_08
-      hub: hub1
-      slave: 1
-      coil: 807
+      address: 807
+      input_type: coil
     - name: modbus_switch_09
-      hub: hub1
-      slave: 1
-      coil: 808
+      address: 808
+      input_type: coil
     - name: modbus_switch_10
-      hub: hub1
-      slave: 1
-      coil: 809
+      address: 809
+      input_type: coil
     - name: modbus_switch_11
-      hub: hub1
-      slave: 1
-      coil: 810
+      address: 810
+      input_type: coil
     - name: modbus_switch_12
-      hub: hub1
-      slave: 1
-      coil: 811
+      address: 811
+      input_type: coil
     - name: modbus_switch_13
-      hub: hub1
-      slave: 1
-      coil: 812
+      address: 812
+      input_type: coil
     - name: modbus_switch_14
-      hub: hub1
-      slave: 1
-      coil: 814
+      address: 814
+      input_type: coil
 
 # Template switches for direct use (250ms pulse)
+switch:
   - platform: template
     switches:
 
