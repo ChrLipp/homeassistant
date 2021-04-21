@@ -38,4 +38,4 @@ esphome/.gitignore
 **/platformio.ini
 
 # Backups
-config/siemens_logo/UDF.rar
+/siemens_logo/UDF.rar
