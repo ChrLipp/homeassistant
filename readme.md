@@ -36,4 +36,4 @@
 
 ## Fixed
 
-- Updated modbus to remove depricated warning
+- none
