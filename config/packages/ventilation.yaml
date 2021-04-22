@@ -16,13 +16,15 @@ fan:
           {% else %}
             on
           {% endif %}
-        speed_template: >-
-          {% if states('switch.ventilation_relay_2') == 'on' %}
-            medium
+        percentage_template: >-
+          {% if states('switch.ventilation_relay_1') == 'on' %}
+            0
+          {% elif states('switch.ventilation_relay_2') == 'on' %}
+            66
           {% elif states('switch.ventilation_relay_3') == 'on' %}
-            high
+            100
           {% else %}
-            low
+            33
           {% endif %}
         turn_on:
           service: switch.turn_off
@@ -32,21 +34,20 @@ fan:
           service: switch.turn_on
           data:
             entity_id: switch.ventilation_relay_1
-        set_speed:
+        set_percentage:
           service_template: >-
-            {% if speed == 'low' %}
+            {% if percentage  == 0 %}
+              script.ventilation_fan_off
+            {% elif percentage  <= 33 %}
               script.ventilation_fan_1
-            {% elif speed == 'medium' %}
+            {% elif percentage <= 66 %}
               script.ventilation_fan_2
-            {% elif speed == 'high' %}
+            {% elif percentage <= 100 %}
               script.ventilation_fan_3
             {% endif %}
-        speeds:
-          - 'low'
-          - 'medium'
-          - 'high'
 
 # One sensor to display the state of the Wohnraumlüftung
+# for logbook and history - oldfashioned with state
 sensor:
   - platform: template
     sensors:
@@ -66,6 +67,14 @@ sensor:
 
 # Scripts for setting the speed
 script:
+  ventilation_fan_off:
+    alias: Turn ventilation off
+    icon: "mdi:fan"
+    description: 'Set ventilation speed to 0 (aka turn it off)'
+    sequence:
+      - service: switch.turn_on
+        data:
+          entity_id: switch.ventilation_relay_1
   ventilation_fan_1:
     alias: Set ventilation speed to low
     icon: "mdi:fan"
@@ -101,6 +110,7 @@ script:
 logbook:
   exclude:
     entities:
+      - script.ventilation_fan_off
       - script.ventilation_fan_1
       - script.ventilation_fan_2
       - script.ventilation_fan_3
@@ -115,6 +125,7 @@ logbook:
 history:
   exclude:
     entities:
+      - script.ventilation_fan_off
       - script.ventilation_fan_1
       - script.ventilation_fan_2
       - script.ventilation_fan_3

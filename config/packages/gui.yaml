@@ -7,6 +7,6 @@ lovelace:
     - type: module
       url: /hacsfiles/lovelace-time-picker-card/time-picker-card.js
     - type: module
-      url: /hacsfiles/fan-control-entity-row/fan-control-entity-row.js
+      url: /hacsfiles/fan-percent-button-row/fan-percent-button-row.js
     - type: module
       url: /hacsfiles/atomic-calendar-revive/atomic-calendar-revive.js

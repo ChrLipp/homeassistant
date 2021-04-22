@@ -30,10 +30,9 @@
 ##  Open issues and known problems
 
 - Remove version warning for waste_bmv
-- Remove template fan depricated warning
 - Fix Miki GPS
 - Send updates telegram messages to different chat
 
 ## Fixed
 
-- none
+- Fixed template fan depricated warning

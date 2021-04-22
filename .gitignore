@@ -10,14 +10,14 @@
 
 # Ignore these YAML files with secret data/credentials
 secrets.yaml
-config/google_calendars.yaml
-config/govee_learning.yaml
-config/ip_bans.yaml
-config/known_devices.yaml
-#config/tv-token.txt
+/config/google_calendars.yaml
+/config/govee_learning.yaml
+/config/ip_bans.yaml
+/config/known_devices.yaml
+#/config/tv-token.txt
 
 # Database
-config/home-assistant_v2.db
+/config/home-assistant_v2.db
 
 # Python-specific stuff
 **/__pycache__/
@@ -29,7 +29,7 @@ config/home-assistant_v2.db
 .DS_Store
 
 # ESPHome
-esphome/.gitignore
+/esphome/.gitignore
 .esphome
 **/.pioenvs/
 **/.piolibdeps/

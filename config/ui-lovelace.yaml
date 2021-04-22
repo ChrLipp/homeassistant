@@ -30,12 +30,16 @@ views:
         show_header_toggle: false
         entities:
         - entity: fan.ventilation_fan
-          type: custom:fan-control-entity-row
+          type: custom:fan-percent-button-row
           name: Wohnraumlüftung
           customHiText: 3
           customMedText: 2
           customLowText: 1
           customOffText: AUS
+          hiPercentage: 100
+          medPercentage: 66
+          lowPercentage: 33
+          customTheme: false
       - cards:
         - entity: input_boolean.elias_alarm_switch
           type: entity-button
