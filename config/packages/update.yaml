@@ -44,19 +44,22 @@ automation:
 logbook:
   exclude:
     entities:
-      - automation.update_available_notification
+      - automation.notify_update_available
       - binary_sensor.updater
       - input_text.last_known_version_update
       - sensor.current_ha_version
       - sensor.last_ha_version
+      - sensor.hacs
       - sensor.update_available
 
 history:
   exclude:
     entities:
-      - automation.update_available_notification
+      - automation.notify_update_available
       - binary_sensor.updater
       - input_text.last_known_version_update
       - sensor.current_ha_version
       - sensor.last_ha_version
+      - sensor.last_update_trigger
+      - sensor.hacs
       - sensor.update_available

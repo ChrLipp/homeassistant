@@ -44,6 +44,7 @@ logbook:
   exclude:
     entities:
       - automation.notify_miki_error
+      - camera.miki
       - device_tracker.automower_h_170805572_164914249
       - sensor.miki_status
 
@@ -51,5 +52,6 @@ history:
   exclude:
     entities:
       - automation.notify_miki_error
+      - camera.miki
       - device_tracker.automower_h_170805572_164914249
       - sensor.miki_status

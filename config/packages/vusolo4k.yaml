@@ -1,0 +1,6 @@
+media_player:
+  - platform: enigma2
+    host: vusolo4k.lan
+    mac_address: !secret vuplus_mac
+    password: !secret vusolo4k_password
+    name: "Vu+ Solo4K"

@@ -1,0 +1,14 @@
+sensor:
+  - platform: time_date
+    display_options:
+      - 'time'
+
+logbook:
+  exclude:
+    entities:
+      - sensor.time
+
+history:
+  exclude:
+    entities:
+      - sensor.time

@@ -9,7 +9,6 @@ device_tracker:
 logbook:
   exclude:
     entities:
-      - device_tracker.christian
       - device_tracker.christian_iphone
       - device_tracker.anita_iphone
       - device_tracker.elias_iphone
@@ -19,7 +18,6 @@ logbook:
 history:
   exclude:
     entities:
-      - device_tracker.christian
       - device_tracker.christian_iphone
       - device_tracker.anita_iphone
       - device_tracker.elias_iphone

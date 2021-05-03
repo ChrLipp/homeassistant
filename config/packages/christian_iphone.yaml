@@ -1,6 +1,7 @@
 logbook:
   exclude:
     entities:
+      - device_tracker.christian
       - sensor.christian_activity
       - sensor.christian_average_active_pace
       - sensor.christian_battery_level
@@ -20,6 +21,7 @@ logbook:
 history:
   exclude:
     entities:
+      - device_tracker.christian
       - sensor.christian_activity
       - sensor.christian_average_active_pace
       - sensor.christian_battery_level

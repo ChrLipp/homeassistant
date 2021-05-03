@@ -35,4 +35,4 @@
 
 ## Fixed
 
-- Fixed template fan depricated warning
+- History and Logbook tuning

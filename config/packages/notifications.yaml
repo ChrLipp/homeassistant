@@ -8,3 +8,8 @@ notify:
   - name: telegram
     platform: telegram
     chat_id: !secret telegram_chat_id
+
+history:
+  exclude:
+    entities:
+      - persistent_notification.config_entry_discovery

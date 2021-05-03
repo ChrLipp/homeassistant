@@ -1,4 +1,11 @@
-# Additional configs for ESPHome devices, which don't have a custom package file
+# Additional configs for ESPHome and ESPHome devices, which don't have a custom package file
+
+panel_iframe:
+  esphome:
+    title: "ESPHome"
+    url: "http://HomeServer.lan:6052"
+    icon: mdi:chip
+    require_admin: true
 
 logbook:
   exclude:
