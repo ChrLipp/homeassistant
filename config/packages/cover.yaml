@@ -171,7 +171,7 @@ cover:
       all:
         device_class: shutter
         friendly_name: "Alle Rollos"
-        position_template: "{{ states('sensor.cover_all') }}"
+        position_template: "{{ states('sensor.cover_all')|float(50) }}"
         open_cover:
           service: switch.turn_on
           data:
@@ -183,7 +183,7 @@ cover:
       rain:
         device_class: shutter
         friendly_name: "Rollos bei Regen"
-        position_template: "{{ states('sensor.cover_rain') }}"
+        position_template: "{{ states('sensor.cover_rain')|float(50) }}"
         open_cover:
           service: switch.turn_on
           data:
@@ -203,8 +203,8 @@ cover:
 
 automation:
 - id: '1606158583703'
-  alias: Covers down on sundown
-  description: 'Fährt die Rollos am Abend runter'
+  alias: Garden covers down on sundown
+  description: 'Fährt die Rollos zum Garten am Abend runter'
   trigger:
     - platform: numeric_state
       entity_id: sun.sun
@@ -212,13 +212,23 @@ automation:
       below: -5.57
   action:
     - service: cover.close_cover
-      entity_id: cover.kitchen_window
-    - service: cover.close_cover
-      entity_id: cover.livingroom_door
-    - service: cover.close_cover
       entity_id: cover.bedroom_window
     - service: cover.close_cover
       entity_id: cover.livingroom_window
+  mode: single
+- id: '1620112221379'
+  alias: Neighbors covers down on sundown
+  description: 'Fährt die Rollos zum Nachbarn am Abend runter'
+  trigger:
+    - platform: numeric_state
+      entity_id: sun.sun
+      value_template: "{{ state_attr('sun.sun', 'elevation') }}"
+      below: -3.40
+  action:
+    - service: cover.close_cover
+      entity_id: cover.kitchen_window
+    - service: cover.close_cover
+      entity_id: cover.livingroom_door
   mode: single
 
 logbook:
@@ -233,7 +243,8 @@ logbook:
 history:
   exclude:
     entities:
-      - automation.covers_down_on_sundown
+      - automation.garden_covers_down_on_sundown
+      - automation.neighbors_covers_down_on_sundown
       - cover.all
       - cover.kitchen_window
       - cover.rain

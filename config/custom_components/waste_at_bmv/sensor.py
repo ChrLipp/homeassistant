@@ -57,7 +57,12 @@ class WasteSensor(Entity):
         self._unit = SENSOR_TYPES[self.type][1]
         self._icon = SENSOR_TYPES[self.type][2]
         self._state = None
+        
         self._attributes = {}
+        self._attributes['display_date'] = '?'
+        self._attributes['display_text'] = 'Lade Daten ...'
+        self._attributes['display_text_long'] = 'Lade Daten ...'
+        self._attributes['days'] = -1
 
     @property
     def name(self):

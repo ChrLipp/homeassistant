@@ -29,10 +29,14 @@
 
 ##  Open issues and known problems
 
-- Remove version warning for waste_bmv
 - Fix Miki GPS
-- Send updates telegram messages to different chat
+- Rewire the ventilation system
 
 ## Fixed
 
-- History and Logbook tuning
+- Send Telegram updates messages to different chats
+- Update notification for HACS
+- Different times for covers down
+- Get rid of uninitialised warning for waste_bmv sensors
+- Fixed version warning for waste_bmv
+- Get rid of unknown warning for template cover

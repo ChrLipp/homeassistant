@@ -27,23 +27,37 @@ automation:
 - id: '1582890671844'
   alias: 'Notify: Update Available'
   description: Sends a telegram message when an update is available
+  mode: single
   trigger:
-  - entity_id: sensor.update_available
+  - platform: state
+    entity_id: sensor.update_available
     from: 'false'
-    platform: state
     to: 'true'
   action:
   - data:
       message: Meister, die Home Assistant version *{{ states("sensor.last_ha_version")}}* ist verfügbar. Derzeit läuft die Version {{ states("sensor.current_ha_version")}}.
-    service: notify.telegram
+    service: notify.telegram_admin
   - service: input_text.set_value
     data_template:
       entity_id: input_text.last_known_version_update
       value: '{{ states(''sensor.last_ha_version'') }}'
+- id: '1620058754239'
+  alias: 'Notify: HACS update available'
+  description: Sends a telegram message when a HACS update is available
+  mode: single
+  trigger:
+  - platform: state
+    entity_id: sensor.hacs
+    from: '0'
+  action:
+  - data:
+      message: Ein HACS update ist verfügbar.
+    service: notify.telegram_admin
 
 logbook:
   exclude:
     entities:
+      - automation.notify_hacs_update_available
       - automation.notify_update_available
       - binary_sensor.updater
       - input_text.last_known_version_update
@@ -55,6 +69,7 @@ logbook:
 history:
   exclude:
     entities:
+      - automation.notify_hacs_update_available
       - automation.notify_update_available
       - binary_sensor.updater
       - input_text.last_known_version_update

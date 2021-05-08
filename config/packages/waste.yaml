@@ -31,7 +31,7 @@ automation:
   action:
   - data:
       message: '*Gelber Sack* rausbringen. Abholung *morgen* ( {{states.sensor.waste_gelber_sack.attributes.display_date}})'
-    service: notify.telegram
+    service: notify.telegram_all
 - id: '1583509362750'
   alias: 'Notify: Garbage (Papier)'
   description: Telegram notification when garbage "Papier" is collected tomorrow
@@ -44,7 +44,7 @@ automation:
   action:
   - data:
       message: '*Papier* rausbringen. Abholung *morgen* ( {{states.sensor.waste_papier.attributes.display_date}})'
-    service: notify.telegram
+    service: notify.telegram_all
 - id: '1583509362751'
   alias: 'Notify: Garbage (Restmüll)'
   description: Telegram notification when garbage "Restmüll" is collected tomorrow
@@ -57,7 +57,7 @@ automation:
   action:
   - data:
       message: '*Restmüll* rausbringen. Abholung *morgen* ( {{states.sensor.waste_restmull.attributes.display_date}})'
-    service: notify.telegram
+    service: notify.telegram_all
 
 logbook:
   exclude:

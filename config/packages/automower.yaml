@@ -21,7 +21,7 @@ sensor:
       miki_status:
         friendly_name: "Miki"
         entity_picture_template: "{{state_attr('camera.miki', 'entity_picture')}}"
-        value_template: "{{states('device_tracker.automower_h_170805572_164914249')}}"
+        value_template: "{{states('device_tracker.automower_none_170805572_164914249')}}"
 
 automation:
 - id: '1583509362752'
@@ -35,7 +35,7 @@ automation:
   action:
   - data_template:
       message: "*Achtung:* Miki steckt! ({{state_attr('vacuum.miki', 'lastErrorMessage')}})"
-    service: notify.telegram
+    service: notify.telegram_all
   - data_template:
       message: "{{ states.vacuum.miki }}"
     service: system_log.write
@@ -45,7 +45,7 @@ logbook:
     entities:
       - automation.notify_miki_error
       - camera.miki
-      - device_tracker.automower_h_170805572_164914249
+      - device_tracker.automower_none_170805572_164914249
       - sensor.miki_status
 
 history:
@@ -53,5 +53,5 @@ history:
     entities:
       - automation.notify_miki_error
       - camera.miki
-      - device_tracker.automower_h_170805572_164914249
+      - device_tracker.automower_none_170805572_164914249
       - sensor.miki_status
