@@ -1,11 +1,3 @@
-device_tracker:
-  - platform: fritz
-    host: fritzbox.lan
-    username: dummy
-    password: !secret fritzbox_password
-    new_device_defaults:
-      track_new_devices: false
-
 logbook:
   exclude:
     entities:
