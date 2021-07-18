@@ -21,6 +21,8 @@ logbook:
       
       - sensor.elias_light_esphome_version
       - switch.elias_light_reboot
+      
+      - sensor.power_01_esphome_version
     
 history:
   exclude:
@@ -40,3 +42,6 @@ history:
       - sensor.elias_light_esphome_version
       - sensor.elias_light_uptime
       - switch.elias_light_reboot
+
+      - sensor.power_01_esphome_version
+      - sensor.power_01_uptime

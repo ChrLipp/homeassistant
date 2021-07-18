@@ -1,0 +1,472 @@
+# Connecting Siemens Logo via modbus
+# Port 502 ist der Standard für Modbus-TCP
+#
+# How to enable modbus on Sienems Logo
+# - Tools -> Ethernet Connections…
+# - Enter IP address of your LOGO…
+# - Right click on Etnernet Connections -> Add server connection -> Modbus Connection
+# - Upload your program to LOGO
+#
+# Regel für Netzwerkeingang: Coil = VB-address * 8 + bit (V100.0 = 8 * 100 + 0 = 800)
+# Regel für analogen Ausgang: Register = VW-address / 2 (VW124 / 2 = register 62)
+# See https://community.home-assistant.io/t/siemens-logo-8/129281/18
+#
+# This is the first logo in the technical room of the swimming pool.
+#
+# Modbus address space
+# I   1 - 24        Dig. Eing. (DI)    1 - 24       R   bit
+# Q   1 - 20        Spule              8193 - 8212  R/W bit
+# M   1 - 64        Spule              8257 - 8320	R/W bit
+# V   0.0 - 850.7   Spule              1 - 6808     R/W bit
+# AI  1 - 8         Eing.register (IR) 1 - 8        R   word
+# VW  0 - 850       Halteregister (HR) 1 - 425      R/W word
+# AQ  1 - 8         Halteregister (HR) 513 - 520    R/W word
+# AM  1 - 64        Halteregister (HR) 529 - 592    R/W word
+
+
+modbus:
+  - name: hub2
+    type: tcp
+    host: 10.0.0.213
+    port: 502
+
+    binary_sensors:
+      - name: logo2_q01
+        address: 8192
+        scan_interval: 5
+        device_class: light
+      - name: logo2_q02
+        address: 8193
+        scan_interval: 5
+        device_class: power
+      - name: logo2_q03
+        address: 8194
+        scan_interval: 5
+        device_class: light
+      - name: logo2_q04
+        address: 8195
+        scan_interval: 5
+        device_class: light
+      - name: logo2_q05
+        address: 8196
+        scan_interval: 5
+        device_class: light
+      - name: logo2_q06
+        address: 8197
+        scan_interval: 5
+        device_class: light
+      - name: logo2_q07
+        address: 8198
+        scan_interval: 5
+        device_class: light
+      - name: logo2_q08
+        address: 8199
+        scan_interval: 10
+      - name: logo2_q09
+        address: 8200
+        scan_interval: 10
+      - name: logo2_q10
+        address: 8201
+        scan_interval: 10
+      - name: logo2_q11
+        address: 8202
+        scan_interval: 10
+      - name: logo2_q12
+        address: 8203
+        scan_interval: 10
+      - name: logo2_q13
+        address: 8204
+        scan_interval: 10
+      - name: logo2_q14
+        address: 8205
+        scan_interval: 10
+      - name: logo2_q15
+        address: 8206
+        scan_interval: 10
+      - name: logo2_q16
+        address: 8207
+        scan_interval: 10
+      - name: logo2_q17
+        address: 8208
+        scan_interval: 10
+      - name: logo2_q18
+        address: 8209
+        scan_interval: 10
+      - name: logo2_q19
+        address: 8210
+        scan_interval: 10
+      - name: logo2_q20
+        address: 8211
+        scan_interval: 5
+
+    switches:
+      - name: logo2_ni01
+        address: 1600
+        write_type: coil
+      - name: logo2_ni02
+        address: 1601
+        write_type: coil
+      - name: logo2_ni03
+        address: 1602
+        write_type: coil
+      - name: logo2_ni04
+        address: 1603
+        write_type: coil
+      - name: logo2_ni05
+        address: 1604
+        write_type: coil
+      - name: logo2_ni06
+        address: 1605
+        write_type: coil
+      - name: logo2_ni07
+        address: 1606
+        write_type: coil
+      - name: logo2_ni08
+        address: 1607
+        write_type: coil
+      - name: logo2_ni09
+        address: 1608
+        write_type: coil
+      - name: logo2_ni10
+        address: 1609
+        write_type: coil
+      - name: logo2_ni11
+        address: 1610
+        write_type: coil
+      - name: logo2_ni12
+        address: 1611
+        write_type: coil
+      - name: logo2_ni13
+        address: 1612
+        write_type: coil
+      - name: logo2_ni14
+        address: 1613
+        write_type: coil
+      - name: logo2_ni15
+        address: 1614
+        write_type: coil
+      - name: logo2_ni16
+        address: 1615
+        write_type: coil
+      - name: logo2_ni17
+        address: 1616
+        write_type: coil
+      - name: logo2_ni18
+        address: 1617
+        write_type: coil
+      - name: logo2_ni19
+        address: 1618
+        write_type: coil
+      - name: logo2_ni20
+        address: 1619
+        write_type: coil
+
+# Template switches for direct use (250ms pulse)
+switch:
+  - platform: template
+    switches:
+
+      terrace_light:
+        friendly_name: "Terrasse Licht"
+        value_template: "{{ is_state('binary_sensor.logo2_q01', 'on') }}"
+        turn_on:
+        - service: switch.turn_on
+          data:
+            entity_id: switch.logo2_ni01
+        - delay:
+            milliseconds: 250
+        - service: switch.turn_off
+          data:
+            entity_id: switch.logo2_ni01
+        turn_off:
+        - service: switch.turn_on
+          data:
+            entity_id: switch.logo2_ni01
+        - delay:
+            milliseconds: 250
+        - service: switch.turn_off
+          data:
+            entity_id: switch.logo2_ni01
+        icon_template: >-
+          {% if is_state('binary_sensor.logo2_q01', 'on') %}
+            mdi:lightbulb-on
+          {% else %}
+            mdi:lightbulb-off
+          {% endif %}
+      terrace_socket:
+        friendly_name: "Terrasse Strom"
+        value_template: "{{ is_state('binary_sensor.logo2_q02', 'on') }}"
+        turn_on:
+        - service: switch.turn_on
+          data:
+            entity_id: switch.logo2_ni02
+        - delay:
+            milliseconds: 250
+        - service: switch.turn_off
+          data:
+            entity_id: switch.logo2_ni02
+        turn_off:
+        - service: switch.turn_on
+          data:
+            entity_id: switch.logo2_ni02
+        - delay:
+            milliseconds: 250
+        - service: switch.turn_off
+          data:
+            entity_id: switch.logo2_ni02
+        icon_template: >-
+          {% if is_state('binary_sensor.logo2_q02', 'on') %}
+            mdi:power-plug
+          {% else %}
+            mdi:power-plug-outline
+          {% endif %}
+      garden_light_back:
+        friendly_name: "Licht hinten"
+        value_template: "{{ is_state('binary_sensor.logo2_q03', 'on') }}"
+        turn_on:
+        - service: switch.turn_on
+          data:
+            entity_id: switch.logo2_ni03
+        - delay:
+            milliseconds: 250
+        - service: switch.turn_off
+          data:
+            entity_id: switch.logo2_ni03
+        turn_off:
+        - service: switch.turn_on
+          data:
+            entity_id: switch.logo2_ni03
+        - delay:
+            milliseconds: 250
+        - service: switch.turn_off
+          data:
+            entity_id: switch.logo2_ni03
+        icon_template: >-
+          {% if is_state('binary_sensor.logo2_q03', 'on') %}
+            mdi:lightbulb-on
+          {% else %}
+            mdi:lightbulb-off
+          {% endif %}
+      garden_light_front:
+        friendly_name: "Licht vorne"
+        value_template: "{{ is_state('binary_sensor.logo2_q04', 'on') }}"
+        turn_on:
+        - service: switch.turn_on
+          data:
+            entity_id: switch.logo2_ni04
+        - delay:
+            milliseconds: 250
+        - service: switch.turn_off
+          data:
+            entity_id: switch.logo2_ni04
+        turn_off:
+        - service: switch.turn_on
+          data:
+            entity_id: switch.logo2_ni04
+        - delay:
+            milliseconds: 250
+        - service: switch.turn_off
+          data:
+            entity_id: switch.logo2_ni04
+        icon_template: >-
+          {% if is_state('binary_sensor.logo2_q04', 'on') %}
+            mdi:lightbulb-on
+          {% else %}
+            mdi:lightbulb-off
+          {% endif %}
+      terrace_flower_light:
+        friendly_name: "Terrasse Blumenlicht"
+        value_template: "{{ is_state('binary_sensor.logo2_q05', 'on') }}"
+        turn_on:
+        - service: switch.turn_on
+          data:
+            entity_id: switch.logo2_ni05
+        - delay:
+            milliseconds: 250
+        - service: switch.turn_off
+          data:
+            entity_id: switch.logo2_ni05
+        turn_off:
+        - service: switch.turn_on
+          data:
+            entity_id: switch.logo2_ni05
+        - delay:
+            milliseconds: 250
+        - service: switch.turn_off
+          data:
+            entity_id: switch.logo2_ni05
+        icon_template: >-
+          {% if is_state('binary_sensor.logo2_q05', 'on') %}
+            mdi:lightbulb-on
+          {% else %}
+            mdi:lightbulb-off
+          {% endif %}
+      pool_light:
+        friendly_name: "Pool Licht"
+        value_template: "{{ is_state('binary_sensor.logo2_q06', 'on') }}"
+        turn_on:
+        - service: switch.turn_on
+          data:
+            entity_id: switch.logo2_ni06
+        - delay:
+            milliseconds: 250
+        - service: switch.turn_off
+          data:
+            entity_id: switch.logo2_ni06
+        turn_off:
+        - service: switch.turn_on
+          data:
+            entity_id: switch.logo2_ni06
+        - delay:
+            milliseconds: 250
+        - service: switch.turn_off
+          data:
+            entity_id: switch.logo2_ni06
+        icon_template: >-
+          {% if is_state('binary_sensor.logo2_q06', 'on') %}
+            mdi:lightbulb-on
+          {% else %}
+            mdi:lightbulb-off
+          {% endif %}
+      pool_light_chain:
+        friendly_name: "Lichterkette"
+        value_template: "{{ is_state('binary_sensor.logo2_q07', 'on') }}"
+        turn_on:
+        - service: switch.turn_on
+          data:
+            entity_id: switch.logo2_ni07
+        - delay:
+            milliseconds: 250
+        - service: switch.turn_off
+          data:
+            entity_id: switch.logo2_ni07
+        turn_off:
+        - service: switch.turn_on
+          data:
+            entity_id: switch.logo2_ni07
+        - delay:
+            milliseconds: 250
+        - service: switch.turn_off
+          data:
+            entity_id: switch.logo2_ni07
+        icon_template: >-
+          {% if is_state('binary_sensor.logo2_q07', 'on') %}
+            mdi:lightbulb-on
+          {% else %}
+            mdi:lightbulb-off
+          {% endif %}
+      pool_counter_current_system:
+        friendly_name: "Gegenstromanlage"
+        value_template: "{{ is_state('binary_sensor.logo2_q20', 'on') }}"
+        turn_on:
+        - service: switch.turn_on
+          data:
+            entity_id: switch.logo2_ni20
+        - delay:
+            milliseconds: 250
+        - service: switch.turn_off
+          data:
+            entity_id: switch.logo2_ni20
+        turn_off:
+        - service: switch.turn_on
+          data:
+            entity_id: switch.logo2_ni20
+        - delay:
+            milliseconds: 250
+        - service: switch.turn_off
+          data:
+            entity_id: switch.logo2_ni20
+        icon_template: >-
+          {% if is_state('binary_sensor.logo2_q20', 'on') %}
+            mdi:waves
+          {% else %}
+            mdi:wave
+          {% endif %}
+
+logbook:
+  exclude:
+    entities:
+      - binary_sensor.logo2_q01
+      - binary_sensor.logo2_q02
+      - binary_sensor.logo2_q03
+      - binary_sensor.logo2_q04
+      - binary_sensor.logo2_q05
+      - binary_sensor.logo2_q06
+      - binary_sensor.logo2_q07
+      - binary_sensor.logo2_q08
+      - binary_sensor.logo2_q09
+      - binary_sensor.logo2_q10
+      - binary_sensor.logo2_q11
+      - binary_sensor.logo2_q12
+      - binary_sensor.logo2_q13
+      - binary_sensor.logo2_q14
+      - binary_sensor.logo2_q15
+      - binary_sensor.logo2_q16
+      - binary_sensor.logo2_q17
+      - binary_sensor.logo2_q18
+      - binary_sensor.logo2_q19
+      - binary_sensor.logo2_q20
+      - switch.logo2_ni01
+      - switch.logo2_ni02
+      - switch.logo2_ni03
+      - switch.logo2_ni04
+      - switch.logo2_ni05
+      - switch.logo2_ni06
+      - switch.logo2_ni07
+      - switch.logo2_ni08
+      - switch.logo2_ni09
+      - switch.logo2_ni10
+      - switch.logo2_ni11
+      - switch.logo2_ni12
+      - switch.logo2_ni13
+      - switch.logo2_ni14
+      - switch.logo2_ni15
+      - switch.logo2_ni16
+      - switch.logo2_ni17
+      - switch.logo2_ni18
+      - switch.logo2_ni19
+      - switch.logo2_ni20
+
+history:
+  exclude:
+    entities:
+      - binary_sensor.logo2_q01
+      - binary_sensor.logo2_q02
+      - binary_sensor.logo2_q03
+      - binary_sensor.logo2_q04
+      - binary_sensor.logo2_q05
+      - binary_sensor.logo2_q06
+      - binary_sensor.logo2_q07
+      - binary_sensor.logo2_q08
+      - binary_sensor.logo2_q09
+      - binary_sensor.logo2_q10
+      - binary_sensor.logo2_q11
+      - binary_sensor.logo2_q12
+      - binary_sensor.logo2_q13
+      - binary_sensor.logo2_q14
+      - binary_sensor.logo2_q15
+      - binary_sensor.logo2_q16
+      - binary_sensor.logo2_q17
+      - binary_sensor.logo2_q18
+      - binary_sensor.logo2_q19
+      - binary_sensor.logo2_q20
+      - switch.logo2_ni01
+      - switch.logo2_ni02
+      - switch.logo2_ni03
+      - switch.logo2_ni04
+      - switch.logo2_ni05
+      - switch.logo2_ni06
+      - switch.logo2_ni07
+      - switch.logo2_ni08
+      - switch.logo2_ni09
+      - switch.logo2_ni10
+      - switch.logo2_ni11
+      - switch.logo2_ni12
+      - switch.logo2_ni13
+      - switch.logo2_ni14
+      - switch.logo2_ni15
+      - switch.logo2_ni16
+      - switch.logo2_ni17
+      - switch.logo2_ni18
+      - switch.logo2_ni19
+      - switch.logo2_ni20

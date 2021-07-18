@@ -1,6 +1,13 @@
 logger:
   default: info
 #  logs:
+
+# ATTENTION: if you comment out every logger, then you must also comment out the logs: node.
+# Otherwise Home assistant will not start and the "check config" runs forever.
+  
+#    custom_components.automower: debug
+#    homeassistant.components.device_tracker: debug
+
 #    custom_components.localtuya: debug
 #
 #    custom_components.waste_at_bmv: debug
@@ -11,3 +18,8 @@ logger:
 #    homeassistant.components.govee: debug
 #    custom_components.govee: debug
 #    govee_api_laggat: debug
+
+#   Fritzbox
+#    homeassistant.components.fritz: debug
+#    fritzconnection: debug
+#    fritzprofiles: debug

@@ -6,11 +6,6 @@ default_config:
 homeassistant:
   packages: !include_dir_named packages/
 
-logbook:
-  exclude:
-    entities:
-      - sun.sun
-
 # Include standard files
 group: !include groups.yaml
 automation: !include automations.yaml

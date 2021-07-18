@@ -25,9 +25,10 @@ substitutions:
   device_name: switch_elias_cover
   device_description: Schalter Dachflächenfenster Rollo Elias
   friendly_name: Switch Elias Cover
-  short_name: Elias Cover
+  short_name: elias_cover
   cover_name: Elias Dachflächenfenster
   ip_adress: 10.0.0.212
+  treshold: 95.0
 
 esphome:
   name: ${device_name}
@@ -84,7 +85,7 @@ binary_sensor:
       if (id(wait_on_init) == false) {
           return false;
       } else {
-        if (id(${short_name}_in_switch1_sensor).state < 95.0) {
+        if (id(${short_name}_in_switch1_sensor).state < ${treshold}) {
           return true;
         } else {
           return false;
@@ -109,7 +110,7 @@ binary_sensor:
       if (id(wait_on_init) == false) {
           return false;
       } else {
-        if (id(${short_name}_in_switch2_sensor).state < 95.0) {
+        if (id(${short_name}_in_switch2_sensor).state < ${treshold})) {
           return true;
         } else {
           return false;

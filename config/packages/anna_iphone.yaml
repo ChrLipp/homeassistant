@@ -1,0 +1,27 @@
+logbook:
+  exclude:
+    entities:
+      - sensor.anna_mavie_battery_level
+      - sensor.anna_mavie_battery_state
+      - sensor.anna_mavie_bssid
+      - sensor.anna_mavie_connection_type
+      - sensor.anna_mavie_geocoded_location
+      - sensor.anna_mavie_last_update_trigger
+      - sensor.anna_mavie_sim_1
+      - sensor.anna_mavie_sim_2
+      - sensor.anna_mavie_ssid
+      - sensor.anna_mavie_storage
+
+history:
+  exclude:
+    entities:
+      - sensor.anna_mavie_battery_level
+      - sensor.anna_mavie_battery_state
+      - sensor.anna_mavie_bssid
+      - sensor.anna_mavie_connection_type
+      - sensor.anna_mavie_geocoded_location
+      - sensor.anna_mavie_last_update_trigger
+      - sensor.anna_mavie_sim_1
+      - sensor.anna_mavie_sim_2
+      - sensor.anna_mavie_ssid
+      - sensor.anna_mavie_storage

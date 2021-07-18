@@ -1,0 +1,10 @@
+sensor:
+  - platform: zamg
+    station_id: 11190
+    name: Eisenstadt
+    monitored_conditions:
+      - temperature
+      - humidity
+      - wind_speed
+      - wind_max_speed
+      - precipitation

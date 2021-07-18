@@ -1,0 +1,51 @@
+# Name: LoraTap RR400W Tuya Smart Life Wifi Relay Receiver
+# Link to device: https://de.aliexpress.com/item/33005382815.html
+# Config: https://templates.blakadder.com/loratap_RR400W.html
+# The device only switches L+N to the output pins. You cannot control the input for the relay.
+#
+# My working template
+# 12    out   x    Relay
+# 13    in    x    Pairing button, used as a switch on the relay
+# 04    out   ?    Red internal led (not tested)
+
+
+substitutions:
+  device_name: power_01
+  device_description: Power device 01
+  friendly_name: Power 01
+  short_name: power_01
+  ip_adress: 10.0.0.204
+
+esphome:
+  name: ${device_name}
+  comment: ${device_description}
+  platform: ESP8266
+  board: esp01_1m
+
+# Network settings
+<<: !include .network.yaml
+
+# Enable logging
+logger:
+
+switch:
+# Relay action
+- platform: gpio
+  name: ${friendly_name}
+  pin: GPIO12
+  id: relay1
+  restore_mode: ALWAYS_OFF
+
+binary_sensor:
+# Reports when the button is pressed
+- platform: gpio
+  device_class: power
+  pin:
+    number: GPIO13
+    inverted: True
+  name: "Switch ${short_name}"
+  id: switch1
+  on_press:
+    then:
+      - switch.toggle: relay1
+  internal: true

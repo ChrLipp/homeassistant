@@ -1,0 +1,57 @@
+# Connecting Siemens Logo via modbus
+# Port 502 ist der Standard für Modbus-TCP
+#
+# How to enable modbus on Sienems Logo
+# - Tools -> Ethernet Connections…
+# - Enter IP address of your LOGO…
+# - Right click on Etnernet Connections -> Add server connection -> Modbus Connection
+# - Upload your program to LOGO
+#
+# Regel für Netzwerkeingang: Coil = VB-address * 8 + bit (V100.0 = 8 * 100 + 0 = 800)
+# Regel für analogen Ausgang: Register = VW-address / 2 (VW124 / 2 = register 62)
+# See https://community.home-assistant.io/t/siemens-logo-8/129281/18
+#
+# This is the second logo in the technical room of the swimming pool.
+#
+# Modbus address space
+# I   1 - 24        Dig. Eing. (DI)    1 - 24       R   bit
+# Q   1 - 20        Spule              8193 - 8212  R/W bit
+# M   1 - 64        Spule              8257 - 8320	R/W bit
+# V   0.0 - 850.7   Spule              1 - 6808     R/W bit
+# AI  1 - 8         Eing.register (IR) 1 - 8        R   word
+# VW  0 - 850       Halteregister (HR) 1 - 425      R/W word
+# AQ  1 - 8         Halteregister (HR) 513 - 520    R/W word
+# AM  1 - 64        Halteregister (HR) 529 - 592    R/W word
+
+
+modbus:
+  - name: hub3
+    type: tcp
+    host: 10.0.0.214
+    port: 502
+
+    sensors:
+      - name: logo3_naq1
+        address: 158
+        scan_interval: 10
+        unit_of_measurement: brightness
+      - name: logo3_naq2
+        address: 159
+        scan_interval: 10
+        unit_of_measurement: brightness
+      - name: logo3_naq3
+        address: 160
+        scan_interval: 10
+        unit_of_measurement: temperature
+      - name: logo3_naq4
+        address: 161
+        scan_interval: 10
+        unit_of_measurement: temperature
+
+logbook:
+  exclude:
+    entities:
+      - sensor.logo3_naq1
+      - sensor.logo3_naq2
+      - sensor.logo3_naq3
+      - sensor.logo3_naq4

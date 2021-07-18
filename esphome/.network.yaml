@@ -50,4 +50,4 @@ text_sensor:
 switch:
 # Allow rebooting per switch
   - platform: restart
-    name: "${short_name} REBOOT"
+    name: "${short_name} Restart"

@@ -401,6 +401,10 @@ class AutomowerDevice(VacuumEntity):
     def update_see(self):
         """Update the device tracker."""
         _LOGGER.debug("Updating device tracker: %s", self._name)
+        _LOGGER.debug("Updating device tracker: %s", self.name)
+        _LOGGER.debug("Updating device tracker lat: %f", self.lat)
+        _LOGGER.debug("Updating device tracker: %f", self.lon)
+        _LOGGER.debug("Updating device tracker: %s", self.dev_id)
         self._see(
             dev_id=self.dev_id,
             host_name=self.name,

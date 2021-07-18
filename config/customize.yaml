@@ -1,0 +1,7 @@
+device_tracker.elias_ipad:
+  friendly_name: iPad-Elias
+switch.plug_04:
+  friendly_name: Plug 04
+device_tracker.anita_iphone:
+  host_name: Anita
+  friendly_name: Anita

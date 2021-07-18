@@ -7,79 +7,93 @@
 # - Right click on Etnernet Connections -> Add server connection -> Modbus Connection
 # - Upload your program to LOGO
 #
-# Coil = VB-address * 8 + bit (V100.0 = 8 * 100 + 0 = 800)
-# Register = VW-address / 2 (VW124 / 2 = register 62)
+# Regel für Netzwerkeingang: Coil = VB-address * 8 + bit (V100.0 = 8 * 100 + 0 = 800)
+# Regel für analogen Ausgang: Register = VW-address / 2 (VW124 / 2 = register 62)
 # See https://community.home-assistant.io/t/siemens-logo-8/129281/18
+#
+# This is the logo for the blinds located in the fuse box.
+#
+# Modbus address space
+# I   1 - 24        Dig. Eing. (DI)    1 - 24       R   bit
+# Q   1 - 20        Spule              8193 - 8212  R/W bit
+# M   1 - 64        Spule              8257 - 8320	R/W bit
+# V   0.0 - 850.7   Spule              1 - 6808     R/W bit
+# AI  1 - 8         Eing.register (IR) 1 - 8        R   word
+# VW  0 - 850       Halteregister (HR) 1 - 425      R/W word
+# AQ  1 - 8         Halteregister (HR) 513 - 520    R/W word
+# AM  1 - 64        Halteregister (HR) 529 - 592    R/W word
+
 
 modbus:
-  name: hub1
-  type: tcp
-  host: 10.0.0.211
-  port: 502
-  sensors:
-    - name: modbus_sensor_01
-      address: 58
-      scan_interval: 10
-    - name: modbus_sensor_02
-      address: 59
-      scan_interval: 10
-    - name: modbus_sensor_03
-      address: 60
-      scan_interval: 10
-    - name: modbus_sensor_04
-      address: 61
-      scan_interval: 10
-    - name: modbus_sensor_05
-      address: 62
-      scan_interval: 10
-    - name: modbus_sensor_06
-      address: 63
-      scan_interval: 10
+  - name: hub1
+    type: tcp
+    host: 10.0.0.211
+    port: 502
+  
+    sensors:
+      - name: modbus_sensor_01
+        address: 58
+        scan_interval: 10
+      - name: modbus_sensor_02
+        address: 59
+        scan_interval: 10
+      - name: modbus_sensor_03
+        address: 60
+        scan_interval: 10
+      - name: modbus_sensor_04
+        address: 61
+        scan_interval: 10
+      - name: modbus_sensor_05
+        address: 62
+        scan_interval: 10
+      - name: modbus_sensor_06
+        address: 63
+        scan_interval: 10
 
 # Modbus switches, do not use directly as they have to be pulsed
-  switches:
-    - name: modbus_switch_01
-      address: 800
-      input_type: coil
-    - name: modbus_switch_02
-      address: 801
-      input_type: coil
-    - name: modbus_switch_03
-      address: 802
-      input_type: coil
-    - name: modbus_switch_04
-      address: 803
-      input_type: coil
-    - name: modbus_switch_05
-      address: 804
-      input_type: coil
-    - name: modbus_switch_06
-      address: 805
-      input_type: coil
-    - name: modbus_switch_07
-      address: 806
-      input_type: coil
-    - name: modbus_switch_08
-      address: 807
-      input_type: coil
-    - name: modbus_switch_09
-      address: 808
-      input_type: coil
-    - name: modbus_switch_10
-      address: 809
-      input_type: coil
-    - name: modbus_switch_11
-      address: 810
-      input_type: coil
-    - name: modbus_switch_12
-      address: 811
-      input_type: coil
-    - name: modbus_switch_13
-      address: 812
-      input_type: coil
-    - name: modbus_switch_14
-      address: 814
-      input_type: coil
+    switches:
+      - name: modbus_switch_01
+        address: 800
+        write_type: coil
+      - name: modbus_switch_02
+        address: 801
+        write_type: coil
+      - name: modbus_switch_03
+        address: 802
+        write_type: coil
+      - name: modbus_switch_04
+        address: 803
+        write_type: coil
+      - name: modbus_switch_05
+        address: 804
+        write_type: coil
+      - name: modbus_switch_06
+        address: 805
+        write_type: coil
+      - name: modbus_switch_07
+        address: 806
+        write_type: coil
+      - name: modbus_switch_08
+        address: 807
+        write_type: coil
+      - name: modbus_switch_09
+        address: 808
+        write_type: coil
+      - name: modbus_switch_10
+        address: 809
+        write_type: coil
+      - name: modbus_switch_11
+        address: 810
+        write_type: coil
+      - name: modbus_switch_12
+        address: 811
+        write_type: coil
+      - name: modbus_switch_13
+        address: 812
+        write_type: coil
+      - name: modbus_switch_14
+        address: 814
+        write_type: coil
 
 # Template switches for direct use (250ms pulse)
 switch:
