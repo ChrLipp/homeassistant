@@ -4,7 +4,7 @@
 # Config: https://esphome-configs.io/devices/sonoff-4ch-pro-r2/
 
 substitutions:
-  device_name: switch_ventilation
+  device_name: switch-ventilation
   device_description: Schalter Kontrollierte Wohnraumlüftung
   friendly_name: Switch ventilation
   short_name: ventilation
@@ -17,10 +17,8 @@ esphome:
   board: esp01_1m
 
 # Network settings
-<<: !include .network.yaml
-
-# Enable logging
-logger:
+packages:
+  wifi: !include .network.yaml
 
 binary_sensor:
   - platform: gpio

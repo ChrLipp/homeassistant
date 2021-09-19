@@ -11,37 +11,53 @@ logbook:
   exclude:
     entities:
       - sensor.plug_02_esphome_version
-      - switch.plug_02_reboot
+      - switch.plug_02_restart
 
       - sensor.plug_03_esphome_version
-      - switch.plug_03_reboot
+      - switch.plug_03_restart
       
       - sensor.anna_chain_of_lights_esphome_version
-      - switch.anna_chain_of_lights_reboot
+      - switch.anna_chain_of_lights_restart
       
       - sensor.elias_light_esphome_version
-      - switch.elias_light_reboot
+      - switch.elias_light_restart
       
       - sensor.power_01_esphome_version
+      - switch.power_01_restart
+      
+      - sensor.fence_esphome_version
+      - switch.fence_restart
+      
+      - sensor.garage_christian_esphome_version
+      - switch.garage_christian_restart
     
 history:
   exclude:
     entities:
       - sensor.plug_02_esphome_version
       - sensor.plug_02_uptime
-      - switch.plug_02_reboot
+      - switch.plug_02_restart
       
       - sensor.plug_03_esphome_version
       - sensor.plug_03_uptime
-      - switch.plug_03_reboot
+      - switch.plug_03_restart
       
       - sensor.anna_chain_of_lights_esphome_version
       - sensor.anna_chain_of_lights_uptime
-      - switch.anna_chain_of_lights_reboot
+      - switch.anna_chain_of_lights_restart
       
       - sensor.elias_light_esphome_version
       - sensor.elias_light_uptime
-      - switch.elias_light_reboot
+      - switch.elias_light_restart
 
       - sensor.power_01_esphome_version
       - sensor.power_01_uptime
+      - switch.power_01_restart
+
+      - sensor.fence_esphome_version
+      - sensor.fence_uptime
+      - switch.fence_restart
+            
+      - sensor.garage_christian_esphome_version
+      - sensor.garage_christian_uptime
+      - switch.garage_christian_restart

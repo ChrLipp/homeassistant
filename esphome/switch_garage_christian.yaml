@@ -1,0 +1,78 @@
+# Device: Shelly 1
+# Link to device: https://www.amazon.de/gp/product/B07NS8M4Y1
+#
+# Flashed with USB
+# - insert header pin row with 5 pins
+# - connect GPIO0 for some seconds with ground
+# - see https://www.youtube.com/watch?v=iF1NHR_oVr0
+# - TXD (Shelly) zu RXD
+#
+# Config: 
+# - https://templates.blakadder.com/shelly_1.html
+# - https://savjee.be/2020/06/make-garage-door-opener-smart-shelly-esphome-home-assistant/
+#
+# GPIO  Mode  Description
+#  5    in    Input
+#  4    out   Relay
+
+
+substitutions:
+  device_name: switch-garage-christian
+  device_description: Schalter Garagentor Christian
+  friendly_name: Switch Garage Christian
+  short_name: Garage Christian
+  ip_adress: 10.0.0.217
+
+esphome:
+  name: ${device_name}
+  comment: ${device_description}
+  platform: ESP8266
+  board: esp01_1m
+
+# Network settings
+packages:
+  wifi: !include .network.yaml
+
+# The door contact sensor that is attached to SW on the 
+# Shelly 1. Not exposed to HA, instead used to set the 
+# state of the cover.
+binary_sensor:
+  - platform: gpio
+    pin: GPIO5
+    name: "Garage Door Contact Sensor"
+    id: contact_sensor
+#    internal: true
+    filters:
+      - invert:
+
+# The relay in the Shelly 1 that will deliver the pulse to
+# the garage door opener (not exposed to HA)
+switch:
+  - platform: gpio
+    pin: GPIO4
+    name: "Garage Door Relay"
+    id: relay
+    internal: true
+
+# This creates the actual garage door in HA. The state is based
+# on the contact sensor. Opening/closing the garage door simply
+# turns the relay on/off with a 0.5s delay in between.
+cover:
+  - platform: template
+    device_class: garage
+    name: $short_name
+    id: template_cov
+    lambda: |-
+      if (id(contact_sensor).state) {
+        return COVER_OPEN;
+      } else {
+        return COVER_CLOSED;
+      }
+    open_action:
+      - switch.turn_on: relay
+      - delay: 0.5s
+      - switch.turn_off: relay
+    close_action:
+      - switch.turn_on: relay
+      - delay: 0.5s
+      - switch.turn_off: relay

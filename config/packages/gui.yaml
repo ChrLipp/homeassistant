@@ -10,3 +10,7 @@ lovelace:
       url: /hacsfiles/fan-percent-button-row/fan-percent-button-row.js
     - type: module
       url: /hacsfiles/atomic-calendar-revive/atomic-calendar-revive.js
+    - type: module
+      url: /hacsfiles/home-assistant-sun-card/home-assistant-sun-card.js
+    - type: module
+      url: /hacsfiles/lovelace-xiaomi-vacuum-card/xiaomi-vacuum-card.js

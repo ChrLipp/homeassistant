@@ -236,7 +236,8 @@ class AutomowerDevice(VacuumEntity):
         _LOGGER.debug("Initializing device: %s", meta['name'])
         self._id = meta['id']
         self._name = meta['name']
-        self._model = meta['model']
+        """Husqvarna API stoppped returning model number, HA prior to 2021.9 defaulted to none."""
+        self._model = None
         self._state = None
         self._mower_status = None
         self._stored_timestamp = None
@@ -401,10 +402,6 @@ class AutomowerDevice(VacuumEntity):
     def update_see(self):
         """Update the device tracker."""
         _LOGGER.debug("Updating device tracker: %s", self._name)
-        _LOGGER.debug("Updating device tracker: %s", self.name)
-        _LOGGER.debug("Updating device tracker lat: %f", self.lat)
-        _LOGGER.debug("Updating device tracker: %f", self.lon)
-        _LOGGER.debug("Updating device tracker: %s", self.dev_id)
         self._see(
             dev_id=self.dev_id,
             host_name=self.name,

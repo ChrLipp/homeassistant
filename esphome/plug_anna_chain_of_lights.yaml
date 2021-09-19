@@ -2,7 +2,7 @@
 # Energy Monitoring Smart Plug with button, blue and red LED.
 
 substitutions:
-  device_name: plug_anna_chain_of_lights
+  device_name: plug-anna-chain-of-lights
   device_description: Zimmer Anna-Mavie Lichterkette
   friendly_name: Plug Anna Chain Of Lights
   short_name: Anna Chain Of Lights

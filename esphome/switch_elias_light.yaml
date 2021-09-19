@@ -16,7 +16,7 @@
 # 16    out   -    Blue LED (1 – off, 0 – on) - no functionality
 
 substitutions:
-  device_name: switch_elias_light
+  device_name: switch-elias-light
   device_description: Licht Zimmer Elias
   friendly_name: Switch Elias Light
   short_name: Elias Light
@@ -29,10 +29,8 @@ esphome:
   board: esp01_1m
 
 # Network settings
-<<: !include .network.yaml
-
-# Enable logging
-logger:
+packages:
+  wifi: !include .network.yaml
 
 # Device Specific Config
 output:

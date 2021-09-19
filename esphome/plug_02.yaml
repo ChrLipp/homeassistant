@@ -2,7 +2,7 @@
 # Energy Monitoring Smart Plug with button, blue and red LED.
 
 substitutions:
-  device_name: plug_02
+  device_name: plug-02
   device_description: Stecker 02
   friendly_name: Plug 02
   short_name: Plug 02

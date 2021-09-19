@@ -1,0 +1,33 @@
+automation:
+- id: '1626674872893'
+  alias: Pool heater on
+  description: When pool pump requests the heater, power01 becomes available
+  trigger:
+  - platform: state
+    entity_id: switch.power_01
+    from: "unavailable"
+  condition: []
+  action:
+  - service: switch.turn_on
+    target:
+      entity_id: switch.ventilation_relay_4
+  mode: single
+- id: '1626674977154'
+  alias: Pool heater off
+  description: When pool pump stops to request the heater, power01 becomes unavailable
+  trigger:
+  - platform: state
+    entity_id: switch.power_01
+    to: "unavailable"
+  condition: []
+  action:
+  - service: switch.turn_off
+    target:
+      entity_id: switch.ventilation_relay_4
+  mode: single
+
+history:
+  exclude:
+    entities:
+      - automation.pool_heater_on
+      - automation.pool_heater_off

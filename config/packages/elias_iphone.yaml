@@ -21,6 +21,7 @@ logbook:
 history:
   exclude:
     entities:
+      - device_tracker.elias
       - device_tracker.eliass_iphone
       - sensor.eliass_iphone_activity
       - sensor.eliass_iphone_average_active_pace

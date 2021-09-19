@@ -6,16 +6,16 @@ sensor:
   - platform: template
     sensors:
       gelbersack_text:
-        value_template: "{{states.sensor.waste_gelber_sack.attributes.display_text}}"
-        friendly_name_template: "Gelber Sack - am {{states.sensor.waste_gelber_sack.attributes.display_date}}"
+        value_template: "{{state_attr('sensor.waste_gelber_sack', 'display_text')}}"
+        friendly_name_template: "Gelber Sack - am {{state_attr('sensor.waste_gelber_sack', 'display_date')}}"
         icon_template: mdi:sack
       papiertonne_text:
-        value_template: "{{states.sensor.waste_papier.attributes.display_text}}"
-        friendly_name_template: "Papier - am {{states.sensor.waste_papier.attributes.display_date}}"
+        value_template: "{{state_attr('sensor.waste_papier', 'display_text')}}"
+        friendly_name_template: "Papier - am {{state_attr('sensor.waste_papier', 'display_date')}}"
         icon_template: mdi:delete-empty
       restmuell_text:
-        value_template: "{{states.sensor.waste_restmull.attributes.display_text}}"
-        friendly_name_template: "Restmüll - am {{states.sensor.waste_restmull.attributes.display_date}}"
+        value_template: "{{state_attr('sensor.waste_restmull', 'display_text')}}"
+        friendly_name_template: "Restmüll - am {{state_attr('sensor.waste_restmull', 'display_date')}}"
         icon_template: mdi:trash-can-outline
 
 automation:
@@ -27,10 +27,10 @@ automation:
     platform: time
   condition:
   - condition: template
-    value_template: '{{ states.sensor.waste_gelber_sack.attributes.days == 1 }}'
+    value_template: "{{ state_attr('sensor.waste_gelber_sack', 'days') == 1 }}"
   action:
   - data:
-      message: '*Gelber Sack* rausbringen. Abholung *morgen* ( {{states.sensor.waste_gelber_sack.attributes.display_date}})'
+      message: "*Gelber Sack* rausbringen. Abholung *morgen* ( {{state_attr('sensor.waste_gelber_sack', 'display_date')}})"
     service: notify.telegram_all
 - id: '1583509362750'
   alias: 'Notify: Garbage (Papier)'
@@ -40,10 +40,10 @@ automation:
     platform: time
   condition:
   - condition: template
-    value_template: '{{ states.sensor.waste_papier.attributes.days == 1 }}'
+    value_template: "{{ state_attr('sensor.waste_papier', 'days') == 1 }}"
   action:
   - data:
-      message: '*Papier* rausbringen. Abholung *morgen* ( {{states.sensor.waste_papier.attributes.display_date}})'
+      message: "*Papier* rausbringen. Abholung *morgen* ( {{state_attr('sensor.waste_papier', 'display_date')}})"
     service: notify.telegram_all
 - id: '1583509362751'
   alias: 'Notify: Garbage (Restmüll)'
@@ -53,10 +53,10 @@ automation:
     platform: time
   condition:
   - condition: template
-    value_template: '{{ states.sensor.waste_restmull.attributes.days == 1 }}'
+    value_template: "{{ state_attr('sensor.waste_restmull', 'days') == 1 }}"
   action:
   - data:
-      message: '*Restmüll* rausbringen. Abholung *morgen* ( {{states.sensor.waste_restmull.attributes.display_date}})'
+      message: "*Restmüll* rausbringen. Abholung *morgen* ( {{state_attr('sensor.waste_restmull', 'display_date')}})"
     service: notify.telegram_all
 
 logbook:

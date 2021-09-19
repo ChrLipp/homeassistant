@@ -9,17 +9,17 @@ sensor:
     source: local
   - platform: version
     name: Last HA version
-    source: hassio
+    source: container
   - platform: template
     sensors:
       update_available:
         friendly_name: "Home assistant update available"
         value_template: >-
-          {% if states("sensor.last_ha_version") ==  "unknown" %}
+          {% if is_state("sensor.last_ha_version", "unknown") %}
             false
           {% elif states("sensor.last_ha_version") ==  states("input_text.last_known_version_update") %}
             false
-          {% elif states("binary_sensor.updater") ==  true %}
+          {% elif is_state("binary_sensor.updater", "on") %}
             true
           {% else %}
             false
@@ -53,7 +53,7 @@ automation:
     from: '0'
   action:
   - data:
-      message: Ein HACS update ist verfügbar.
+      message: Meister, ein HACS update ist verfügbar.
     service: notify.telegram_admin
 
 logbook:

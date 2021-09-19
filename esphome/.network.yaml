@@ -26,6 +26,9 @@ api:
 # Enable Over The Air update (OTA)
 ota:
 
+# Enable logging
+logger:
+
 # Enable web server
 web_server:
   port: 80

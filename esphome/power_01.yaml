@@ -10,7 +10,7 @@
 
 
 substitutions:
-  device_name: power_01
+  device_name: power-01
   device_description: Power device 01
   friendly_name: Power 01
   short_name: power_01

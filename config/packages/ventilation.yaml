@@ -1,7 +1,7 @@
 ########
 # Package for my heat-recovery ventilation (kontrollierte Wohnraumlüftung).
 # The ventilation is controlled by esphome / switch_wlan_ventilation, a Sonoff 4CH Pro R2.
-# Relay 4 is unused by the moment.
+# Relay 4 is used for the pool heating.
 ########
 
 # A home assistant fan entity to control the Wohnraumlüftung
@@ -106,10 +106,36 @@ script:
         data:
           entity_id: switch.ventilation_relay_3
 
+automation:
+  - id: '1627870856860'
+    alias: Wohnraumlüftung ein
+    description: 'Schaltet die Wohnraumlüftung um 23:00 ein'
+    trigger:
+    - platform: time
+      at: '23:00'
+    action:
+    - service: fan.turn_on
+      target:
+        entity_id: fan.ventilation_fan
+    mode: single
+  - id: '1627870932093'
+    alias: Wohnraumlüftung aus
+    description: 'Schaltet die Wohnraumlüftung um 7:00 aus'
+    trigger:
+    - platform: time
+      at: '7:00'
+    action:
+    - service: fan.turn_off
+      target:
+        entity_id: fan.ventilation_fan
+    mode: single
+
 # Exclude the low level entities from logbook and history
 logbook:
   exclude:
     entities:
+      - automation.wohnraumluftung_ein
+      - automation.wohnraumluftung_aus
       - script.ventilation_fan_off
       - script.ventilation_fan_1
       - script.ventilation_fan_2
@@ -125,6 +151,8 @@ logbook:
 history:
   exclude:
     entities:
+      - automation.wohnraumluftung_ein
+      - automation.wohnraumluftung_aus
       - script.ventilation_fan_off
       - script.ventilation_fan_1
       - script.ventilation_fan_2
@@ -138,6 +166,6 @@ history:
       - switch.ventilation_relay_4
       - fan.ventilation_fan
 
-logger:
-  logs:
-    fan.ventilation_fan: debug
+#logger:
+#  logs:
+#    fan.ventilation_fan: debug

@@ -41,10 +41,8 @@ esphome:
   board: esp01_1m
 
 # Network settings
-<<: !include .network.yaml
-
-# Enable logging
-logger:
+packages:
+  wifi: !include .network.yaml
 
 # Enable time component for use by daily power sensor
 #time:
