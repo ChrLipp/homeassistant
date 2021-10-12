@@ -1,4 +1,5 @@
 import logging
+import ssl
 
 from bs4 import BeautifulSoup
 from datetime import date, datetime, timedelta
@@ -19,7 +20,11 @@ class WasteData:
         self.ort = ort
         self.strasse = strasse
         self.hausnummer = hausnummer
-
+        
+        # setup non verifying context
+        self.ctx = ssl.create_default_context()
+        self.ctx.check_hostname = False
+        self.ctx.verify_mode = ssl.CERT_NONE
 
     # Checks if the given string is a valid date in the future (or today).
     def parse_date(self, date_string):
@@ -45,9 +50,9 @@ class WasteData:
         # build URI on given parameters
         servlet_url = 'https://webudb.udb.at/WasteManagementUDB/WasteManagementServlet'
         querystring = parse.urlencode(parms)
-
+        
         # execute request
-        u = request.urlopen(servlet_url + '?' + querystring)
+        u = request.urlopen(servlet_url + '?' + querystring, context=self.ctx)
         resp = u.read()
 
         soup = BeautifulSoup(resp, 'html.parser')
