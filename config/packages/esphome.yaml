@@ -31,6 +31,12 @@ logbook:
       - sensor.garage_christian_esphome_version
       - switch.garage_christian_restart
     
+      - sensor.fence_left_esphome_version
+      - switch.fence_left_restart
+
+      - sensor.fence_right_esphome_version
+      - switch.fence_right_restart
+
 history:
   exclude:
     entities:
@@ -61,3 +67,11 @@ history:
       - sensor.garage_christian_esphome_version
       - sensor.garage_christian_uptime
       - switch.garage_christian_restart
+
+      - sensor.fence_left_esphome_version
+      - sensor.fence_left_uptime
+      - switch.fence_left_restart
+
+      - sensor.fence_right_esphome_version
+      - sensor.fence_right_uptime
+      - switch.fence_right_restart

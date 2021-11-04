@@ -1,0 +1,70 @@
+# Device: Shelly 1
+# Link to device: https://www.amazon.de/gp/product/B07NS8M4Y1
+#
+# Flashed with USB
+# - insert header pin row with 5 pins
+# - connect GPIO0 for some seconds with ground
+# - see https://www.youtube.com/watch?v=iF1NHR_oVr0
+# - TXD (Shelly) zu RXD
+#
+# Config: 
+# - https://templates.blakadder.com/shelly_1.html
+# - https://savjee.be/2020/06/make-garage-door-opener-smart-shelly-esphome-home-assistant/
+#
+# GPIO  Mode  Description
+#  5    in    Input
+#  4    out   Relay
+
+
+substitutions:
+  device_name: switch-fence-left
+  device_description: Schalter Tor Abfahrt beide
+  friendly_name: Switch Fence Left
+  short_name: Fence Left
+  ip_adress: 10.0.0.219
+
+esphome:
+  name: ${device_name}
+  comment: ${device_description}
+  platform: ESP8266
+  board: esp01_1m
+
+# Network settings
+packages:
+  wifi: !include .network.yaml
+
+# The pulse switch that is attached to Shelly 1.
+# Not exposed to HA, instead used to set the state of the template switch.
+binary_sensor:
+  - platform: gpio
+    pin: GPIO5
+    name: "Fence Pulse Switch Sensor"
+    id: contact_sensor
+    internal: true
+    on_state:
+      then:
+        - switch.turn_on: template_switch
+
+# The relay in the Shelly 1 that will deliver the pulse to
+# the fence opener (not exposed to HA)
+switch:
+  - platform: gpio
+    pin: GPIO4
+    name: "Fence Relay Left"
+    id: relay
+    internal: true
+
+# This creates the actual fence switch in HA. The state is based on the contact sensor.
+# Closing the switch simply turns the relay on/off with a delay in between.
+  - platform: template
+    name: $short_name
+    id: template_switch
+    lambda: "return id(relay).state;"
+    turn_on_action:
+      - switch.turn_on: relay
+      - delay: 1.0s
+      - switch.turn_off: relay
+    turn_off_action:
+      - switch.turn_on: relay
+      - delay: 1.0s
+      - switch.turn_off: relay

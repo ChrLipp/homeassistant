@@ -87,11 +87,10 @@ views:
             label: 'Hauptbürste: '
           side_brush:
             label: 'Seitenbürste: '
-          mop_attached:
-            key: mop_attached
-            label: 'Tuch: '
       - type: picture-entity
         entity: camera.sunny
+        show_name: false
+        show_state: false
       - cards:
           - entity: light.elias_light
             hold_action:

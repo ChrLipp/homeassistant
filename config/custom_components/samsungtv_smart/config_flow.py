@@ -1,4 +1,6 @@
 """Config flow for Samsung TV."""
+from __future__ import annotations
+
 import socket
 from typing import Any, Dict
 import logging
@@ -6,10 +8,12 @@ import logging
 import voluptuous as vol
 
 from homeassistant import config_entries
-from homeassistant.core import callback
-from homeassistant.config_entries import SOURCE_IMPORT
+from homeassistant.components.binary_sensor import DOMAIN as BS_DOMAIN
+from homeassistant.core import callback, HomeAssistant
 
 from homeassistant.const import (
+    ATTR_DEVICE_ID,
+    ATTR_FRIENDLY_NAME,
     CONF_API_KEY,
     CONF_DEVICE_ID,
     CONF_HOST,
@@ -18,11 +22,15 @@ from homeassistant.const import (
     CONF_NAME,
     CONF_PORT,
 )
+from homeassistant.helpers import config_validation as cv, entity_registry as er
 
 # pylint:disable=unused-import
-from . import SamsungTVInfo
-
+from . import SamsungTVInfo, get_device_info
 from .const import (
+    ATTR_DEVICE_MAC,
+    ATTR_DEVICE_MODEL,
+    ATTR_DEVICE_NAME,
+    ATTR_DEVICE_OS,
     DOMAIN,
     CONF_APP_LAUNCH_METHOD,
     CONF_APP_LOAD_METHOD,
@@ -30,6 +38,8 @@ from .const import (
     CONF_DEVICE_MODEL,
     CONF_DEVICE_OS,
     CONF_DUMP_APPS,
+    CONF_EXT_POWER_ENTITY,
+    CONF_LOGO_OPTION,
     CONF_POWER_ON_DELAY,
     CONF_POWER_ON_METHOD,
     CONF_USE_ST_CHANNEL_INFO,
@@ -40,15 +50,13 @@ from .const import (
     CONF_SYNC_TURN_ON,
     CONF_WOL_REPEAT,
     CONF_WS_NAME,
-    CONF_LOGO_OPTION,
     DEFAULT_POWER_ON_DELAY,
     MAX_WOL_REPEAT,
-    RESULT_NOT_SUCCESSFUL,
     RESULT_ST_DEVICE_NOT_FOUND,
     RESULT_ST_DEVICE_USED,
-    RESULT_ST_MULTI_DEVICES,
     RESULT_SUCCESS,
     RESULT_WRONG_APIKEY,
+    SERVICE_TURN_ON,
     AppLaunchMethod,
     AppLoadMethod,
     PowerOnMethod,
@@ -86,23 +94,15 @@ LOGO_OPTIONS = {
     LogoOption.TransparentWhite.value: "Transparent background, White logo",
 }
 
-CONFIG_RESULTS = {
-    RESULT_NOT_SUCCESSFUL: "Local connection to TV failed.",
-    RESULT_ST_DEVICE_NOT_FOUND: "SmartThings TV deviceID not found.",
-    RESULT_ST_DEVICE_USED: "SmartThings TV deviceID already used.",
-    RESULT_ST_MULTI_DEVICES: "Multiple TVs found, unable to identify the SmartThings device to pair.",
-    RESULT_WRONG_APIKEY: "Wrong SmartThings token.",
-}
-
 CONF_SHOW_ADV_OPT = "show_adv_opt"
 CONF_ST_DEVICE = "st_devices"
 CONF_USE_HA_NAME = "use_ha_name_for_ws"
-DEFAULT_TV_NAME = "Samsung TV"
 
 ADVANCED_OPTIONS = [
     CONF_APP_LOAD_METHOD,
     CONF_APP_LAUNCH_METHOD,
     CONF_DUMP_APPS,
+    CONF_EXT_POWER_ENTITY,
     CONF_WOL_REPEAT,
     CONF_POWER_ON_DELAY,
     CONF_USE_MUTE_CHECK,
@@ -137,15 +137,15 @@ class SamsungTVConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
         self._user_data = None
         self._st_devices_schema = None
 
-        self._tvinfo = None
+        self._tv_info: SamsungTVInfo | None = None
         self._host = None
         self._api_key = None
         self._device_id = None
         self._name = None
         self._mac = None
         self._ws_name = None
-        self._use_default_name = False
         self._logo_option = None
+        self._device_info = {}
 
     def _stdev_already_used(self, devices_id):
         """Check if a device_id is in HA config."""
@@ -163,7 +163,8 @@ class SamsungTVConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                 res_dev_list.pop(dev_id)
         return res_dev_list
 
-    def _extract_dev_name(self, device):
+    @staticmethod
+    def _extract_dev_name(device):
         """Extract device neme from SmartThings Info"""
         name = device["name"]
         label = device.get("label", "")
@@ -199,18 +200,17 @@ class SamsungTVConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
 
     async def _try_connect(self):
         """Try to connect and check auth."""
-        self._tvinfo = SamsungTVInfo(self.hass, self._host, self._name, self._ws_name)
+        self._tv_info = SamsungTVInfo(self.hass, self._host, self._ws_name)
 
         session = self.hass.helpers.aiohttp_client.async_get_clientsession()
-        result = await self._tvinfo.get_device_info(
+        result = await self._tv_info.try_connect(
             session, self._api_key, self._device_id
         )
+        if result == RESULT_SUCCESS:
+            self._device_info = await get_device_info(self._host, session)
+            self._mac = self._device_info.get(ATTR_DEVICE_MAC)
 
         return result
-
-    async def async_step_import(self, user_input=None):
-        """Handle configuration by yaml file."""
-        return await self.async_step_user(user_input)
 
     async def async_step_user(self, user_input=None):
         """Handle a flow initialized by the user."""
@@ -228,14 +228,8 @@ class SamsungTVConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
         self._abort_if_unique_id_configured()
 
         self._host = ip_address
+        self._name = user_input[CONF_NAME]
         self._api_key = user_input.get(CONF_API_KEY)
-        self._name = user_input.get(CONF_NAME)
-        if not self._name:
-            self._name = DEFAULT_TV_NAME
-            self._use_default_name = True
-
-        self._device_id = user_input.get(CONF_DEVICE_ID) if self._api_key else None
-        self._mac = user_input.get(CONF_MAC, "")
 
         use_ha_name = user_input.get(CONF_USE_HA_NAME, False)
         if use_ha_name:
@@ -245,29 +239,20 @@ class SamsungTVConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
         if not self._ws_name:
             self._ws_name = self._name
 
-        st_device_label = user_input.get(CONF_DEVICE_NAME, "")
-        is_import = user_input.get(SOURCE_IMPORT, False)
-
         result = RESULT_SUCCESS
-        if self._api_key and not self._device_id:
-            result = await self._get_st_deviceid(st_device_label)
+        if self._api_key:
+            result = await self._get_st_deviceid()
 
             if result == RESULT_SUCCESS and not self._device_id:
                 if self._st_devices_schema:
-                    if not is_import:
-                        return self._show_form(errors=None, step_id="stdevice")
-                    result = RESULT_ST_MULTI_DEVICES
+                    return self._show_form(errors=None, step_id="stdevice")
                 else:
-                    if not is_import:
-                        return self._show_form(errors=None, step_id="stdeviceid")
-                    result = RESULT_ST_DEVICE_NOT_FOUND
-        elif self._device_id and self._stdev_already_used(self._device_id):
-            result = RESULT_ST_DEVICE_USED
+                    return self._show_form(errors=None, step_id="stdeviceid")
 
         if result == RESULT_SUCCESS:
             result = await self._try_connect()
 
-        return self._manage_result(result, is_import)
+        return self._manage_result(result)
 
     async def async_step_stdevice(self, user_input=None):
         """Handle a flow to select ST device."""
@@ -290,22 +275,14 @@ class SamsungTVConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
         return self._manage_result(result)
 
     @callback
-    def _manage_result(self, result, is_import=False):
+    def _manage_result(self, result):
         """Manage the previous result."""
 
         if result != RESULT_SUCCESS:
-            if is_import:
-                _LOGGER.error(
-                    "Error during setup of host %s using configuration.yaml info. Reason: %s",
-                    self._host,
-                    CONFIG_RESULTS[result],
-                )
-                return self.async_abort(reason=result)
-            else:
-                step_id = (
-                    "stdeviceid" if result == RESULT_ST_DEVICE_NOT_FOUND else "user"
-                )
-                return self._show_form({"base": result}, step_id)
+            return self._show_form(
+                errors={"base": result},
+                step_id="stdeviceid" if result == RESULT_ST_DEVICE_NOT_FOUND else "user"
+            )
 
         return self._save_entry()
 
@@ -315,17 +292,22 @@ class SamsungTVConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
         data = {
             CONF_HOST: self._host,
             CONF_NAME: self._name,
-            CONF_ID: self._tvinfo._uuid,
-            CONF_MAC: self._tvinfo._macaddress or self._mac,
-            CONF_DEVICE_NAME: self._tvinfo._device_name,
-            CONF_DEVICE_MODEL: self._tvinfo._device_model,
-            CONF_PORT: self._tvinfo._port,
+            CONF_PORT: self._tv_info.ws_port,
+            CONF_WS_NAME: self._ws_name,
         }
+        if self._mac:
+            data[CONF_MAC] = self._mac
 
-        if self._ws_name:
-            data[CONF_WS_NAME] = self._ws_name
+        for key, attr in {
+            CONF_ID: ATTR_DEVICE_ID,
+            CONF_DEVICE_NAME: ATTR_DEVICE_NAME,
+            CONF_DEVICE_MODEL: ATTR_DEVICE_MODEL,
+            CONF_DEVICE_OS: ATTR_DEVICE_OS,
+        }.items():
+            if attr in self._device_info:
+                data[key] = self._device_info[attr]
 
-        title = self._name if not self._use_default_name else self._tvinfo._device_name
+        title = self._name
         if self._api_key and self._device_id:
             data[CONF_API_KEY] = self._api_key
             data[CONF_DEVICE_ID] = self._device_id
@@ -333,9 +315,6 @@ class SamsungTVConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
             self.CONNECTION_CLASS = config_entries.CONN_CLASS_CLOUD_POLL
         else:
             self.CONNECTION_CLASS = config_entries.CONN_CLASS_LOCAL_POLL
-
-        if self._tvinfo._device_os:
-            data[CONF_DEVICE_OS] = self._tvinfo._device_os
 
         _LOGGER.info("Configured new entity %s with host %s", title, self._host)
         return self.async_create_entry(title=title, data=data)
@@ -349,7 +328,9 @@ class SamsungTVConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                 vol.Optional(
                     CONF_USE_HA_NAME, default=data.get(CONF_USE_HA_NAME, False)
                 ): bool,
-                vol.Optional(CONF_API_KEY, default=data.get(CONF_API_KEY, "")): str,
+                vol.Optional(
+                    CONF_API_KEY, description={"suggested_value": data.get(CONF_API_KEY, "")}
+                ): str,
             }
         )
 
@@ -411,31 +392,36 @@ class OptionsFlowHandler(config_entries.OptionsFlow):
                 return await self.async_step_adv_opt()
             return self._save_entry(data=user_input)
 
-        options = self.config_entry.options
+        switch_entities = _async_get_matching_entities(
+            self.hass,
+            _async_get_domains_service(self.hass, SERVICE_TURN_ON),
+            _async_get_entry_entities(self.hass, self.config_entry.entry_id),
+        )
+        options = _validate_options(self.config_entry.options, switch_entities)
         data_schema = vol.Schema({})
 
         if self._use_st:
             data_schema = data_schema.extend(
                 {
-                    vol.Optional(
+                    vol.Required(
                         CONF_USE_ST_STATUS_INFO,
                         default=options.get(
                             CONF_USE_ST_STATUS_INFO, True
                         ),
                     ): bool,
-                    vol.Optional(
+                    vol.Required(
                         CONF_USE_ST_CHANNEL_INFO,
                         default=options.get(
                             CONF_USE_ST_CHANNEL_INFO, True
                         ),
                     ): bool,
-                    vol.Optional(
+                    vol.Required(
                         CONF_SHOW_CHANNEL_NR,
                         default=options.get(
                             CONF_SHOW_CHANNEL_NR, False
                         ),
                     ): bool,
-                    vol.Optional(
+                    vol.Required(
                         OPT_POWER_ON_METHOD,
                         default=POWER_ON_METHODS.get(
                             options.get(
@@ -448,7 +434,7 @@ class OptionsFlowHandler(config_entries.OptionsFlow):
 
         data_schema = data_schema.extend(
             {
-                vol.Optional(
+                vol.Required(
                     OPT_LOGO_OPTION,
                     default=LOGO_OPTIONS.get(
                         options.get(CONF_LOGO_OPTION, LOGO_OPTION_DEFAULT[0])
@@ -457,20 +443,16 @@ class OptionsFlowHandler(config_entries.OptionsFlow):
                 vol.Optional(
                     CONF_SYNC_TURN_OFF,
                     description={
-                        "suggested_value": options.get(
-                            CONF_SYNC_TURN_OFF, ""
-                        )
+                        "suggested_value": options.get(CONF_SYNC_TURN_OFF)
                     },
-                ): str,
+                ): cv.multi_select(switch_entities),
                 vol.Optional(
                     CONF_SYNC_TURN_ON,
                     description={
-                        "suggested_value": options.get(
-                            CONF_SYNC_TURN_ON, ""
-                        )
+                        "suggested_value": options.get(CONF_SYNC_TURN_ON)
                     },
-                ): str,
-                vol.Optional(CONF_SHOW_ADV_OPT, default=False): bool,
+                ): cv.multi_select(switch_entities),
+                vol.Required(CONF_SHOW_ADV_OPT, default=False): bool,
             }
         )
         return self.async_show_form(step_id="init", data_schema=data_schema)
@@ -485,7 +467,7 @@ class OptionsFlowHandler(config_entries.OptionsFlow):
             user_input[CONF_APP_LAUNCH_METHOD] = _get_key_from_value(
                 APP_LAUNCH_METHODS, user_input.pop(OPT_APP_LAUNCH_METHOD, None)
             )
-            self._adv_options.update(user_input)
+            self._adv_options = user_input
             return await self.async_step_init()
 
         return self._async_adv_opt_form()
@@ -493,10 +475,14 @@ class OptionsFlowHandler(config_entries.OptionsFlow):
     @callback
     def _async_adv_opt_form(self):
         """Return configuration form for advanced options."""
+        external_entities = _async_get_matching_entities(
+            self.hass, [BS_DOMAIN]
+        )
         options = self._adv_options
+
         data_schema = vol.Schema(
             {
-                vol.Optional(
+                vol.Required(
                     OPT_APP_LOAD_METHOD,
                     default=APP_LOAD_METHODS.get(
                         options.get(
@@ -504,7 +490,7 @@ class OptionsFlowHandler(config_entries.OptionsFlow):
                         )
                     ),
                 ): vol.In(list(APP_LOAD_METHODS.values())),
-                vol.Optional(
+                vol.Required(
                     OPT_APP_LAUNCH_METHOD,
                     default=APP_LAUNCH_METHODS.get(
                         options.get(
@@ -512,31 +498,49 @@ class OptionsFlowHandler(config_entries.OptionsFlow):
                         )
                     ),
                 ): vol.In(list(APP_LAUNCH_METHODS.values())),
-                vol.Optional(
+                vol.Required(
                     CONF_DUMP_APPS,
                     default=options.get(CONF_DUMP_APPS, False),
                 ): bool,
-                vol.Optional(
+                vol.Required(
                     CONF_USE_MUTE_CHECK,
                     default=options.get(CONF_USE_MUTE_CHECK, True),
                 ): bool,
-                vol.Optional(
+                vol.Required(
                     CONF_WOL_REPEAT,
                     default=min(
                         options.get(CONF_WOL_REPEAT, 1),
                         MAX_WOL_REPEAT,
                     ),
                 ): vol.All(vol.Coerce(int), vol.Clamp(min=1, max=MAX_WOL_REPEAT)),
-                vol.Optional(
+                vol.Required(
                     CONF_POWER_ON_DELAY,
                     default=options.get(
                         CONF_POWER_ON_DELAY, DEFAULT_POWER_ON_DELAY
                     ),
                 ): vol.All(vol.Coerce(int), vol.Clamp(min=0, max=60)),
+                vol.Optional(
+                    CONF_EXT_POWER_ENTITY,
+                    description={
+                        "suggested_value": options.get(CONF_EXT_POWER_ENTITY)
+                    }
+                ): vol.In(external_entities),
             }
         )
 
         return self.async_show_form(step_id="adv_opt", data_schema=data_schema)
+
+
+def _validate_options(options: dict, sw_ent: dict):
+    """Validate options format"""
+    valid_options = {}
+    for opt_key, opt_val in options.items():
+        if opt_key in [CONF_SYNC_TURN_OFF, CONF_SYNC_TURN_ON]:
+            if isinstance(opt_val, list):
+                valid_options[opt_key] = [k for k in opt_val if k in sw_ent]
+            continue
+        valid_options[opt_key] = opt_val
+    return valid_options
 
 
 def _get_key_from_value(source: dict, value: str):
@@ -546,3 +550,36 @@ def _get_key_from_value(source: dict, value: str):
             if src_value == value:
                 return src_key
     return None
+
+
+def _async_get_matching_entities(hass: HomeAssistant, domains=None, excl_entities=None):
+    """Fetch all entities or entities in the given domains."""
+    return {
+        state.entity_id: f"{state.attributes.get(ATTR_FRIENDLY_NAME, state.entity_id)} ({state.entity_id})"
+        for state in sorted(
+            hass.states.async_all(domains and set(domains)),
+            key=lambda item: item.entity_id,
+        )
+        if state.entity_id not in (excl_entities or [])
+    }
+
+
+def _async_get_domains_service(hass: HomeAssistant, service_name: str):
+    """Fetch list of domain that provide a specific service."""
+    return [
+        domain
+        for domain, service in hass.services.async_services().items()
+        if service_name in service
+    ]
+
+
+def _async_get_entry_entities(hass: HomeAssistant, entry_id: str):
+    """Get the entities related to current entry"""
+    return [
+        entry.entity_id
+        for entry in (
+            er.async_entries_for_config_entry(
+                er.async_get(hass), entry_id
+            )
+        )
+    ]

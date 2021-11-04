@@ -96,6 +96,7 @@ class WasteSensor(Entity):
         self.data.update()
 
         try:
+            # selects the next date
             if self.type == 'restmuell':
                 self._state = next(iter(self.data.restmuell), None)
             elif self.type == 'gelbersack':

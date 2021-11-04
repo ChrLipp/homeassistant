@@ -1,0 +1,87 @@
+device_tracker:
+  - platform: iphonedetect
+    consider_home: 60
+    new_device_defaults:
+      track_new_devices: true
+    hosts:
+      anna_iphone: 10.0.0.1
+      elias_iphone: 10.0.0.2
+      anita_iphone: 10.0.0.3
+      christian_iphone: 10.0.0.4
+      jessica_iphone: 10.0.0.5
+
+logbook:
+  exclude:
+    entities:
+      - device_tracker.anna_iphone
+      - device_tracker.elias_iphone
+      - device_tracker.anita_iphone
+      - device_tracker.christian_iphone
+      - device_tracker.jessica_iphone
+      
+      - device_tracker.anna_mavie
+      - sensor.anna_mavie_battery_level
+      - sensor.anna_mavie_battery_state
+      - sensor.anna_mavie_bssid
+      - sensor.anna_mavie_connection_type
+      - sensor.anna_mavie_geocoded_location
+      - sensor.anna_mavie_last_update_trigger
+      - sensor.anna_mavie_sim_1
+      - sensor.anna_mavie_sim_2
+      - sensor.anna_mavie_ssid
+      - sensor.anna_mavie_storage
+      
+      - device_tracker.christian
+      - sensor.christian_activity
+      - sensor.christian_average_active_pace
+      - sensor.christian_battery_level
+      - sensor.christian_battery_state
+      - sensor.christian_bssid
+      - sensor.christian_connection_type
+      - sensor.christian_distance
+      - sensor.christian_floors_ascended
+      - sensor.christian_floors_descended
+      - sensor.christian_geocoded_location
+      - sensor.christian_last_update_trigger
+      - sensor.christian_sim_1
+      - sensor.christian_ssid
+      - sensor.christian_steps
+      - sensor.christian_storage
+
+history:
+  exclude:
+    entities:
+      - device_tracker.anna_iphone
+      - device_tracker.elias_iphone
+      - device_tracker.anita_iphone
+      - device_tracker.christian_iphone
+      - device_tracker.jessi_iphone
+      
+      - device_tracker.anna_mavie
+      - sensor.anna_mavie_battery_level
+      - sensor.anna_mavie_battery_state
+      - sensor.anna_mavie_bssid
+      - sensor.anna_mavie_connection_type
+      - sensor.anna_mavie_geocoded_location
+      - sensor.anna_mavie_last_update_trigger
+      - sensor.anna_mavie_sim_1
+      - sensor.anna_mavie_sim_2
+      - sensor.anna_mavie_ssid
+      - sensor.anna_mavie_storage
+      
+      - device_tracker.christian
+      - sensor.christian_activity
+      - sensor.christian_average_active_pace
+      - sensor.christian_battery_level
+      - sensor.christian_battery_state
+      - sensor.christian_bssid
+      - sensor.christian_connection_type
+      - sensor.christian_distance
+      - sensor.christian_floors_ascended
+      - sensor.christian_floors_descended
+      - sensor.christian_geocoded_location
+      - sensor.christian_last_update_trigger
+      - sensor.christian_sim_1
+      - sensor.christian_ssid
+      - sensor.christian_steps
+      - sensor.christian_storage
