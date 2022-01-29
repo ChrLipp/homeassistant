@@ -12,8 +12,8 @@ views:
         entities:
           - person.christian
           - person.anita
-          - person.elias
           - person.anna_mavie
+          - person.elias
           - person.jessica
       - entity: weather.home
         type: weather-forecast
@@ -91,6 +91,27 @@ views:
         entity: camera.sunny
         show_name: false
         show_state: false
+      - type: entities
+        entities:
+          - switch.plug_02
+          - switch.plug_03
+          - type: divider
+          - switch.plug_04
+          - switch.plug_05
+          - type: divider
+          - switch.plug_06
+          - switch.plug_07
+          - type: divider
+          - switch.plug_08
+          - switch.plug_09
+          - type: divider
+          - switch.plug_10
+          - switch.plug_11
+          - type: divider
+          - switch.plug_12
+          - switch.plug_13
+        title: Schaltbare Steckdosen
+        show_header_toggle: false
       - cards:
           - entity: light.elias_light
             hold_action:
@@ -160,15 +181,24 @@ views:
                   action: toggle
                 type: entity-button
             type: vertical-stack
-          - entity: switch.fence_right
-            name: Ein Flügel
-            show_icon: true
-            show_name: true
-            state_color: true
-            tap_action:
-              action: toggle
-            type: entity-button
-            icon: 'mdi:gate'
+          - cards:
+              - entity: switch.fence_right
+                name: Ein Flügel
+                show_icon: true
+                show_name: true
+                state_color: true
+                tap_action:
+                  action: toggle
+                type: entity-button
+                icon: 'mdi:gate'
+              - entity: cover.garage_anita
+                show_icon: true
+                show_name: true
+                state_color: true
+                tap_action:
+                  action: toggle
+                type: entity-button
+            type: vertical-stack
         title: Abfahrt
         type: horizontal-stack
       - cards:

@@ -1,3 +1,7 @@
+# For new devices see https://github.com/codetheweb/tuyapi/blob/master/docs/SETUP.md
+# On my MAC run tuya-cli wizard. You will have to use any device_id.
+# Provide a static IP address.  Modify device in app, choose "Information des Geräts", look at Mac address and search this address in your router.
+
 localtuya:
   - host: 10.0.0.206
     device_id: !secret tuya_plug_04_device_id
@@ -43,4 +47,49 @@ localtuya:
     entities:
       - platform: switch
         friendly_name: plug_08
+        id: 1
+  - host: 10.0.0.221
+    device_id: !secret tuya_plug_09_device_id
+    local_key: !secret tuya_plug_09_local_key
+    friendly_name: plug_09
+    protocol_version: "3.3"
+    entities:
+      - platform: switch
+        friendly_name: plug_09
+        id: 1
+  - host: 10.0.0.222
+    device_id: !secret tuya_plug_10_device_id
+    local_key: !secret tuya_plug_10_local_key
+    friendly_name: plug_10
+    protocol_version: "3.3"
+    entities:
+      - platform: switch
+        friendly_name: plug_10
+        id: 1
+  - host: 10.0.0.223
+    device_id: !secret tuya_plug_11_device_id
+    local_key: !secret tuya_plug_11_local_key
+    friendly_name: plug_11
+    protocol_version: "3.3"
+    entities:
+      - platform: switch
+        friendly_name: plug_11
+        id: 1
+  - host: 10.0.0.224
+    device_id: !secret tuya_plug_12_device_id
+    local_key: !secret tuya_plug_12_local_key
+    friendly_name: plug_12
+    protocol_version: "3.3"
+    entities:
+      - platform: switch
+        friendly_name: plug_12
+        id: 1
+  - host: 10.0.0.225
+    device_id: !secret tuya_plug_13_device_id
+    local_key: !secret tuya_plug_13_local_key
+    friendly_name: plug_13
+    protocol_version: "3.3"
+    entities:
+      - platform: switch
+        friendly_name: plug_13
         id: 1

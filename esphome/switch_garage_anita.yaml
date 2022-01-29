@@ -20,7 +20,7 @@ substitutions:
   device_name: switch-garage-anita
   device_description: Schalter Garagentor Anita
   friendly_name: Switch Garage Anita
-  short_name: garage-anita
+  short_name: Garage Anita
   ip_adress: 10.0.0.218
 
 esphome:
@@ -60,7 +60,7 @@ switch:
 cover:
   - platform: template
     device_class: garage
-    name: "Garage Door"
+    name: $short_name
     id: template_cov
     lambda: |-
       if (id(contact_sensor).state) {

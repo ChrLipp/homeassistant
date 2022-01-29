@@ -36,7 +36,7 @@ class WasteData:
     # Select all date entries
     def get_text_from_tds(self, elements):
         result = list()
-        for element in elements:            
+        for element in elements:
             parsed_date = self.parse_date(element.select('p')[0].text)
             if parsed_date is not None:
                 result.append(parsed_date)

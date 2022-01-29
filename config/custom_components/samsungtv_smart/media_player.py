@@ -1,7 +1,7 @@
 """Support for interface with an Samsung TV."""
 from aiohttp import ClientConnectionError, ClientSession, ClientResponseError
-from async_timeout import timeout
 import asyncio
+import async_timeout
 from datetime import datetime, timedelta
 import json
 import logging
@@ -16,7 +16,8 @@ from .api.smartthings import SmartThingsTV, STStatus
 from .api.upnp import upnp
 
 from homeassistant.components.media_player import DEVICE_CLASS_TV, MediaPlayerEntity
-from homeassistant.core import DOMAIN as HA_DOMAIN
+from homeassistant.config_entries import ConfigEntry
+from homeassistant.core import DOMAIN as HA_DOMAIN, HomeAssistant
 from homeassistant.exceptions import HomeAssistantError
 from homeassistant.helpers import config_validation as cv, entity_platform
 from homeassistant.helpers.device_registry import CONNECTION_NETWORK_MAC
@@ -76,6 +77,7 @@ from .const import (
     CONF_DUMP_APPS,
     CONF_EXT_POWER_ENTITY,
     CONF_LOGO_OPTION,
+    CONF_PING_PORT,
     CONF_POWER_ON_DELAY,
     CONF_POWER_ON_METHOD,
     CONF_SHOW_CHANNEL_NR,
@@ -104,7 +106,7 @@ from .const import (
     AppLaunchMethod,
     PowerOnMethod,
 )
-from .logo import LOGO_OPTION_DEFAULT, Logo
+from .logo import LOGO_OPTION_DEFAULT, Logo, LogoOption
 
 ATTR_ART_MODE_STATUS = "art_mode_status"
 ATTR_IP_ADDRESS = "ip_address"
@@ -124,7 +126,6 @@ KEYPRESS_DEFAULT_DELAY = 0.5
 KEYPRESS_MAX_DELAY = 2.0
 KEYPRESS_MIN_DELAY = 0.2
 MAX_ST_ERROR_COUNT = 4
-MAX_ST_CONN_ERROR_COUNT = 3
 MEDIA_TYPE_BROWSER = "browser"
 MEDIA_TYPE_KEY = "send_key"
 MEDIA_TYPE_TEXT = "send_text"
@@ -157,15 +158,16 @@ SCAN_INTERVAL = timedelta(seconds=15)
 _LOGGER = logging.getLogger(__name__)
 
 
-async def async_setup_entry(hass, config_entry, async_add_entities):
+async def async_setup_entry(
+    hass: HomeAssistant, entry: ConfigEntry, async_add_entities
+) -> None:
     """Set up the Samsung TV from a config entry."""
 
     # session used by aiohttp
     session = hass.helpers.aiohttp_client.async_get_clientsession()
 
-    entry_id = config_entry.entry_id
-    config = config_entry.data.copy()
-    add_conf = hass.data[DOMAIN][config_entry.unique_id]
+    config = entry.data.copy()
+    add_conf = hass.data[DOMAIN][entry.unique_id]
     for attr, value in add_conf.items():
         if value:
             config[attr] = value
@@ -176,7 +178,17 @@ async def async_setup_entry(hass, config_entry, async_add_entities):
     logo_file = hass.config.path(STORAGE_DIR, f"{DOMAIN}_logo_paths")
 
     async_add_entities(
-        [SamsungTVDevice(config, entry_id, session, token_file, logo_file)], True
+        [
+            SamsungTVDevice(
+                config,
+                config.get(CONF_ID, entry.entry_id),
+                hass.data[DOMAIN][entry.entry_id],
+                session,
+                token_file,
+                logo_file,
+            )
+        ],
+        True,
     )
 
     # register services
@@ -203,17 +215,19 @@ async def async_setup_entry(hass, config_entry, async_add_entities):
 class SamsungTVDevice(MediaPlayerEntity):
     """Representation of a Samsung TV."""
 
-    def __init__(self, config, entry_id, session: ClientSession, token_file, logo_file):
+    def __init__(
+            self, config, unique_id, entry_data, session: ClientSession, token_file, logo_file
+    ):
         """Initialize the Samsung device."""
 
-        self._entry_id = entry_id
+        self._entry_data = entry_data
         self._session = session
         self._host = config[CONF_HOST]
         self._mac = config.get(CONF_MAC)
 
         # Set entity attributes
         self._attr_name = config.get(CONF_NAME, self._host)
-        self._attr_unique_id = config.get(CONF_ID, entry_id)
+        self._attr_unique_id = unique_id
         self._attr_icon = "mdi:television"
         self._attr_device_class = DEVICE_CLASS_TV
         self._attr_supported_features = SUPPORT_SAMSUNGTV_SMART
@@ -282,7 +296,6 @@ class SamsungTVDevice(MediaPlayerEntity):
         self._fake_on = None
         self._delayed_set_source = None
         self._delayed_set_source_time = None
-        self._st_conn_error_count = 0
 
         ws_name = config.get(CONF_WS_NAME, self._attr_name)
         ws_port = config.get(CONF_PORT, DEFAULT_PORT)
@@ -314,7 +327,7 @@ class SamsungTVDevice(MediaPlayerEntity):
         self._st_error_count = 0
         self._setvolumebyst = False
 
-        self._logo_option = LOGO_OPTION_DEFAULT[0]
+        self._logo_option = LOGO_OPTION_DEFAULT
         self._logo = Logo(
             logo_option=self._logo_option,
             logo_file_download=logo_file,
@@ -371,10 +384,9 @@ class SamsungTVDevice(MediaPlayerEntity):
 
     def _get_option(self, param, default=None):
         """Get option from entity configuration."""
-        entry_id = self.hass.data.get(DOMAIN, {}).get(self._entry_id)
-        if not entry_id:
+        if not self._entry_data:
             return default
-        option = entry_id[DATA_OPTIONS].get(param)
+        option = self._entry_data[DATA_OPTIONS].get(param)
         return default if option is None else option
 
     def _power_off_in_progress(self):
@@ -387,7 +399,7 @@ class SamsungTVDevice(MediaPlayerEntity):
     def _update_forced(self):
         """Check if a forced update is required."""
         if self._set_update_forced:
-            self._update_forced_time = datetime.now()
+            self._update_forced_time = datetime.utcnow()
             self._power_on_detected = datetime.min
             self._set_update_forced = False
             return False
@@ -395,7 +407,7 @@ class SamsungTVDevice(MediaPlayerEntity):
         if not self._update_forced_time:
             return False
 
-        call_time = datetime.now()
+        call_time = datetime.utcnow()
         difference = (call_time - self._update_forced_time).total_seconds()
         if difference >= 10:
             self._update_forced_time = None
@@ -412,8 +424,8 @@ class SamsungTVDevice(MediaPlayerEntity):
 
             if power_on_delay > 0:
                 if not self._power_on_detected:
-                    self._power_on_detected = datetime.now()
-                difference = (datetime.now() - self._power_on_detected).total_seconds()
+                    self._power_on_detected = datetime.utcnow()
+                difference = (datetime.utcnow() - self._power_on_detected).total_seconds()
                 if difference < power_on_delay:
                     return False
         else:
@@ -449,7 +461,8 @@ class SamsungTVDevice(MediaPlayerEntity):
     def _ping_device(self):
         """Ping TV with WS and others method to check power status."""
 
-        result = self._ws.ping_device()
+        ping_port = self._get_option(CONF_PING_PORT, 0)
+        result = self._ws.ping_device(ping_port)
         if result and self._st:
             use_st_status = self._get_option(CONF_USE_ST_STATUS_INFO, True)
             if (
@@ -665,6 +678,30 @@ class SamsungTVDevice(MediaPlayerEntity):
             return False
         return True
 
+    def _log_st_error(self, st_error):
+        """Log start or end problem in ST communication"""
+        if self._st_error_count == 0 and not st_error:
+            return
+
+        if st_error:
+            if self._st_error_count == MAX_ST_ERROR_COUNT:
+                return
+
+            self._st_error_count += 1
+            if self._st_error_count == MAX_ST_ERROR_COUNT:
+                _LOGGER.error(
+                    "%s - Error refreshing from SmartThings."
+                    " Check connection status with TV on the phone App",
+                    self.entity_id,
+                )
+            return
+
+        if self._st_error_count >= MAX_ST_ERROR_COUNT:
+            _LOGGER.warning(
+                "%s - Connection to SmartThings restored", self.entity_id
+            )
+        self._st_error_count = 0
+
     async def async_update(self):
         """Update state of device."""
 
@@ -672,23 +709,19 @@ class SamsungTVDevice(MediaPlayerEntity):
             return
 
         """Required to get source and media title"""
+        st_error = False
         if self._st:
             use_channel_info = self._get_option(CONF_USE_ST_CHANNEL_INFO, True)
             try:
-                with timeout(ST_UPDATE_TIMEOUT):
+                async with async_timeout.timeout(ST_UPDATE_TIMEOUT):
                     await self._st.async_device_update(use_channel_info)
-                self._st_error_count = 0
             except (
                 asyncio.TimeoutError,
                 ClientConnectionError,
                 ClientResponseError,
             ) as ex:
-                self._st_error_count += 1
-                _LOGGER.debug("SamsungTV Smart - Error: [%s]", ex)
-
-        if self._st_error_count >= MAX_ST_ERROR_COUNT:
-            _LOGGER.error("SamsungTV Smart - Error refreshing from SmartThings")
-            self._st_error_count = 0
+                st_error = True
+                _LOGGER.debug("%s - SmartThings error: [%s]", self.entity_id, ex)
 
         result = await self.hass.async_add_executor_job(self._ping_device)
 
@@ -702,7 +735,9 @@ class SamsungTVDevice(MediaPlayerEntity):
                 self._fake_on = is_muted or not self._upnp.connected
                 if self._fake_on:
                     if first_detect:
-                        _LOGGER.debug("SamsungTV Smart - Detected fake power on, status not updated")
+                        _LOGGER.debug(
+                            "%s - Detected fake power on, status not updated", self.entity_id
+                        )
                     result = False
 
         result = self._delay_power_on(result)
@@ -710,23 +745,14 @@ class SamsungTVDevice(MediaPlayerEntity):
 
         if result and self._st:
             if self._st.state != self._st.state.STATE_ON:
-                if self._st_conn_error_count < MAX_ST_CONN_ERROR_COUNT:
-                    self._st_conn_error_count += 1
-                    if self._st_conn_error_count == MAX_ST_CONN_ERROR_COUNT:
-                        _LOGGER.warning(
-                            "SamsungTV Smart - SmartThings connection is offline."
-                            " Check connection status on the phone App"
-                        )
-            else:
-                if self._st_conn_error_count >= MAX_ST_CONN_ERROR_COUNT:
-                    _LOGGER.warning("SamsungTV Smart - SmartThings connection now is online")
-                self._st_conn_error_count = 0
+                st_error = True
+        self._log_st_error(st_error)
 
         self._state = STATE_ON if result else STATE_OFF
 
-        if self.state == STATE_ON:
+        if self.state == STATE_ON:  # NB: We are checking properties, not attribute!
             if self._delayed_set_source:
-                difference = (datetime.now() - self._delayed_set_source_time).total_seconds()
+                difference = (datetime.utcnow() - self._delayed_set_source_time).total_seconds()
                 if difference > DELAYED_SOURCE_TIMEOUT:
                     self._delayed_set_source = None
                 else:
@@ -833,14 +859,20 @@ class SamsungTVDevice(MediaPlayerEntity):
             self._running_app,
         )
 
-        new_logo_option = self._get_option(CONF_LOGO_OPTION, self._logo_option)
+        new_logo_option = LogoOption(
+            self._get_option(CONF_LOGO_OPTION, self._logo_option.value)
+        )
         if self._logo_option != new_logo_option:
             self._logo_option = new_logo_option
             self._logo.set_logo_color(new_logo_option)
             logo_option_changed = True
 
-        if new_media_title == self._attr_media_title and not logo_option_changed:
-            return
+        if not logo_option_changed:
+            logo_option_changed = self._logo.check_requested()
+
+        if not logo_option_changed:
+            if self._attr_media_title and new_media_title == self._attr_media_title:
+                return
 
         media_image_url = await self._logo.async_find_match(new_media_title)
         self._attr_media_image_url = media_image_url
@@ -864,13 +896,17 @@ class SamsungTVDevice(MediaPlayerEntity):
                         return self._st.channel_name
                     if self._st.channel != "":
                         return self._st.channel
+                    return None
 
                 elif self._st.channel_name != "":
                     # the channel name holds the running app ID
                     # regardless of the self._cloud_source value
                     return self._st.channel_name
 
-        return self._get_source()
+        media_title = self._get_source()
+        if media_title and media_title != DEFAULT_APP:
+            return media_title
+        return None
 
     @property
     def media_channel(self):
@@ -1340,7 +1376,7 @@ class SamsungTVDevice(MediaPlayerEntity):
         if self.state != STATE_ON:
             if await self._async_turn_on():
                 self._delayed_set_source = source
-                self._delayed_set_source_time = datetime.now()
+                self._delayed_set_source_time = datetime.utcnow()
             return
 
         if self._source_list and source in self._source_list:

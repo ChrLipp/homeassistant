@@ -1,0 +1,14 @@
+# Use your Garmin to execute entities, 
+# Works only with an existing bluetooth connection to your phone, so the benefit is not very large.
+# Pitfall: Garmin allows only https, so use the external URL for config.
+# See
+# - https://apps.garmin.com/en-US/apps/47f64742-cf59-4d54-b368-841a347f7c6d
+# - https://github.com/hasscontrol/hasscontrol
+
+group:
+  garmin:
+    name: Garmin
+    entities:
+      - switch.fence_left
+      - cover.garage_christian
+
