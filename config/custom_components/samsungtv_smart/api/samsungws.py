@@ -33,9 +33,9 @@ import sys
 from threading import Thread, Lock
 import time
 from typing import Any
+from urllib.parse import urlencode, urljoin
 import uuid
 import websocket
-from yarl import URL
 
 from . import shortcuts
 
@@ -194,12 +194,26 @@ class SamsungTVWS:
         self._client_art_supported = 2
 
         self._ping = Ping(self.host)
+        self._new_token_callback = None
 
     def __enter__(self):
         return self
 
     def __exit__(self, exc_type, exc_value, exc_traceback):
         self.close()
+
+    @staticmethod
+    def ping_probe(host):
+        """Try to ping device and return usable port."""
+        ping = Ping(host)
+        for port in (9197, 0):
+            try:
+                if ping.ping(port):
+                    return port
+            except Exception:
+                _LOGGING.debug("Failed to ping device using port %s", port)
+
+        return None
 
     @staticmethod
     def _serialize_string(string):
@@ -212,41 +226,45 @@ class SamsungTVWS:
 
     def _format_websocket_url(self, path, is_ssl=False, use_token=True):
         scheme = "wss" if is_ssl else "ws"
+
+        base_uri = f"{scheme}://{self.host}:{self.port}"
+        ws_uri = urljoin(base_uri, path)
+        query = {"name": self._serialize_string(self.name)}
         if is_ssl and use_token:
-            token = self._get_token()
-        else:
-            token = ""
+            if token := self._get_token():
+                query["token"] = token
+        ws_query = urlencode(query)
+        return f"{ws_uri}?{ws_query}"
 
-        new_uri = URL.build(
-            scheme=scheme,
-            host=self.host,
-            port=self.port,
-            path=path,
-            query={"name": self._serialize_string(self.name)}
-        )
-
-        if token:
-            return str(new_uri.update_query({"token": token}))
-        return str(new_uri)
+    def register_new_token_callback(self, func):
+        """Register a callback function."""
+        self._new_token_callback = func
 
     def _get_token(self):
+        """Get current token."""
         if self.token_file is not None:
             try:
                 with open(self.token_file, "r") as token_file:
                     return token_file.readline()
-            except:
+            except Exception as exc:
+                _LOGGING.error("Failed to read TV token file: %s", str(exc))
                 return ""
-        else:
-            return self.token
+        return self.token
 
     def _set_token(self, token):
+        """Save new token."""
         _LOGGING.debug("New token %s", token)
         if self.token_file is not None:
             _LOGGING.debug("Save new token to file %s", self.token_file)
             with open(self.token_file, "w") as token_file:
                 token_file.write(token)
-        else:
-            self.token = token
+            return
+
+        if self.token is not None and self.token == token:
+            return
+        self.token = token
+        if self._new_token_callback is not None:
+            self._new_token_callback()
 
     def _ws_send(self, command, key_press_delay=None, *, use_control=False, ws_socket=None):
         using_remote = False

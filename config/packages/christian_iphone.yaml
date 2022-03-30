@@ -1,0 +1,41 @@
+logbook:
+  exclude:
+    entities:
+      - binary_sensor.christian_focus
+      - device_tracker.christian
+      - sensor.christian_activity
+      - sensor.christian_average_active_pace
+      - sensor.christian_battery_level
+      - sensor.christian_battery_state
+      - sensor.christian_bssid
+      - sensor.christian_connection_type
+      - sensor.christian_distance
+      - sensor.christian_floors_ascended
+      - sensor.christian_floors_descended
+      - sensor.christian_geocoded_location
+      - sensor.christian_last_update_trigger
+      - sensor.christian_sim_1
+      - sensor.christian_ssid
+      - sensor.christian_steps
+      - sensor.christian_storage
+
+history:
+  exclude:
+    entities:
+      - binary_sensor.christian_focus
+      - device_tracker.christian
+      - sensor.christian_activity
+      - sensor.christian_average_active_pace
+      - sensor.christian_battery_level
+      - sensor.christian_battery_state
+      - sensor.christian_bssid
+      - sensor.christian_connection_type
+      - sensor.christian_distance
+      - sensor.christian_floors_ascended
+      - sensor.christian_floors_descended
+      - sensor.christian_geocoded_location
+      - sensor.christian_last_update_trigger
+      - sensor.christian_sim_1
+      - sensor.christian_ssid
+      - sensor.christian_steps
+      - sensor.christian_storage

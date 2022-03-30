@@ -33,4 +33,5 @@
 
 ## Fixed
 
-- Rewire the ventilation system
+- Send notification when Elias is not at home, but his alarm is activated
+- Close covers based on real brightness level instead of sun integration

@@ -2,4 +2,6 @@
 homekit:
   filter:
     include_entities:
+      - cover.garage_anita
+      - cover.garage_christian
       - light.elias_light

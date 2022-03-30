@@ -1,7 +1,8 @@
 logbook:
   exclude:
     entities:
-      - device_tracker.eliass_iphone
+      - binary_sensor.eliass_iphone_focus
+      - device_tracker.elias
       - sensor.eliass_iphone_activity
       - sensor.eliass_iphone_average_active_pace
       - sensor.eliass_iphone_battery_level
@@ -21,8 +22,8 @@ logbook:
 history:
   exclude:
     entities:
+      - binary_sensor.eliass_iphone_focus
       - device_tracker.elias
-      - device_tracker.eliass_iphone
       - sensor.eliass_iphone_activity
       - sensor.eliass_iphone_average_active_pace
       - sensor.eliass_iphone_battery_level

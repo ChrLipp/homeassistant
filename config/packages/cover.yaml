@@ -206,10 +206,8 @@ automation:
   alias: Garden covers down on sundown
   description: 'Fährt die Rollos zum Garten am Abend runter'
   trigger:
-    - platform: numeric_state
-      entity_id: sun.sun
-      value_template: "{{ state_attr('sun.sun', 'elevation') }}"
-      below: -6.00
+    - platform: template
+      value_template: "{{ states('sensor.time') > '15:00' and states('sensor.logo3_naq1') | int < 10 }}"
   action:
     - service: cover.close_cover
       entity_id: cover.bedroom_window
@@ -220,10 +218,8 @@ automation:
   alias: Neighbors covers down on sundown
   description: 'Fährt die Rollos zum Nachbarn am Abend runter'
   trigger:
-    - platform: numeric_state
-      entity_id: sun.sun
-      value_template: "{{ state_attr('sun.sun', 'elevation') }}"
-      below: -3.40
+    - platform: template
+      value_template: "{{ states('sensor.time') > '15:00' and states('sensor.logo3_naq1') | int < 600 }}"
   action:
     - service: cover.close_cover
       entity_id: cover.kitchen_window

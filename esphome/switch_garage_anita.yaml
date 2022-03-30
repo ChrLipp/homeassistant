@@ -41,9 +41,9 @@ binary_sensor:
     pin: GPIO5
     name: "Garage Door Contact Sensor"
     id: contact_sensor
-    internal: true
-    filters:
-      - invert:
+#    internal: true
+#    filters:
+#      - invert:
 
 # The relay in the Shelly 1 that will deliver the pulse to
 # the garage door opener (not exposed to HA)

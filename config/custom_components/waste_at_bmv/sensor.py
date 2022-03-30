@@ -84,7 +84,7 @@ class WasteSensor(Entity):
         return self._unit
 
     @property
-    def device_state_attributes(self):
+    def extra_state_attributes(self):
         """Return attributes for the sensor."""
         return self._attributes
 

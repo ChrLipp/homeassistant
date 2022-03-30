@@ -164,6 +164,7 @@ history:
       - switch.ventilation_relay_2
       - switch.ventilation_relay_3
       - switch.ventilation_relay_4
+      - switch.ventilation_restart
       - fan.ventilation_fan
 
 #logger:

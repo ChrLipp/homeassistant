@@ -24,8 +24,24 @@ logbook:
   exclude:
     entities:
       - automation.disable_vacuum_camera_update_when_docked
+      - binary_sensor.sunny_mop_attached
+      - binary_sensor.sunny_water_box_attached
+      - binary_sensor.sunny_water_shortage
+      - camera.sunny
+      - sensor.sunny_dnd_start
+      - sensor.sunny_dnd_end
+      - sensor.sunny_last_clean_start
+      - sensor.sunny_last_clean_end
 
 history:
   exclude:
     entities:
       - automation.disable_vacuum_camera_update_when_docked
+      - binary_sensor.sunny_mop_attached
+      - binary_sensor.sunny_water_box_attached
+      - binary_sensor.sunny_water_shortage
+      - camera.sunny
+      - sensor.sunny_dnd_start
+      - sensor.sunny_dnd_end
+      - sensor.sunny_last_clean_start
+      - sensor.sunny_last_clean_end
