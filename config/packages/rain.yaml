@@ -1,0 +1,101 @@
+# Rain sensor and logicPublic
+#
+# I am using the public Netatmo sensor(s).
+# What I learned:
+# - sensor.netatmo_pottelsdorf_rain is not usable. The sensor updates its state every 5 minutes to his server,
+#   the server updates every 10 minutes to Netatmo. If you sum rain, it is much smaller than rain_today,
+#   because values are missed. See
+#   https://community.home-assistant.io/t/netatmo-rain-gauge-data-between-sensors-does-not-match/305736
+# - Therefore I set up sensor.netatmo_rain_changes to get the differences from the last value of rain_total.
+# - The template sensor is only initialized when a change occurs. For performing an init during start see
+#   https://community.home-assistant.io/t/add-initial-and-restore-variables-to-event-trigger-based-template-sensors/311401
+
+binary_sensor:
+- platform: template
+  sensors:
+    is_wet_outside:
+      friendly_name: Is it wet outside?
+      delay_off:
+        minutes: 30
+      value_template: >-
+        {{ states('sensor.netatmo_rain_changes')|float > 0.0 }}
+
+template:
+  - trigger:
+    - platform: state
+      entity_id:
+        - sensor.netatmo_pottelsdorf_rain_today
+    - platform: state
+      entity_id:
+        - sensor.netatmo_pottelsdorf_rain
+    - platform: homeassistant
+      event: start
+    sensor:
+      - name: Netatmo Rain Changes
+        state: >
+          {% if trigger.platform == 'homeassistant' %}
+            0.0
+          {% elif trigger.entity_id == 'sensor.netatmo_pottelsdorf_rain_today' %}
+            {% if trigger.from_state.state == 'unknown' and trigger.to_state.state == 'unknown' %}
+              0.0
+            {% elif trigger.to_state.state == 'unknown' %}
+              {{ trigger.from_state.state }}
+            {% elif trigger.from_state.state == 'unknown' %}
+              {{ trigger.to_state.state }}
+            {% else %}
+              {% set delta = trigger.to_state.state|float - trigger.from_state.state|float %}
+              {{ delta if delta > 0.0 else 0.0 }}
+            {% endif %}
+          {% elif trigger.entity_id == 'sensor.netatmo_pottelsdorf_rain' %}
+            {% if trigger.to_state.state != 'unknown' %}
+              {% if trigger.to_state.state|float == 0.0 %}
+                0.0
+              {% endif %}
+            {% endif %}
+          {% endif %}
+        unit_of_measurement: mm
+        icon: mdi:weather-rainy 
+        state_class: measurement
+
+automation:
+- id: '1653639569445'
+  alias: Rain starts
+  description: Triggers when rain start is detected
+  trigger:
+  - platform: state
+    entity_id: binary_sensor.is_wet_outside
+    to: 'on'
+  action:
+  - service: notify.telegram_admin
+    data:
+      message: Meister, es beginnt zu regnen!
+
+- id: '1653640337733'
+  alias: Rain ends
+  description: Triggers 30 minutes after rain
+  trigger:
+  - platform: state
+    entity_id: binary_sensor.is_wet_outside
+    to: 'off'
+  action:
+  - service: notify.telegram_admin
+    data:
+      message: Meister, Regen ist vorbei und Gras ist trocken.
+
+logbook:
+  exclude:
+    entities:
+      - automation.rain_ends
+      - automation.rain_starts
+      - sensor.netatmo_pottelsdorf_humidity
+      - sensor.netatmo_pottelsdorf_pressure
+      - sensor.netatmo_pottelsdorf_rain
+      - sensor.netatmo_pottelsdorf_rain_today
+      - sensor.netatmo_pottelsdorf_temperature
+      - sensor.netatmo_pottelsdorf_wind_strength
+
+history:
+  exclude:
+    entities:
+      - automation.rain_ends
+      - automation.rain_starts

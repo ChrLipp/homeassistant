@@ -30,7 +30,6 @@ _LOGGER = logging.getLogger(__name__)
 
 DEFAULT_ICON = 'mdi:robot-mower'
 DOMAIN = 'automower'
-REQUIREMENTS = ['pyhusmow==0.1.1']
 VENDOR = 'Husqvarna'
 
 # TODO: Add more statuses as we observe them
@@ -42,7 +41,7 @@ STATUS_OK_LEAVING =             'OK_LEAVING'
 STATUS_OK_SEARCHING =           'OK_SEARCHING'
 STATUS_PARKED_TIMER =           'PARKED_TIMER'
 STATUS_PARKED_AUTOTIMER =       'PARKED_AUTOTIMER'
-STATUS_PARKED_PARKED_SELECTED = 'PARKED_PARKED_SELECTED'
+STATUS_PARKED_PARKED_SELECTED = 'PARKED_IN_CS'
 STATUS_PAUSED =                 'PAUSED'
 STATUS_EXECUTING_PARK =         'EXECUTING_PARK'
 STATUS_EXECUTING_START =        'EXECUTING_START'
@@ -394,7 +393,7 @@ class AutomowerDevice(VacuumEntity):
         # remain active until there's an actual change from the
         # API.
         if self._stored_timestamp != self._state['storedTimestamp']:
-            self._mower_status = self._state['mowerStatus']
+            self._mower_status = self._state['mowerStatus']['activity']
             self._stored_timestamp = self._state['storedTimestamp']
         if self._see is not None:
             self.update_see()

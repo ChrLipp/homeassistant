@@ -22,6 +22,9 @@
 # VW  0 - 850       Halteregister (HR) 1 - 425      R/W word
 # AQ  1 - 8         Halteregister (HR) 513 - 520    R/W word
 # AM  1 - 64        Halteregister (HR) 529 - 592    R/W word
+#
+# The temperature sensors are two WZP-Pt100 with an range from -200 to 500 degree Celsius. The mapping occurs in LOGO!Soft Comfort.
+# Here I just divide it by 10.
 
 
 modbus:
@@ -48,10 +51,26 @@ modbus:
         scan_interval: 10
         unit_of_measurement: temperature
 
+
+template:
+  - sensor:
+      - name: "Logo3 Temperature 1"
+        unit_of_measurement: °C
+        state: "{{ states('sensor.logo3_naq3')|float / 10 }}"
+      - name: "Logo3 Temperature 2"
+        unit_of_measurement: °C
+        state: "{{ states('sensor.logo3_naq4')|float / 10 }}"
+
 logbook:
   exclude:
     entities:
       - sensor.logo3_naq1
       - sensor.logo3_naq2
+      - sensor.logo3_naq3
+      - sensor.logo3_naq4
+
+history:
+  exclude:
+    entities:
       - sensor.logo3_naq3
       - sensor.logo3_naq4

@@ -207,7 +207,7 @@ automation:
   description: 'Fährt die Rollos zum Garten am Abend runter'
   trigger:
     - platform: template
-      value_template: "{{ states('sensor.time') > '15:00' and states('sensor.logo3_naq1') | int < 10 }}"
+      value_template: "{{ not is_state('sensor.logo3_naq1', 'unavailable') and states('sensor.time') > '15:00' and states('sensor.logo3_naq1') | int < 10 }}"
   action:
     - service: cover.close_cover
       entity_id: cover.bedroom_window
@@ -219,7 +219,7 @@ automation:
   description: 'Fährt die Rollos zum Nachbarn am Abend runter'
   trigger:
     - platform: template
-      value_template: "{{ states('sensor.time') > '15:00' and states('sensor.logo3_naq1') | int < 600 }}"
+      value_template: "{{ not is_state('sensor.logo3_naq1', 'unavailable') and states('sensor.time') > '15:00' and states('sensor.logo3_naq1') | int < 600 }}"
   action:
     - service: cover.close_cover
       entity_id: cover.kitchen_window

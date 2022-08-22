@@ -1,0 +1,135 @@
+cover:
+  - platform: template
+    covers:
+      descent_anita_bike:
+        device_class: garage
+        friendly_name: "Descent Anita for bike"
+        value_template: >-
+          {% if is_state('cover.garage_anita', 'open') %}
+            open
+          {% else %}
+            closed
+          {% endif %}
+        open_cover:
+        - service: cover.toggle
+          data:
+            entity_id: cover.garage_anita
+        - service: switch.turn_on
+          data:
+            entity_id: switch.fence_right
+        close_cover:
+        - service: cover.toggle
+          data:
+            entity_id: cover.garage_anita
+        - service: switch.turn_on
+          data:
+            entity_id: switch.fence_right
+        icon_template: >-
+          {% if is_state('cover.garage_door', 'closed') %}
+            mdi:garage
+          {% else %}
+            mdi:garage-open
+          {% endif %}
+      descent_anita_car:
+        device_class: garage
+        friendly_name: "Descent Anita for car"
+        value_template: >-
+          {% if is_state('cover.garage_anita', 'open') %}
+            open
+          {% else %}
+            closed
+          {% endif %}
+        open_cover:
+        - service: cover.toggle
+          data:
+            entity_id: cover.garage_anita
+        - service: switch.turn_on
+          data:
+            entity_id: switch.fence_left
+        close_cover:
+        - service: cover.toggle
+          data:
+            entity_id: cover.garage_anita
+        - service: switch.turn_on
+          data:
+            entity_id: switch.fence_left
+        icon_template: >-
+          {% if is_state('cover.garage_door', 'closed') %}
+            mdi:garage
+          {% else %}
+            mdi:garage-open
+          {% endif %}
+      descent_christian_bike:
+        device_class: garage
+        friendly_name: "Descent Christian for bike"
+        value_template: >-
+          {% if is_state('cover.garage_christian', 'open') %}
+            open
+          {% else %}
+            closed
+          {% endif %}
+        open_cover:
+        - service: cover.toggle
+          data:
+            entity_id: cover.garage_christian
+        - service: switch.turn_on
+          data:
+            entity_id: switch.fence_right
+        close_cover:
+        - service: cover.toggle
+          data:
+            entity_id: cover.garage_christian
+        - service: switch.turn_on
+          data:
+            entity_id: switch.fence_right
+        icon_template: >-
+          {% if is_state('cover.garage_door', 'closed') %}
+            mdi:garage
+          {% else %}
+            mdi:garage-open
+          {% endif %}
+      descent_christian_car:
+        device_class: garage
+        friendly_name: "Descent Christian for car"
+        value_template: >-
+          {% if is_state('cover.garage_christian', 'open') %}
+            open
+          {% else %}
+            closed
+          {% endif %}
+        open_cover:
+        - service: cover.toggle
+          data:
+            entity_id: cover.garage_christian
+        - service: switch.turn_on
+          data:
+            entity_id: switch.fence_left
+        close_cover:
+        - service: cover.toggle
+          data:
+            entity_id: cover.garage_christian
+        - service: switch.turn_on
+          data:
+            entity_id: switch.fence_left
+        icon_template: >-
+          {% if is_state('cover.garage_door', 'closed') %}
+            mdi:garage
+          {% else %}
+            mdi:garage-open
+          {% endif %}
+
+logbook:
+  exclude:
+    entities:
+      - cover.descent_anita_bike
+      - cover.descent_anita_car
+      - cover.descent_christian_bike
+      - cover.descent_christian_car
+
+history:
+  exclude:
+    entities:
+      - cover.descent_anita_bike
+      - cover.descent_anita_car
+      - cover.descent_christian_bike
+      - cover.descent_christian_car

@@ -41,7 +41,19 @@ history:
       - binary_sensor.sunny_water_box_attached
       - binary_sensor.sunny_water_shortage
       - camera.sunny
-      - sensor.sunny_dnd_start
+      - sensor.sunny_current_clean_area
+      - sensor.sunny_current_clean_duration
       - sensor.sunny_dnd_end
-      - sensor.sunny_last_clean_start
+      - sensor.sunny_dnd_start
+      - sensor.sunny_filter_left
+      - sensor.sunny_last_clean_area
+      - sensor.sunny_last_clean_duration
       - sensor.sunny_last_clean_end
+      - sensor.sunny_last_clean_start
+      - sensor.sunny_main_brush_left
+      - sensor.sunny_sensor_dirty_left
+      - sensor.sunny_side_brush_left
+      - sensor.sunny_total_clean_area
+      - sensor.sunny_total_clean_count
+      - sensor.sunny_total_duration
+      - sensor.sunny_total_dust_collection_count

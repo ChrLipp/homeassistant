@@ -18,7 +18,9 @@
 
 ## Integrations (add manual, not covered through code)
 
-- Goggle cast
+- Goggle
+    - cast
+	- Calendar
 - HACS
     - SamsungTV Smart
     - Govee
@@ -30,8 +32,10 @@
 
 ##  Open issues and known problems
 
+- rename plug02 to toaster
 
 ## Fixed
 
-- Send notification when Elias is not at home, but his alarm is activated
-- Close covers based on real brightness level instead of sun integration
+- Close covers based on sun integration (since real brightness level is damaged)
+- Rain V1
+- Update to 2022.8.6 and fixes

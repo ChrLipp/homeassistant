@@ -12,6 +12,7 @@ automation:
     target:
       entity_id: switch.ventilation_relay_4
   mode: single
+
 - id: '1626674977154'
   alias: Pool heater off
   description: When pool pump stops to request the heater, power01 becomes unavailable

@@ -4,6 +4,9 @@
 #             2 | No loop signal (Kein Schleifensignal)
 #            10 | Upside down (Umgedreht)
 #            13 | No drive (kein Antrieb)
+#
+# Docking station: flashing blue light (damaged wire)
+#                  flashing green light (power save mode, removed Automower during recharging, insert Automower into docking station again will fix it)
 
 automower:
   username: !secret husqvarna_username
