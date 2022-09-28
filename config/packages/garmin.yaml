@@ -9,6 +9,10 @@ group:
   garmin:
     name: Garmin
     entities:
+      - cover.descent_christian_bike
+      - cover.descent_christian_car
+      - switch.fence_right
       - switch.fence_left
       - cover.garage_christian
+      - cover.garage_anita
 

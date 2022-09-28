@@ -40,7 +40,7 @@ automation:
     to: 'true'
   action:
   - data:
-      message: Meister, die Home Assistant version *{{ states("sensor.last_ha_version")}}* ist verfügbar. Derzeit läuft die Version {{ states("sensor.current_ha_version")}}. Details siehe {{ state_attr("binary_sensor.home_assistant_versions_update_available", "release_notes") }}
+      message: Meister, die Home Assistant version *{{ states("sensor.last_ha_version")}}* ist verfügbar. Derzeit läuft die Version {{ states("sensor.current_ha_version")}}.
     service: notify.telegram_admin
   - service: input_text.set_value
     data_template:

@@ -206,8 +206,12 @@ automation:
   alias: Garden covers down on sundown
   description: 'Fährt die Rollos zum Garten am Abend runter'
   trigger:
-    - platform: template
-      value_template: "{{ not is_state('sensor.logo3_naq1', 'unavailable') and states('sensor.time') > '15:00' and states('sensor.logo3_naq1') | int < 10 }}"
+#    - platform: template
+#      value_template: "{{ not is_state('sensor.logo3_naq1', 'unavailable') and states('sensor.time') > '15:00' and states('sensor.logo3_naq1') | int < 10 }}"
+    - platform: numeric_state
+      entity_id: sun.sun
+      value_template: "{{ state_attr('sun.sun', 'elevation') }}"
+      below: -6.00
   action:
     - service: cover.close_cover
       entity_id: cover.bedroom_window
@@ -218,8 +222,12 @@ automation:
   alias: Neighbors covers down on sundown
   description: 'Fährt die Rollos zum Nachbarn am Abend runter'
   trigger:
-    - platform: template
-      value_template: "{{ not is_state('sensor.logo3_naq1', 'unavailable') and states('sensor.time') > '15:00' and states('sensor.logo3_naq1') | int < 600 }}"
+#    - platform: template
+#      value_template: "{{ not is_state('sensor.logo3_naq1', 'unavailable') and states('sensor.time') > '15:00' and states('sensor.logo3_naq1') | int < 600 }}"
+    - platform: numeric_state
+      entity_id: sun.sun
+      value_template: "{{ state_attr('sun.sun', 'elevation') }}"
+      below: -3.40
   action:
     - service: cover.close_cover
       entity_id: cover.kitchen_window
