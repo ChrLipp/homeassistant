@@ -1,11 +1,12 @@
 # Name: Jules V
 # Energy Monitoring Smart Plug with button, blue and red LED.
+# Was: Plug 02
 
 substitutions:
-  device_name: plug-02
-  device_description: Stecker 02
-  friendly_name: Plug 02
-  short_name: Plug 02
+  device_name: plug-toaster
+  device_description: Stecker Toaster
+  friendly_name: Plug Toaster
+  short_name: Plug Toaster
   ip_adress: 10.0.0.202
 
 <<: !include .yules.yaml

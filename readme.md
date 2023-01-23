@@ -22,8 +22,9 @@
     - cast
 	- Calendar
 - HACS
-    - SamsungTV Smart
     - Govee
+	- LocalTuya
+    - SamsungTV Smart
 - Fritz 
 
 ##  Custom components
@@ -32,10 +33,16 @@
 
 ##  Open issues and known problems
 
-- rename plug02 to toaster
+- Govee: As a general rule you need to increase the polling interval by 10 seconds for every govee device connected. So if you have 1 device it should be 10, 2 devices will be 20
 
 ## Fixed
 
-- Close covers based on sun integration (since real brightness level is damaged)
-- Rain V1
-- Update to 2022.8.6 and fixes
+- Rename plug_02 to plug_toaster
+- Turn toaster off after 15 minutes
+- Provide names for plugs in GUI
+- Update HA to 2022.12.9
+- Update HACS
+- Update Google Dark Theme
+- Update LocalTuya
+- Update SamsungTV Smart
+- Update GUI Elements

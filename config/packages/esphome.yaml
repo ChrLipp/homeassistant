@@ -10,9 +10,6 @@ panel_iframe:
 logbook:
   exclude:
     entities:
-      - sensor.plug_02_esphome_version
-      - switch.plug_02_restart
-
       - sensor.plug_03_esphome_version
       - switch.plug_03_restart
       
@@ -43,10 +40,6 @@ logbook:
 history:
   exclude:
     entities:
-      - sensor.plug_02_esphome_version
-      - sensor.plug_02_uptime
-      - switch.plug_02_restart
-      
       - sensor.plug_03_esphome_version
       - sensor.plug_03_uptime
       - switch.plug_03_restart

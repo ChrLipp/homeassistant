@@ -22,7 +22,7 @@ views:
         noEventsForNextDaysText: "Keine Ereignisse in den nächsten Tagen"
         untilText: "bis"
         entities:
-        - entity: calendar.familie      
+        - entity: calendar.familie
       - type: entities
         title: Abfalltermine
         show_header_toggle: false
@@ -61,16 +61,16 @@ views:
           - cover.bedroom_window
         title: Rollos
       - cards:
-        - entity: media_player.samsung
+        - entity: media_player.fernseher_wohnzimmer
           type: media-control
-          name: Samsung TV
+          name: TV Samsung
         - entity: media_player.vu_solo4k
           type: media-control
         - entity: media_player.onkyo
           type: media-control
           name: Onkyo
         type: vertical-stack
-        title: Medien
+        title: Medien Wohnzimmer
 
   - title: Zimmer
     icon: 'mdi:human-child'
@@ -93,23 +93,37 @@ views:
         show_state: false
       - type: entities
         entities:
-          - switch.plug_02
-          - switch.plug_03
+          - entity: switch.plug_toaster
+            name: Toaster
           - type: divider
-          - switch.plug_04
-          - switch.plug_05
+          - entity: switch.plug_10
+            name: Eingangstür
+          - entity: switch.plug_06
+            name: Eingang Stern
           - type: divider
-          - switch.plug_06
-          - switch.plug_07
+          - entity: switch.plug_08
+            name: Küche Tisch
+          - entity: switch.plug_05
+            name: Terrasse Weihnachtsbaum
           - type: divider
-          - switch.plug_08
-          - switch.plug_09
+          - entity: switch.plug_03
+            name: Wohnzimmer Lichterkette
+          - entity: switch.plug_11
+            name: Wohnzimmer Stern
           - type: divider
-          - switch.plug_10
-          - switch.plug_11
+            name: Anna Stern Links
+          - entity: switch.plug_09
+            name: Anna Stern Links
+          - entity: switch.plug_07
+            name: Anna Stern Rechts
           - type: divider
-          - switch.plug_12
-          - switch.plug_13
+          - entity: switch.plug_12
+            name: Arbeitszimmer
+          - entity: switch.plug_04
+            name: Elias Stern
+          - type: divider
+          - entity: switch.plug_13
+            name: Schlafzimmer  Stern
         title: Schaltbare Steckdosen
         show_header_toggle: false
       - cards:
@@ -156,6 +170,12 @@ views:
             name: true
         title: Wecker Elias
         type: horizontal-stack
+      - cards:
+        - entity: media_player.fernseher_anna_mavie
+          type: media-control
+          name: TV Samsung
+        type: vertical-stack
+        title: Medien Zimmer Anna-Mavie
 
   - title: Garten
     icon: 'mdi:tree'
@@ -211,7 +231,7 @@ views:
                 top: 30%
                 left: 50%
                 '--paper-item-icon-color': white
-            - type: state-label        
+            - type: state-label
               entity: vacuum.miki
               attribute: status
               style:
@@ -228,16 +248,14 @@ views:
           - switch.terrace_socket
           - type: divider
           - switch.pool_light_chain
-          - switch.terrace_flower_light
           - type: divider
           - switch.pool_light
           - switch.pool_counter_current_system
           - type: divider
-          - switch.garden_light_front
           - switch.garden_light_back
         title: Licht
         show_header_toggle: false
-        
+
   - title: Netzwerk
     icon: 'mdi:network'
     path: network

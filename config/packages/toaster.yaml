@@ -1,0 +1,36 @@
+automation:
+- id: '1583510362752'
+  alias: 'Service: turn off toaster after 15 minutes'
+  mode: restart
+  trigger:
+    platform: state
+    entity_id: switch.plug_toaster
+    from: 'off'
+    to: 'on'
+  action:
+    - delay:
+        minutes: 15
+    - if:
+        - alias: "If toaster is still running"
+          condition: state
+          entity_id: switch.plug_toaster
+          state: 'on'
+      then:
+        - service: switch.turn_off
+          entity_id: switch.plug_toaster
+        - data:
+            message: "Toaster wurde nach 15 Minuten automatisch ausgeschalten. Aufpassen!"
+          service: notify.telegram_all
+  
+logbook:
+  exclude:
+    entities:
+      - sensor.plug_toaster_esphome_version
+      - switch.plug_toaster_restart
+
+history:
+  exclude:
+    entities:
+      - sensor.plug_toaster_esphome_version
+      - sensor.plug_toaster_uptime
+      - switch.plug_toaster_restart
