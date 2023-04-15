@@ -6,7 +6,6 @@ automation:
   - platform: state
     entity_id: switch.power_01
     from: "unavailable"
-  condition: []
   action:
   - service: switch.turn_on
     target:
@@ -20,7 +19,6 @@ automation:
   - platform: state
     entity_id: switch.power_01
     to: "unavailable"
-  condition: []
   action:
   - service: switch.turn_off
     target:

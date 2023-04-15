@@ -9,6 +9,15 @@
 # - Therefore I set up sensor.netatmo_rain_changes to get the differences from the last value of rain_total.
 # - The template sensor is only initialized when a change occurs. For performing an init during start see
 #   https://community.home-assistant.io/t/add-initial-and-restore-variables-to-event-trigger-based-template-sensors/311401
+# - State for sensor.netatmo Rain Changes
+#   if trigger.platform == 'homeassistant'
+#     When plattform boots, set it to zero. The boot event has no data, so handle it at first.
+#   elif trigger.entity_id == 'sensor.netatmo_pottelsdorf_rain_today'
+#     Calculate the change to the old value
+#   elif trigger.entity_id == 'sensor.netatmo_pottelsdorf_rain'
+#     Use the current value only to set it to zero
+#     otherwise ignore value (just use the old value)
+
 
 binary_sensor:
 - platform: template
@@ -18,7 +27,7 @@ binary_sensor:
       delay_off:
         minutes: 30
       value_template: >-
-        {{ states('sensor.netatmo_rain_changes')|float > 0.0 }}
+        {{ states('sensor.netatmo_rain_changes')|float(0) > 0.1 }}
 
 template:
   - trigger:
@@ -36,21 +45,13 @@ template:
           {% if trigger.platform == 'homeassistant' %}
             0.0
           {% elif trigger.entity_id == 'sensor.netatmo_pottelsdorf_rain_today' %}
-            {% if trigger.from_state.state == 'unknown' and trigger.to_state.state == 'unknown' %}
-              0.0
-            {% elif trigger.to_state.state == 'unknown' %}
-              {{ trigger.from_state.state }}
-            {% elif trigger.from_state.state == 'unknown' %}
-              {{ trigger.to_state.state }}
-            {% else %}
-              {% set delta = trigger.to_state.state|float - trigger.from_state.state|float %}
-              {{ delta if delta > 0.0 else 0.0 }}
-            {% endif %}
+            {% set delta = trigger.to_state.state|float(0) - trigger.from_state.state|float(0) %}
+            {{ delta if delta > 0.0 else 0.0 }}
           {% elif trigger.entity_id == 'sensor.netatmo_pottelsdorf_rain' %}
-            {% if trigger.to_state.state != 'unknown' %}
-              {% if trigger.to_state.state|float == 0.0 %}
-                0.0
-              {% endif %}
+            {% if trigger.to_state.state|float(0) == 0.0 %}
+              0.0
+            {% else %}
+              {{ states('sensor.netatmo_rain_changes') | float(0) }}
             {% endif %}
           {% endif %}
         unit_of_measurement: mm
@@ -64,6 +65,7 @@ automation:
   trigger:
   - platform: state
     entity_id: binary_sensor.is_wet_outside
+    from: 'off'
     to: 'on'
   action:
   - service: notify.telegram_admin
@@ -76,11 +78,51 @@ automation:
   trigger:
   - platform: state
     entity_id: binary_sensor.is_wet_outside
+    from: 'on'
     to: 'off'
   action:
   - service: notify.telegram_admin
     data:
       message: Meister, Regen ist vorbei und Gras ist trocken.
+
+- id: '1653640337734'
+  alias: LogDetail
+  description: Ich mach das jetzt stabil
+  trigger:
+    - platform: state
+      entity_id:
+        - sensor.netatmo_pottelsdorf_rain
+  action:
+  - service: notify.telegram_admin
+    data:
+      message: >
+        Sensor {{trigger.entity_id}} just changed from {{ trigger.from_state.state|float(99) }} to {{ trigger.to_state.state|float(99) }}.
+- id: '1653640337634'
+  alias: LogSummary
+  description: Ich mach das jetzt stabil
+  trigger:
+    - platform: state
+      entity_id:
+        - sensor.netatmo_pottelsdorf_rain_today
+  action:
+  - service: notify.telegram_admin
+    data:
+      message: >
+        Sensor {{trigger.entity_id}} just changed from {{ trigger.from_state.state|float(99) }} to {{ trigger.to_state.state|float(99) }}.
+- id: '1653640337624'
+  alias: BinaererState
+  description: Ich mach das jetzt stabil
+  trigger:
+    - platform: state
+      entity_id:
+        - sensor.netatmo_rain_changes
+  condition:
+  - "{{ trigger.to_state.state|float(0) <= 0.1 }}"
+  action:
+  - service: notify.telegram_admin
+    data:
+      message: >
+        Sensor {{trigger.entity_id}} just changed from {{ trigger.from_state.state }} to {{ trigger.to_state.state }}.
 
 logbook:
   exclude:

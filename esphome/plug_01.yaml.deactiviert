@@ -1,0 +1,11 @@
+# Name: ELIVCO
+# Energy Monitoring Smart Plug with button and LED.
+
+substitutions:
+  device_name: plug-01
+  device_description: Stecker 01
+  friendly_name: Plug 01
+  short_name: Plug 01
+  ip_adress: 10.0.0.222
+
+<<: !include .elivco.yaml

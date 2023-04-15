@@ -1,0 +1,186 @@
+# Device: 2-Channel Wi-Fi Switch Module (QS-WIFI-S04-2C)
+# Link to device: https://de.aliexpress.com/item/4000402866869.html
+# Link to wiring diagram: https://ae01.alicdn.com/kf/H5e94d23ffe344f72beebc0ed45abf9c6g.jpg
+# Switch pins can handle 220V. Device has a buzzer instead of a LED for status info.
+#
+# Flashed with Tuya-Convert, see
+# - https://www.youtube.com/watch?v=dt5-iZc4_qU
+# - https://www.heise.de/ct/artikel/Tuya-Convert-IoT-Geraete-ohne-Loeten-vom-Cloud-Zwang-befreien-4283623.html
+#
+# Config: 
+# - https://templates.blakadder.com/moes-MS-104B.html
+# - https://community.home-assistant.io/t/qs-wifi-s04-2c/195663
+# - https://youtu.be/cBtZAbc9_q8
+#
+# GPIO  Mode  Done Description
+#  2    in    -    Button (only accessible when case is removed)
+#  4    out   -    Buzzer (works with PWM @ 800hz)
+# 12    in    -    Switch 2
+# 13    in    -    Switch 1
+# 14    out   -    Relay 1
+# 15    out   -    Relay 2
+
+
+substitutions:
+  device_name: switch-reserve
+  device_description: Ursprünglich Schalter Tor Abfahrt, nun Reserve
+  friendly_name: Switch Reserve
+  short_name: reserve
+  ip_adress: 10.0.0.250
+  treshold: '90.0'
+  duration: 2s
+
+esphome:
+  name: ${device_name}
+  comment: ${device_description}
+  platform: ESP8266
+  board: esp01_1m
+  on_boot:
+    priority: -100
+    then:
+      - delay: 1s
+      - lambda: 'id(wait_on_init) = true;'
+
+# At power on, a on_click of the binary sensors is triggered.
+# To handle this, I introduced a global variable (a gate) which is opened 1s after boot is completed.
+globals:
+  - id: wait_on_init
+    type: bool
+    restore_value: no
+    initial_value: 'false'
+
+# Network settings
+packages:
+  wifi: !include .network.yaml
+
+# Enable logging
+logger:
+  logs:
+    sensor: ERROR
+    duty_cycle: ERROR
+
+sensor:
+# Duty cycle sensors for switch inputs "S1" and "S2"
+  - platform: duty_cycle
+    pin: GPIO13
+    internal: true
+    id: ${short_name}_in_switch1_sensor
+    name: "${short_name} Switch 1 Sensor"
+    update_interval: 20ms
+  - platform: duty_cycle
+    pin: GPIO12
+    internal: true
+    id: ${short_name}_in_switch2_sensor
+    name: "${short_name} Switch 2 Sensor"
+    update_interval: 20ms
+
+# Template binary switch sensors monitor duty cycle sensors on GPIO pins.
+# on_click for momentatry (push) switch
+# on_state for std rocker switch
+binary_sensor:
+  - platform: template
+    id: ${short_name}_switch_1
+    name: "${friendly_name} Switch 1"
+    internal: true
+    lambda: |-
+      if (id(wait_on_init) == false) {
+          return false;
+      } else {
+        double tresholdCopy = ${treshold};
+        if (id(${short_name}_in_switch1_sensor).state < tresholdCopy) {
+          return true;
+        } else {
+          return false;
+        }
+      }
+    on_click:
+      then:
+        - lambda: |-
+            if (id(wait_on_init) == true) {
+              if (id(switch_left).state) {
+                id(switch_left).turn_off();
+              } else {
+                id(switch_left).turn_on();
+              }
+            }
+
+  - platform: template
+    id: ${short_name}_switch_2
+    name: "${friendly_name} Switch 2"
+    internal: true
+    lambda: |-
+      if (id(wait_on_init) == false) {
+          return false;
+      } else {
+        double tresholdCopy = ${treshold};
+        if (id(${short_name}_in_switch2_sensor).state < tresholdCopy) {
+          return true;
+        } else {
+          return false;
+        }
+      }
+    on_click:
+      then:
+        - lambda: |-
+            if (id(wait_on_init) == true) {
+              if (id(switch_right).state) {
+                id(switch_right).turn_off();
+              } else {
+                id(switch_right).turn_on();
+              }
+            }
+
+output:
+  - platform: esp8266_pwm
+    pin: GPIO4
+    id: buzzer
+    frequency: 800 Hz
+  - platform: gpio
+    pin: GPIO14
+    id: relay1
+  - platform: gpio
+    pin: GPIO15
+    id: relay2
+
+
+switch:
+  - platform: template
+    name: "${short_name} Left"
+    id: switch_left
+    turn_on_action:
+      - output.turn_off: relay2
+      - output.turn_on: relay1
+      - switch.template.publish:
+          id: switch_left
+          state: ON
+      - delay: ${duration}
+      - output.turn_off: relay1
+      - switch.template.publish:
+          id: switch_left
+          state: OFF
+    turn_off_action:
+      - output.turn_off: relay1
+      - output.turn_off: relay2
+      - switch.template.publish:
+          id: switch_left
+          state: OFF
+  - platform: template
+    name: "${short_name} Right"
+    id: switch_right
+    turn_on_action:
+      - output.turn_off: relay1
+      - output.turn_on: relay2
+      - switch.template.publish:
+          id: switch_right
+          state: ON
+      - delay: ${duration}
+      - output.turn_off: relay2
+      - switch.template.publish:
+          id: switch_right
+          state: OFF
+    turn_off_action:
+      - output.turn_off: relay1
+      - output.turn_off: relay2
+      - switch.template.publish:
+          id: switch_right
+          state: OFF

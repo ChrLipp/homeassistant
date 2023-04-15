@@ -30,7 +30,7 @@ views:
         - entity: sensor.gelbersack_text
         - entity: sensor.papiertonne_text
         - entity: sensor.restmuell_text
-      - type: 'custom:sun-card'
+      - type: "custom:horizon-card"
         darkMode: true
       - type: entities
         title: Belüftung
@@ -95,35 +95,8 @@ views:
         entities:
           - entity: switch.plug_toaster
             name: Toaster
-          - type: divider
-          - entity: switch.plug_10
-            name: Eingangstür
-          - entity: switch.plug_06
-            name: Eingang Stern
-          - type: divider
-          - entity: switch.plug_08
-            name: Küche Tisch
-          - entity: switch.plug_05
-            name: Terrasse Weihnachtsbaum
-          - type: divider
           - entity: switch.plug_03
             name: Wohnzimmer Lichterkette
-          - entity: switch.plug_11
-            name: Wohnzimmer Stern
-          - type: divider
-            name: Anna Stern Links
-          - entity: switch.plug_09
-            name: Anna Stern Links
-          - entity: switch.plug_07
-            name: Anna Stern Rechts
-          - type: divider
-          - entity: switch.plug_12
-            name: Arbeitszimmer
-          - entity: switch.plug_04
-            name: Elias Stern
-          - type: divider
-          - entity: switch.plug_13
-            name: Schlafzimmer  Stern
         title: Schaltbare Steckdosen
         show_header_toggle: false
       - cards:
@@ -263,7 +236,7 @@ views:
     cards:
       - cards:
           - entity: switch.arbeitszimmer
-            icon: 'mdi:desktop-mac'
+            icon: 'mdi:desktop-classic'
             type: entity-button
             state_color: true
           - entity: switch.diskstation
