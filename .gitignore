@@ -1,5 +1,7 @@
 # Logs
 *.log
+*.log.1
+*.log.fault
 
 # Ignore folders
 .storage

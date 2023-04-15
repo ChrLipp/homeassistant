@@ -1,6 +1,7 @@
 logger:
   default: info
-#  logs:
+  logs:
+    custom_components.localtuya.common: error
 
 # ATTENTION: if you comment out every logger, then you must also comment out the logs: node.
 # Otherwise Home assistant will not start and the "check config" runs forever.
