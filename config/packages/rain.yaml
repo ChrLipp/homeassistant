@@ -27,7 +27,7 @@ binary_sensor:
       delay_off:
         minutes: 30
       value_template: >-
-        {{ states('sensor.netatmo_rain_changes')|float(0) > 0.1 }}
+        {{ states('sensor.netatmo_rain_changes')|float(0) >= 0.1 }}
 
 template:
   - trigger:
@@ -45,7 +45,7 @@ template:
           {% if trigger.platform == 'homeassistant' %}
             0.0
           {% elif trigger.entity_id == 'sensor.netatmo_pottelsdorf_rain_today' %}
-            {% set delta = trigger.to_state.state|float(0) - trigger.from_state.state|float(0) %}
+            {% set delta = (trigger.to_state.state|float(0) - trigger.from_state.state|float(0))| round(1) %}
             {{ delta if delta > 0.0 else 0.0 }}
           {% elif trigger.entity_id == 'sensor.netatmo_pottelsdorf_rain' %}
             {% if trigger.to_state.state|float(0) == 0.0 %}
@@ -53,6 +53,8 @@ template:
             {% else %}
               {{ states('sensor.netatmo_rain_changes') | float(0) }}
             {% endif %}
+          {% else %}
+            100.0
           {% endif %}
         unit_of_measurement: mm
         icon: mdi:weather-rainy 
@@ -116,8 +118,6 @@ automation:
     - platform: state
       entity_id:
         - sensor.netatmo_rain_changes
-  condition:
-  - "{{ trigger.to_state.state|float(0) <= 0.1 }}"
   action:
   - service: notify.telegram_admin
     data:

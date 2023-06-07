@@ -1,0 +1,32 @@
+# Filter to: home kann entfernt werden, wenn man die anderen Meldungen auch haben möchte.
+# Weitere Personen können einfach hinzugefügt werden.
+# Siehe https://community.home-assistant.io/t/error-rendering-data-template-undefinederror-dict-object-has-no-attribute-from-state/325386/12
+
+automation:
+- id: '1681559151264'
+  alias: 'Notify: Familienmitglied kommt heim'
+  description: ''
+  trigger:
+  - platform: state
+    entity_id:
+    - person.anna_mavie
+    to: home
+  condition: "{{ trigger.to_state.state != trigger.from_state.state }}"
+  action:
+  - variables:
+      old: "{{ trigger.from_state.state }}"
+      new: "{{ trigger.to_state.state }}"
+      person: "{{ trigger.to_state.name }}"
+  - service: notify.telegram_admin
+    data:
+      message: >
+        {% if new == "not_home" and old == "home"%}
+          {{ person }} ist weg gegangen.
+        {% elif new == "home" %}
+          {{ person }} ist zuhause.
+        {% elif new == "not_home" %}
+          {{ person }} ist von {{ old }} weg.
+        {% else %}
+          {{ person }} ist in {{ new }} angekommen.
+        {% endif %}
+  mode: single
