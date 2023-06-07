@@ -87,43 +87,6 @@ automation:
     data:
       message: Meister, Regen ist vorbei und Gras ist trocken.
 
-- id: '1653640337734'
-  alias: LogDetail
-  description: Ich mach das jetzt stabil
-  trigger:
-    - platform: state
-      entity_id:
-        - sensor.netatmo_pottelsdorf_rain
-  action:
-  - service: notify.telegram_admin
-    data:
-      message: >
-        Sensor {{trigger.entity_id}} just changed from {{ trigger.from_state.state|float(99) }} to {{ trigger.to_state.state|float(99) }}.
-- id: '1653640337634'
-  alias: LogSummary
-  description: Ich mach das jetzt stabil
-  trigger:
-    - platform: state
-      entity_id:
-        - sensor.netatmo_pottelsdorf_rain_today
-  action:
-  - service: notify.telegram_admin
-    data:
-      message: >
-        Sensor {{trigger.entity_id}} just changed from {{ trigger.from_state.state|float(99) }} to {{ trigger.to_state.state|float(99) }}.
-- id: '1653640337624'
-  alias: BinaererState
-  description: Ich mach das jetzt stabil
-  trigger:
-    - platform: state
-      entity_id:
-        - sensor.netatmo_rain_changes
-  action:
-  - service: notify.telegram_admin
-    data:
-      message: >
-        Sensor {{trigger.entity_id}} just changed from {{ trigger.from_state.state }} to {{ trigger.to_state.state }}.
-
 logbook:
   exclude:
     entities:
