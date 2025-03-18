@@ -33,7 +33,7 @@ cover:
     covers:
       kitchen_left_window:
         device_class: shutter
-        friendly_name: "Küche links"
+        friendly_name: "Küche links (Tisch)"
         position_template: >-
           {% if states('sensor.modbus_sensor_01')|int == 1 %}
             0
@@ -52,7 +52,7 @@ cover:
             entity_id: switch.blind_kitchen_left_down
       kitchen_right_window:
         device_class: shutter
-        friendly_name: "Küche rechts"
+        friendly_name: "Küche rechts (Geschirrspüler)"
         position_template: >-
           {% if states('sensor.modbus_sensor_04')|int == 1 %}
             0
@@ -238,17 +238,6 @@ automation:
 logbook:
   exclude:
     entities:
-      - cover.all
-      - cover.kitchen_window
-      - cover.rain
-      - sensor.cover_all
-      - sensor.cover_rain
-
-history:
-  exclude:
-    entities:
-      - automation.garden_covers_down_on_sundown
-      - automation.neighbors_covers_down_on_sundown
       - cover.all
       - cover.kitchen_window
       - cover.rain

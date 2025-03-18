@@ -11,6 +11,8 @@ automation:
     entity_id:
     - person.anna_mavie
     to: home
+    for:
+      minutes: 2
   condition: "{{ trigger.to_state.state != trigger.from_state.state }}"
   action:
   - variables:
@@ -29,4 +31,6 @@ automation:
         {% else %}
           {{ person }} ist in {{ new }} angekommen.
         {% endif %}
+      data:
+        parse_mode: markdown
   mode: single

@@ -1,8 +1,9 @@
 device_tracker:
   - platform: iphonedetect
     consider_home: 60
+    scan_interval: 10
     new_device_defaults:
-      track_new_devices: false
+      track_new_devices: true
     hosts:
       anna_iphone: 10.0.0.1
       elias_iphone: 10.0.0.2
@@ -18,12 +19,3 @@ logbook:
       - device_tracker.anita_iphone
       - device_tracker.christian_iphone
       - device_tracker.jessica_iphone
-
-history:
-  exclude:
-    entities:
-      - device_tracker.anna_iphone
-      - device_tracker.elias_iphone
-      - device_tracker.anita_iphone
-      - device_tracker.christian_iphone
-      - device_tracker.jessi_iphone

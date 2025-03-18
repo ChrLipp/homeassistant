@@ -31,6 +31,8 @@ automation:
   action:
   - data:
       message: "*Gelber Sack* rausbringen. Abholung *morgen* ( {{state_attr('sensor.waste_gelber_sack', 'display_date')}})"
+      data:
+        parse_mode: markdown
     service: notify.telegram_all
 - id: '1583509362750'
   alias: 'Notify: Garbage (Papier)'
@@ -44,6 +46,8 @@ automation:
   action:
   - data:
       message: "*Papier* rausbringen. Abholung *morgen* ( {{state_attr('sensor.waste_papier', 'display_date')}})"
+      data:
+        parse_mode: markdown
     service: notify.telegram_all
 - id: '1583509362751'
   alias: 'Notify: Garbage (Restmüll)'
@@ -57,22 +61,11 @@ automation:
   action:
   - data:
       message: "*Restmüll* rausbringen. Abholung *morgen* ( {{state_attr('sensor.waste_restmull', 'display_date')}})"
+      data:
+        parse_mode: markdown
     service: notify.telegram_all
 
 logbook:
-  exclude:
-    entities:
-      - automation.notify_garbage_gelber_sack
-      - automation.notify_garbage_papier
-      - automation.notify_garbage_restmull
-      - sensor.gelbersack_text
-      - sensor.papiertonne_text
-      - sensor.restmuell_text
-      - sensor.waste_gelber_sack
-      - sensor.waste_papier
-      - sensor.waste_restmull
-
-history:
   exclude:
     entities:
       - automation.notify_garbage_gelber_sack

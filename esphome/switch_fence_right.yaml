@@ -38,9 +38,9 @@ packages:
 binary_sensor:
   - platform: gpio
     pin: GPIO5
-    name: "Fence Pulse Switch Sensor"
+    name: ${short_name} Relay Pulse Switch Sensor
     id: contact_sensor
-    internal: true
+    internal: false
     on_state:
       then:
         - switch.turn_on: template_switch
@@ -50,7 +50,7 @@ binary_sensor:
 switch:
   - platform: gpio
     pin: GPIO4
-    name: "Fence Relay Right"
+    name: ${short_name} Relay
     id: relay
     internal: true
 

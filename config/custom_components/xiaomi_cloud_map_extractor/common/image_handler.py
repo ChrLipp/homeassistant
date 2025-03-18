@@ -28,6 +28,10 @@ class ImageHandler:
         COLOR_ZONES_OUTLINE: (0xAD, 0xD8, 0xFF),
         COLOR_VIRTUAL_WALLS: (255, 0, 0),
         COLOR_NEW_DISCOVERED_AREA: (64, 64, 64),
+        COLOR_MOP_PATH: (255, 255, 255, 0x48),
+        COLOR_CARPETS: (0xA9, 0xF7, 0xA9),
+        COLOR_NO_CARPET_ZONES: (255, 33, 55, 127),
+        COLOR_NO_CARPET_ZONES_OUTLINE: (255, 0, 0),
         COLOR_NO_GO_ZONES: (255, 33, 55, 127),
         COLOR_NO_GO_ZONES_OUTLINE: (255, 0, 0),
         COLOR_NO_MOPPING_ZONES: (163, 130, 211, 127),
@@ -73,21 +77,32 @@ class ImageHandler:
         else:
             text_color = (255, 255, 255)
         draw = ImageDraw.Draw(image, "RGBA")
-        w, h = draw.textsize(text)
+        l, t, r, b = draw.textbbox((0, 0), text)
+        w, h = r - l, b - t
         draw.text(((image.size[0] - w) / 2, (image.size[1] - h) / 2), text, fill=text_color)
         return image
 
     @staticmethod
     def draw_path(image: ImageData, path: Path, sizes: Sizes, colors: Colors, scale: float):
-        ImageHandler.__draw_path__(image, path, sizes, ImageHandler.__get_color__(COLOR_PATH, colors), scale)
+        ImageHandler.__draw_path__(image, path, sizes[CONF_SIZE_PATH_WIDTH], ImageHandler.__get_color__(COLOR_PATH, colors), scale)
 
     @staticmethod
     def draw_goto_path(image: ImageData, path: Path, sizes: Sizes, colors: Colors, scale: float):
-        ImageHandler.__draw_path__(image, path, sizes, ImageHandler.__get_color__(COLOR_GOTO_PATH, colors), scale)
+        ImageHandler.__draw_path__(image, path, sizes[CONF_SIZE_PATH_WIDTH], ImageHandler.__get_color__(COLOR_GOTO_PATH, colors), scale)
 
     @staticmethod
     def draw_predicted_path(image: ImageData, path: Path, sizes: Sizes, colors: Colors, scale: float):
-        ImageHandler.__draw_path__(image, path, sizes, ImageHandler.__get_color__(COLOR_PREDICTED_PATH, colors), scale)
+        ImageHandler.__draw_path__(image, path, sizes[CONF_SIZE_PATH_WIDTH], ImageHandler.__get_color__(COLOR_PREDICTED_PATH, colors), scale)
+
+    @staticmethod
+    def draw_mop_path(image: ImageData, path: Path, sizes: Sizes, colors: Colors, scale: float):
+        ImageHandler.__draw_path__(image, path, sizes[CONF_SIZE_MOP_PATH_WIDTH], ImageHandler.__get_color__(COLOR_MOP_PATH, colors), scale)
+
+    @staticmethod
+    def draw_no_carpet_areas(image: ImageData, areas: List[Area], colors: Colors):
+        ImageHandler.__draw_areas__(image, areas,
+                                    ImageHandler.__get_color__(COLOR_NO_CARPET_ZONES, colors),
+                                    ImageHandler.__get_color__(COLOR_NO_CARPET_ZONES_OUTLINE, colors))
 
     @staticmethod
     def draw_no_go_areas(image: ImageData, areas: List[Area], colors: Colors):
@@ -256,7 +271,7 @@ class ImageHandler:
             point = position.to_img(image.dimensions)
             angle = -position.a if position.a is not None else 0
             coords = [point.x - r, point.y - r, point.x + r, point.y + r]
-            draw.pieslice(coords, angle + 90, angle - 90, outline="black", fill=fill)
+            draw.pieslice(coords, angle + 90, angle - 90, outline=outline, fill=fill)
 
         ImageHandler.__draw_on_new_layer__(image, draw_func, 1, ImageHandler.__use_transparency__(outline, fill))
 
@@ -273,20 +288,29 @@ class ImageHandler:
             ImageHandler.__draw_on_new_layer__(image, draw_func, 1, use_transparency)
 
     @staticmethod
-    def __draw_path__(image: ImageData, path: Path, sizes: Sizes, color: Color, scale: float):
+    def __draw_path__(image: ImageData, path: Path, path_width: int, color: Color, scale: float):
         if len(path.path) < 1:
             return
-
-        path_width = sizes[CONF_SIZE_PATH_WIDTH]
 
         def draw_func(draw: ImageDraw):
             for current_path in path.path:
                 if len(current_path) > 1:
                     s = current_path[0].to_img(image.dimensions)
+                    coords = None
                     for point in current_path[1:]:
                         e = point.to_img(image.dimensions)
-                        draw.line([s.x * scale, s.y * scale, e.x * scale, e.y * scale],
-                                  width=int(scale * path_width), fill=color)
+                        sx = s.x * scale
+                        sy = s.y * scale
+                        ex = e.x * scale
+                        ey = e.y * scale
+                        draw.line([sx, sy, ex, ey], width=int(scale * path_width), fill=color)
+                        if path_width > 4:
+                            r = scale * path_width / 2
+                            if not coords:
+                                coords = [sx - r, sy - r, sx + r, sy + r]
+                                draw.pieslice(coords, 0, 360, outline=color, fill=color)
+                            coords = [ex - r, ey - r, ex + r, ey + r]
+                            draw.pieslice(coords, 0, 360, outline=color, fill=color)
                         s = e
 
         ImageHandler.__draw_on_new_layer__(image, draw_func, scale, ImageHandler.__use_transparency__(color))
@@ -303,7 +327,8 @@ class ImageHandler:
             except ImportError:
                 _LOGGER.warning("Unable to open font: %s", font_file)
             finally:
-                w, h = draw.textsize(text, font)
+                l, t, r, b = draw.textbbox((0, 0), text, font)
+                w, h = r - l, b - t
                 draw.text((x - w / 2, y - h / 2), text, font=font, fill=color)
 
         ImageHandler.__draw_on_new_layer__(image, draw_func, 1, ImageHandler.__use_transparency__(color))

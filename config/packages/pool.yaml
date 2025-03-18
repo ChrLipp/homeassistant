@@ -24,9 +24,3 @@ automation:
     target:
       entity_id: switch.ventilation_relay_4
   mode: single
-
-history:
-  exclude:
-    entities:
-      - automation.pool_heater_on
-      - automation.pool_heater_off

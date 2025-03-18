@@ -5,20 +5,12 @@ http:
   use_x_forwarded_for: true
   trusted_proxies:
     - 127.0.0.1
+    - 10.0.0.100
 
 
 # Excludes are for FRITZ!Box 4040 / AVM FRITZ!Box Tools which I have removed now since the device trackers are just not working.
 # Instead I am working with HACS iPhone Device Tracker
 logbook:
-  exclude:
-    entities:
-      - binary_sensor.fritz_box_4040_connection
-      - binary_sensor.fritz_box_4040_firmware_update
-      - binary_sensor.fritz_box_4040_link
-      - sensor.fritz_box_4040_uptime
-      - sensor.fritz_box_4040_external_ip
-
-history:
   exclude:
     entities:
       - binary_sensor.fritz_box_4040_connection

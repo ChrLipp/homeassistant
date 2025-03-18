@@ -68,9 +68,3 @@ logbook:
       - sensor.logo3_naq2
       - sensor.logo3_naq3
       - sensor.logo3_naq4
-
-history:
-  exclude:
-    entities:
-      - sensor.logo3_naq3
-      - sensor.logo3_naq4

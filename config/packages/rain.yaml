@@ -98,9 +98,3 @@ logbook:
       - sensor.netatmo_pottelsdorf_rain_today
       - sensor.netatmo_pottelsdorf_temperature
       - sensor.netatmo_pottelsdorf_wind_strength
-
-history:
-  exclude:
-    entities:
-      - automation.rain_ends
-      - automation.rain_starts

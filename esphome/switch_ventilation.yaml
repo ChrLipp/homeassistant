@@ -69,6 +69,7 @@ switch:
     pin: GPIO12
     icon: mdi:electric-switch
     interlock: &interlock_group [relay1, relay2, relay3]
+    restore_mode: ALWAYS_ON
   - platform: gpio
     id: relay2
     name: "${short_name} Relay 2"

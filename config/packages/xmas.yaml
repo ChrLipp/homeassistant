@@ -8,18 +8,19 @@ automation:
   action:
     service: switch.turn_on
     entity_id:
+      - switch.shellyplusplugs_e86beae2f644_switch_0
       - switch.plug_03
       - switch.plug_04
       - switch.plug_05
       - switch.plug_06
       - switch.plug_07
-      - switch.plug_08
       - switch.plug_09
       - switch.plug_10
       - switch.plug_11
       - switch.plug_12
       - switch.plug_13
-      - switch.anna_chain_of_lights
+      - switch.shellyplusplugs_d48afc7ae358_switch_0
+      - switch.plug_15_switch_0
 
 - id: '1606158583657'
   alias: 'Service: turn off x-mas lights'
@@ -35,21 +36,16 @@ automation:
     - delay: '00:00:15'
     - service: switch.turn_off
       entity_id:
+        - switch.shellyplusplugs_e86beae2f644_switch_0
         - switch.plug_03
         - switch.plug_04
         - switch.plug_05
         - switch.plug_06
         - switch.plug_07
-        - switch.plug_08
         - switch.plug_09
         - switch.plug_10
         - switch.plug_11
         - switch.plug_12
         - switch.plug_13
-        - switch.anna_chain_of_lights
-
-history:
-  exclude:
-    entities:
-      - automation.service_turn_on_x_mas_lights
-      - automation.service_turn_off_x_mas_lights
+        - switch.shellyplusplugs_d48afc7ae358_switch_0
+        - switch.plug_15_switch_0

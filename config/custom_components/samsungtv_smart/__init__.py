@@ -1,4 +1,5 @@
 """The samsungtv_smart integration."""
+
 from __future__ import annotations
 
 import asyncio
@@ -13,6 +14,7 @@ import async_timeout
 import voluptuous as vol
 from websocket import WebSocketException
 
+from homeassistant.components.http import StaticPathConfig
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.const import (
     ATTR_DEVICE_ID,
@@ -56,6 +58,7 @@ from .const import (
     CONF_UPDATE_CUSTOM_PING_URL,
     CONF_UPDATE_METHOD,
     CONF_WS_NAME,
+    DATA_CFG,
     DATA_CFG_YAML,
     DATA_OPTIONS,
     DEFAULT_PORT,
@@ -82,6 +85,8 @@ DEVICE_INFO = {
     ATTR_DEVICE_MODEL: "modelName",
     ATTR_DEVICE_OS: "OS",
 }
+
+SAMSMART_PLATFORM = [Platform.MEDIA_PLAYER, Platform.REMOTE]
 
 SAMSMART_SCHEMA = {
     vol.Optional(CONF_SOURCE_LIST, default=DEFAULT_SOURCE_LIST): cv.string,
@@ -157,7 +162,7 @@ def is_valid_ha_version() -> bool:
 def _notify_message(
     hass: HomeAssistant, notification_id: str, title: str, message: str
 ) -> None:
-    """Notify user with persistent notification"""
+    """Notify user with persistent notification."""
     hass.async_create_task(
         hass.services.async_call(
             domain="persistent_notification",
@@ -297,13 +302,18 @@ def _migrate_entry_unique_id(hass: HomeAssistant, entry: ConfigEntry) -> None:
     hass.config_entries.async_update_entry(entry, unique_id=new_unique_id)
 
 
-def _register_logo_paths(hass: HomeAssistant) -> str | None:
+async def _register_logo_paths(hass: HomeAssistant) -> str | None:
     """Register paths for local logos."""
 
     static_logo_path = Path(__file__).parent / "static"
-    hass.http.register_static_path(STATIC_IMAGE_BASE_URL, str(static_logo_path), False)
+    static_paths = [
+        StaticPathConfig(
+            STATIC_IMAGE_BASE_URL, str(static_logo_path), cache_headers=False
+        )
+    ]
 
     local_logo_path = Path(hass.config.path("www", f"{DOMAIN}_logos"))
+    url_logo_path = str(local_logo_path)
     if not local_logo_path.exists():
         try:
             local_logo_path.mkdir(parents=True)
@@ -311,10 +321,15 @@ def _register_logo_paths(hass: HomeAssistant) -> str | None:
             _LOGGER.warning(
                 "Error registering custom logo folder %s: %s", str(local_logo_path), exc
             )
-            return None
+            url_logo_path = None
 
-    hass.http.register_static_path(CUSTOM_IMAGE_BASE_URL, str(local_logo_path), False)
-    return str(local_logo_path)
+    if url_logo_path is not None:
+        static_paths.append(
+            StaticPathConfig(CUSTOM_IMAGE_BASE_URL, url_logo_path, cache_headers=False)
+        )
+
+    await hass.http.async_register_static_paths(static_paths)
+    return url_logo_path
 
 
 async def get_device_info(hostname: str, session: ClientSession) -> dict:
@@ -509,7 +524,7 @@ async def async_setup(hass: HomeAssistant, config: ConfigType) -> bool:
                 hass.data[DOMAIN][valid_entries[0]] = {DATA_CFG_YAML: data_yaml}
 
     # Register path for local logo
-    if local_logo_path := await hass.async_add_executor_job(_register_logo_paths, hass):
+    if local_logo_path := await _register_logo_paths(hass):
         hass.data.setdefault(DOMAIN, {})[LOCAL_LOGO_PATH] = local_logo_path
 
     return True
@@ -533,11 +548,27 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     _migrate_options_format(hass, entry)
 
     # setup entry
-    entry.async_on_unload(entry.add_update_listener(_update_listener))
-    hass.data.setdefault(DOMAIN, {}).setdefault(entry.entry_id, {})
-    hass.data[DOMAIN][entry.entry_id][DATA_OPTIONS] = entry.options.copy()
+    if DOMAIN not in hass.data:
+        hass.data[DOMAIN] = {}
 
-    await hass.config_entries.async_forward_entry_setups(entry, [Platform.MEDIA_PLAYER])
+    add_conf = None
+    config = entry.data.copy()
+    if entry.entry_id in hass.data[DOMAIN]:
+        add_conf = hass.data[DOMAIN][entry.entry_id].get(DATA_CFG_YAML, {})
+        for attr, value in add_conf.items():
+            if value:
+                config[attr] = value
+
+    # setup entry
+    hass.data[DOMAIN][entry.entry_id] = {
+        DATA_CFG: config,
+        DATA_OPTIONS: entry.options.copy(),
+    }
+    if add_conf:
+        hass.data[DOMAIN][entry.entry_id][DATA_CFG_YAML] = add_conf
+    entry.async_on_unload(entry.add_update_listener(_update_listener))
+
+    await hass.config_entries.async_forward_entry_setups(entry, SAMSMART_PLATFORM)
 
     return True
 
@@ -545,8 +576,9 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
 async def async_unload_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     """Unload a config entry."""
     if unload_ok := await hass.config_entries.async_unload_platforms(
-        entry, [Platform.MEDIA_PLAYER]
+        entry, SAMSMART_PLATFORM
     ):
+        hass.data[DOMAIN][entry.entry_id].pop(DATA_CFG)
         hass.data[DOMAIN][entry.entry_id].pop(DATA_OPTIONS)
         if not hass.data[DOMAIN][entry.entry_id]:
             hass.data[DOMAIN].pop(entry.entry_id)

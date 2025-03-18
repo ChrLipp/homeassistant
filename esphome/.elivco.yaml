@@ -1,0 +1,67 @@
+# Name: ELIVCO
+# Energy Monitoring Smart Plug with button and LED.
+# Link to device: https://de.aliexpress.com/item/4000478798085.html
+# The device is labeled as "LSPA9", this device is available with many different brands (Elivco, Athom, ..)
+#
+# Flashing with Tuya-Convert is not possible.
+#
+# Link for GPIO layout:
+# - Athom config  : https://github.com/athom-tech/athom-configs/blob/main/athom-smart-plug.yaml
+#                   https://github.com/athom-tech/athom-configs/blob/main/athom-smart-plug-v2.yaml
+# - Athom template: https://templates.blakadder.com/athom_PG01EU16A.html
+# - AliExpress    : https://de.aliexpress.com/item/1005002984938182.html
+#
+# Template from blackadder and AliExpress (identical)
+# GPIO  Mode  Description
+# 03    in    Button1
+# 04    out   Power monitoring chip BL0937 CF
+# 05    out   Power monitoring HLWBL CF1, Voltage or Current based on SELi
+# 12    in    Power monitoring HLWBL SELi (selection pin  SEL pin to toggle the CF1 pin output between Voltage and Current)
+# 13    out   Led1
+# 14    out   Relay1
+#
+# I am not interested in power monitoring, so I did not implement it.
+
+esphome:
+  name: ${device_name}
+  comment: ${device_description}
+  platform: ESP8266
+  board: esp8285
+
+# Network settings
+packages:
+  wifi: !include .network.yaml
+
+# Enable time component for use by daily power sensor
+#time:
+#  - platform: homeassistant
+#    id: homeassistant_time
+
+switch:
+# Relay action
+- platform: gpio
+  name: ${short_name}
+  pin: GPIO14
+  id: relay1
+  restore_mode: ALWAYS_OFF
+
+binary_sensor:
+# Reports when the button is pressed
+- platform: gpio
+  device_class: power
+  pin:
+    number: GPIO03
+    mode:
+      input: true
+      pullup: true
+    inverted: True
+  name: ${friendly_name} Button
+  on_press:
+    - switch.toggle: relay1
+  internal: true
+
+# status led
+status_led:
+  pin:
+    number: GPIO13
+    inverted: True

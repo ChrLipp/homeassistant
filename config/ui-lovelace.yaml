@@ -10,11 +10,16 @@ views:
         title: Familie
         show_header_toggle: false
         entities:
-          - person.christian
-          - person.anita
-          - person.anna_mavie
-          - person.elias
-          - person.jessica
+          - entity: person.christian
+            secondary_info: last-changed
+          - entity: person.anita
+            secondary_info: last-changed
+          - entity: person.anna_mavie
+            secondary_info: last-changed
+          - entity: person.elias
+            secondary_info: last-changed
+          - entity: person.jessica
+            secondary_info: last-changed
       - entity: weather.home
         type: weather-forecast
       - type: "custom:atomic-calendar-revive"
@@ -93,17 +98,18 @@ views:
         show_state: false
       - type: entities
         entities:
-          - entity: switch.plug_toaster
-            name: Toaster
-          - type: divider
-          - entity: switch.plug_10
-            name: Eingangstür
           - entity: switch.plug_06
             name: Eingang Stern
-          - type: divider
-          - entity: switch.plug_08
-            name: Küche Tisch
           - entity: switch.plug_05
+            name: Eingangstür
+          - entity: switch.plug_12
+            name: Arbeitszimmer
+          - type: divider
+          - entity: switch.plug_04
+            name: Kellerabgang
+          - entity: switch.plug_07
+            name: Küche Tisch
+          - entity: switch.plug_10
             name: Terrasse Weihnachtsbaum
           - type: divider
           - entity: switch.plug_03
@@ -111,19 +117,22 @@ views:
           - entity: switch.plug_11
             name: Wohnzimmer Stern
           - type: divider
-            name: Anna Stern Links
           - entity: switch.plug_09
-            name: Anna Stern Links
-          - entity: switch.plug_07
-            name: Anna Stern Rechts
-          - type: divider
-          - entity: switch.plug_12
-            name: Arbeitszimmer
-          - entity: switch.plug_04
-            name: Elias Stern
+            name: Christbaum Vorraum 1.Stock
+          - entity: switch.shellyplusplugs_e86beae2f644_switch_0
+            name: Schlafzimmer Stern
+          - entity: switch.shellyplusplugs_d48afc7ae358_switch_0
+            name: Lichterkette Schlafzimmer
           - type: divider
           - entity: switch.plug_13
-            name: Schlafzimmer  Stern
+            name: Anna-Mavie Stern
+          - entity: switch.plug_15_switch_0
+            name: Elias Stern
+          - type: divider
+          - entity: switch.plug_toaster
+            name: Toaster
+          - entity: switch.plug_01
+            name: Rennrad Ventilator
         title: Schaltbare Steckdosen
         show_header_toggle: false
       - cards:
@@ -137,17 +146,6 @@ views:
             tap_action:
               action: toggle
             type: entity-button
-          - entity: switch.anna_chain_of_lights
-            hold_action:
-              action: more-info
-            name: Anna Lichterkette
-            show_icon: true
-            show_name: true
-            state_color: true
-            tap_action:
-              action: toggle
-            type: entity-button
-            icon: 'mdi:lightbulb'
           - entity: light.hochbett
             name: Anna Hochbett
             show_icon: true
@@ -175,7 +173,13 @@ views:
           type: media-control
           name: TV Samsung
         type: vertical-stack
-        title: Medien Zimmer Anna-Mavie
+        title: Zimmer Anna-Mavie
+      - type: history-graph
+        title: Schlafzimmmer
+        hours_to_show: 24
+        entities:
+          - entity: sensor.alarm_clock_4d44_temperature
+            name: Wecker
 
   - title: Garten
     icon: 'mdi:tree'
@@ -222,25 +226,12 @@ views:
         title: Abfahrt
         type: horizontal-stack
       - cards:
-        - type: picture-elements
-          camera_image: camera.miki
-          elements:
-            - type: state-icon
-              entity: vacuum.miki
-              style:
-                top: 30%
-                left: 50%
-                '--paper-item-icon-color': white
-            - type: state-label
-              entity: vacuum.miki
-              attribute: status
-              style:
-                top: 30%
-                left: 65%
-                color: white
         - type: entities
           entities:
-            - vacuum.miki
+            - entity: vacuum.miki
+              name: Status Miki
+            - entity: sensor.miki_next_start
+              name: Nächster Start
         type: vertical-stack
       - type: entities
         entities:
@@ -255,6 +246,24 @@ views:
           - switch.garden_light_back
         title: Licht
         show_header_toggle: false
+      - type: history-graph
+        title: Temperaturen pro Tag (Raw)
+        hours_to_show: 3
+        entities:
+          - sensor.logo3_naq3
+          - sensor.logo3_naq4
+      - type: history-graph
+        title: Temperaturen pro Tag
+        hours_to_show: 3
+        entities:
+          - sensor.logo3_temperature_1
+          - sensor.logo3_temperature_2
+      - type: history-graph
+        title: Helligkeitsverlauf
+        hours_to_show: 3
+        entities:
+          - sensor.logo3_naq1
+          - sensor.logo3_naq2
 
   - title: Netzwerk
     icon: 'mdi:network'

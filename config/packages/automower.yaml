@@ -8,24 +8,6 @@
 # Docking station: flashing blue light (damaged wire)
 #                  flashing green light (power save mode, removed Automower during recharging, insert Automower into docking station again will fix it)
 
-automower:
-  username: !secret husqvarna_username
-  password: !secret husqvarna_password
-
-camera:
-  name: Miki
-  platform: generic
-  still_image_url: !secret husqvarna_maps_url
-  limit_refetch_to_url_change: true
-
-sensor:
-  - platform: template
-    sensors:
-      miki_status:
-        friendly_name: "Miki"
-        entity_picture_template: "{{state_attr('camera.miki', 'entity_picture')}}"
-        value_template: "{{states('device_tracker.automower_none_170805572_164914249')}}"
-
 automation:
 - id: '1583509362752'
   alias: 'Notify: Miki error'
@@ -33,28 +15,14 @@ automation:
   trigger:
   - entity_id: vacuum.miki
     platform: state
-    to: 'Error'
+    to: 'error'
     for: "00:01:00"
   action:
   - data_template:
-      message: "*Achtung:* Miki steckt! ({{state_attr('vacuum.miki', 'lastErrorMessage')}})"
+      message: "*Achtung:* Miki hat ein Problem!"
+      data:
+        parse_mode: markdown
     service: notify.telegram_all
   - data_template:
-      message: "{{ states.vacuum.miki }}"
+      message: "Achtung: Miki hat ein Problem!"
     service: system_log.write
-
-logbook:
-  exclude:
-    entities:
-      - automation.notify_miki_error
-      - camera.miki
-      - device_tracker.automower_none_170805572_164914249
-      - sensor.miki_status
-
-history:
-  exclude:
-    entities:
-      - automation.notify_miki_error
-      - camera.miki
-      - device_tracker.automower_none_170805572_164914249
-      - sensor.miki_status

@@ -148,25 +148,6 @@ logbook:
       - switch.ventilation_relay_4
       - fan.ventilation_fan
 
-history:
-  exclude:
-    entities:
-      - automation.wohnraumluftung_ein
-      - automation.wohnraumluftung_aus
-      - script.ventilation_fan_off
-      - script.ventilation_fan_1
-      - script.ventilation_fan_2
-      - script.ventilation_fan_3
-      - sensor.ventilation_esphome_version
-      - sensor.ventilation_uptime
-      - switch.ventilation_reboot
-      - switch.ventilation_relay_1
-      - switch.ventilation_relay_2
-      - switch.ventilation_relay_3
-      - switch.ventilation_relay_4
-      - switch.ventilation_restart
-      - fan.ventilation_fan
-
 #logger:
 #  logs:
 #    fan.ventilation_fan: debug

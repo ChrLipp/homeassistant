@@ -8,8 +8,3 @@ logbook:
     entities:
       - sensor.time
       - sun.sun
-
-history:
-  exclude:
-    entities:
-      - sensor.time

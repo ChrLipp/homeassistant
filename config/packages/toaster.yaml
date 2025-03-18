@@ -18,18 +18,13 @@ automation:
         - service: switch.turn_off
           entity_id: switch.plug_toaster
         - data:
-            message: "Toaster wurde nach 20 Minuten automatisch ausgeschalten. Aufpassen!"
+            message: "Toaster wurde nach 20 Minuten automatisch ausgeschalten. *Aufpassen!*"
+            data:
+              parse_mode: markdown
           service: notify.telegram_all
   
 logbook:
   exclude:
     entities:
       - sensor.plug_toaster_esphome_version
-      - switch.plug_toaster_restart
-
-history:
-  exclude:
-    entities:
-      - sensor.plug_toaster_esphome_version
-      - sensor.plug_toaster_uptime
       - switch.plug_toaster_restart

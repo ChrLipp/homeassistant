@@ -118,15 +118,24 @@ cover:
             mdi:garage-open
           {% endif %}
 
-logbook:
-  exclude:
-    entities:
-      - cover.descent_anita_bike
-      - cover.descent_anita_car
-      - cover.descent_christian_bike
-      - cover.descent_christian_car
+automation:
+- id: '1711985708694'
+  alias: 'Action: Christian car'
+  description: 'iOS Steuerung für Garagentor Christian'
+  trigger:
+  - platform: event
+    event_data:
+      actionID: 027BB736-3075-402F-92BB-1DE0EFEF3681
+    event_type: ios.action_fired
+  condition: []
+  action:
+  - service: cover.toggle
+    target:
+      entity_id: cover.descent_christian_car
+    data: {}
+  mode: single
 
-history:
+logbook:
   exclude:
     entities:
       - cover.descent_anita_bike
