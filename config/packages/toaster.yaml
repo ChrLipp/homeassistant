@@ -4,7 +4,7 @@ automation:
   mode: restart
   trigger:
     platform: state
-    entity_id: switch.plug_toaster
+    entity_id: switch.plug_17_switch_0
     to: 'on'
   action:
     - delay:
@@ -12,19 +12,13 @@ automation:
     - if:
         - alias: "If toaster is still running"
           condition: state
-          entity_id: switch.plug_toaster
+          entity_id: switch.plug_17_switch_0
           state: 'on'
       then:
         - service: switch.turn_off
-          entity_id: switch.plug_toaster
+          entity_id: switch.plug_17_switch_0
         - data:
             message: "Toaster wurde nach 20 Minuten automatisch ausgeschalten. *Aufpassen!*"
             data:
               parse_mode: markdown
           service: notify.telegram_all
-  
-logbook:
-  exclude:
-    entities:
-      - sensor.plug_toaster_esphome_version
-      - switch.plug_toaster_restart

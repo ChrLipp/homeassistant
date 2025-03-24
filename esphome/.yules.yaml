@@ -37,7 +37,8 @@
 esphome:
   name: ${device_name}
   comment: ${device_description}
-  platform: ESP8266
+
+esp8266:
   board: esp01_1m
 
 # Network settings
@@ -74,4 +75,3 @@ status_led:
   pin:
     number: GPIO0
     inverted: True
-

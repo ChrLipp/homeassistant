@@ -71,6 +71,7 @@ views:
           name: TV Samsung
         - entity: media_player.vu_solo4k
           type: media-control
+          name: VU Solo 4K
         - entity: media_player.onkyo
           type: media-control
           name: Onkyo
@@ -129,7 +130,7 @@ views:
           - entity: switch.plug_15_switch_0
             name: Elias Stern
           - type: divider
-          - entity: switch.plug_toaster
+          - entity: switch.plug_17_switch_0
             name: Toaster
           - entity: switch.plug_01
             name: Rennrad Ventilator
