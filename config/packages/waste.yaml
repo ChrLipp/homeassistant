@@ -1,22 +1,23 @@
+template:
+  - sensor:
+      - default_entity_id: sensor.gelbersack_text
+        name: "Gelber Sack - am {{ state_attr('sensor.waste_gelber_sack', 'display_date') }}"
+        state: "{{ state_attr('sensor.waste_gelber_sack', 'display_text') }}"
+        icon: mdi:sack
+      - default_entity_id: sensor.papiertonne_text
+        name: "Papier - am {{ state_attr('sensor.waste_papier', 'display_date') }}"
+        state: "{{ state_attr('sensor.waste_papier', 'display_text') }}"
+        icon: mdi:delete-empty        
+      - default_entity_id: sensor.restmuell_text
+        name: "Restmüll - am {{ state_attr('sensor.waste_restmull', 'display_date') }}"
+        state: "{{ state_attr('sensor.waste_restmull', 'display_text') }}"
+        icon: mdi:trash-can-outline
+
 sensor:
   - platform: waste_at_bmv
     ort: !secret bmv_ort
     strasse: !secret bmv_strasse
     hausnummer: !secret bmv_hausnummer
-  - platform: template
-    sensors:
-      gelbersack_text:
-        value_template: "{{state_attr('sensor.waste_gelber_sack', 'display_text')}}"
-        friendly_name_template: "Gelber Sack - am {{state_attr('sensor.waste_gelber_sack', 'display_date')}}"
-        icon_template: mdi:sack
-      papiertonne_text:
-        value_template: "{{state_attr('sensor.waste_papier', 'display_text')}}"
-        friendly_name_template: "Papier - am {{state_attr('sensor.waste_papier', 'display_date')}}"
-        icon_template: mdi:delete-empty
-      restmuell_text:
-        value_template: "{{state_attr('sensor.waste_restmull', 'display_text')}}"
-        friendly_name_template: "Restmüll - am {{state_attr('sensor.waste_restmull', 'display_date')}}"
-        icon_template: mdi:trash-can-outline
 
 automation:
 - id: '1583509362749'
@@ -64,16 +65,3 @@ automation:
       data:
         parse_mode: markdown
     service: notify.telegram_all
-
-logbook:
-  exclude:
-    entities:
-      - automation.notify_garbage_gelber_sack
-      - automation.notify_garbage_papier
-      - automation.notify_garbage_restmull
-      - sensor.gelbersack_text
-      - sensor.papiertonne_text
-      - sensor.restmuell_text
-      - sensor.waste_gelber_sack
-      - sensor.waste_papier
-      - sensor.waste_restmull

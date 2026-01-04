@@ -5,15 +5,15 @@
 ##  HACS
 
 - [HACS (Home Assistant Community Store)](https://github.com/hacs/integration)
-- Integrations
+  - Integrations
     - [Govee](https://github.com/LaggAt/hacs-govee)
     - [Husqvarna Automower](https://github.com/Thomas55555/husqvarna_automower)
-	- [iPhone Device Tracker](https://github.com/mudape/iphonedetect)
+    - [iPhone Device Tracker](https://github.com/mudape/iphonedetect)
     - [Local Tuya](https://github.com/rospogrigio/localtuya)
     - [SamsungTV Smart](https://github.com/ollo69/ha-samsungtv-smart)
-	- [Waste BMV](https://github.com/ChrLipp/waste_at_bmv)
-	- [Xiaomi Cloud Map Extractor](https://github.com/PiotrMachowski/Home-Assistant-custom-components-Xiaomi-Cloud-Map-Extractor)
-- Frontend
+    - [Waste BMV](https://github.com/ChrLipp/waste_at_bmv)
+    - [Xiaomi Cloud Map Extractor](https://github.com/PiotrMachowski/Home-Assistant-custom-components-Xiaomi-Cloud-Map-Extractor)
+  - Frontend
     - [Atomic Calendar Revive](https://github.com/marksie1988/atomic-calendar-revive)
     - [Fan Percent Button Row](https://github.com/finity69x2/fan-percent-button-row)
     - [Google Dark Theme](https://github.com/JuanMTech/google_dark_theme)
@@ -26,7 +26,8 @@
 - Goggle
     - cast
 	- Calendar
-- Fritz 
+- Fritz
+- Generic camera, see `automower.yaml`
 
 ##  Open issues and known problems
 
@@ -39,6 +40,4 @@
 
 ## Fixed
 
-- Extracted BMV integration to a custom HACS 
-- Updated HA and HACS components
-- Switched from unsupported to supported Automower integration
+- Tried to fix fence ghost execution

@@ -96,275 +96,249 @@ modbus:
         write_type: coil
 
 # Template switches for direct use (250ms pulse)
-switch:
-  - platform: template
-    switches:
+template:
+  - switch:
+      - default_entity_id: switch.blind_livingroom_window_up
+        name: "Blind living room window up"
+        state: "{{ is_state('switch.modbus_switch_01', 'on') }}"
+        icon: "mdi:blinds"
+        turn_on:
+          - action: switch.turn_on
+            data:
+              entity_id: switch.modbus_switch_01
+          - delay:
+              milliseconds: 250
+          - action: switch.turn_off
+            data:
+              entity_id: switch.modbus_switch_01
+        turn_off:
+          - action: switch.turn_off
+            data:
+              entity_id: switch.modbus_switch_01
+      - default_entity_id: switch.blind_livingroom_window_down
+        name: "Blind living room window down"
+        state: "{{ is_state('switch.modbus_switch_02', 'on') }}"
+        icon: "mdi:blinds"
+        turn_on:
+          - action: switch.turn_on
+            data:
+              entity_id: switch.modbus_switch_02
+          - delay:
+              milliseconds: 250
+          - action: switch.turn_off
+            data:
+              entity_id: switch.modbus_switch_02
+        turn_off:
+          - action: switch.turn_off
+            data:
+              entity_id: switch.modbus_switch_02
 
-      blind_livingroom_window_up:
-        friendly_name: "Blind living room window up"
-        value_template: "{{ is_state('switch.modbus_switch_01', 'on') }}"
+      - default_entity_id: switch.blind_livingroom_door_up
+        name: "Blind living room door up"
+        state: "{{ is_state('switch.modbus_switch_03', 'on') }}"
+        icon: "mdi:blinds"
         turn_on:
-        - service: switch.turn_on
-          data:
-            entity_id: switch.modbus_switch_01
-        - delay:
-            milliseconds: 250
-        - service: switch.turn_off
-          data:
-            entity_id: switch.modbus_switch_01
+          - action: switch.turn_on
+            data:
+              entity_id: switch.modbus_switch_03
+          - delay:
+              milliseconds: 250
+          - action: switch.turn_off
+            data:
+              entity_id: switch.modbus_switch_03
         turn_off:
-        - service: switch.turn_off
-          data:
-            entity_id: switch.modbus_switch_01
-        icon_template: "mdi:blinds"
-      blind_livingroom_window_down:
-        friendly_name: "Blind living room window down"
-        value_template: "{{ is_state('switch.modbus_switch_02', 'on') }}"
+          - action: switch.turn_off
+            data:
+              entity_id: switch.modbus_switch_03
+      - default_entity_id: switch.blind_livingroom_door_down
+        name: "Blind living room door down"
+        state: "{{ is_state('switch.modbus_switch_04', 'on') }}"
+        icon: "mdi:blinds"
         turn_on:
-        - service: switch.turn_on
-          data:
-            entity_id: switch.modbus_switch_02
-        - delay:
-            milliseconds: 250
-        - service: switch.turn_off
-          data:
-            entity_id: switch.modbus_switch_02
+          - action: switch.turn_on
+            data:
+              entity_id: switch.modbus_switch_04
+          - delay:
+              milliseconds: 250
+          - action: switch.turn_off
+            data:
+              entity_id: switch.modbus_switch_04
         turn_off:
-        - service: switch.turn_off
-          data:
-            entity_id: switch.modbus_switch_02
-        icon_template: "mdi:blinds"
-        
-      blind_livingroom_door_up:
-        friendly_name: "Blind living room door up"
-        value_template: "{{ is_state('switch.modbus_switch_03', 'on') }}"
-        turn_on:
-        - service: switch.turn_on
-          data:
-            entity_id: switch.modbus_switch_03
-        - delay:
-            milliseconds: 250
-        - service: switch.turn_off
-          data:
-            entity_id: switch.modbus_switch_03
-        turn_off:
-        - service: switch.turn_off
-          data:
-            entity_id: switch.modbus_switch_03
-        icon_template: "mdi:blinds"
-      blind_livingroom_door_down:
-        friendly_name: "Blind living room door down"
-        value_template: "{{ is_state('switch.modbus_switch_04', 'on') }}"
-        turn_on:
-        - service: switch.turn_on
-          data:
-            entity_id: switch.modbus_switch_04
-        - delay:
-            milliseconds: 250
-        - service: switch.turn_off
-          data:
-            entity_id: switch.modbus_switch_04
-        turn_off:
-        - service: switch.turn_off
-          data:
-            entity_id: switch.modbus_switch_04
-        icon_template: "mdi:blinds"
-        
-      blind_kitchen_door_up:
-        friendly_name: "Blind kitchen door up"
-        value_template: "{{ is_state('switch.modbus_switch_05', 'on') }}"
-        turn_on:
-        - service: switch.turn_on
-          data:
-            entity_id: switch.modbus_switch_05
-        - delay:
-            milliseconds: 250
-        - service: switch.turn_off
-          data:
-            entity_id: switch.modbus_switch_05
-        turn_off:
-        - service: switch.turn_off
-          data:
-            entity_id: switch.modbus_switch_05
-        icon_template: "mdi:blinds"
-      blind_kitchen_door_down:
-        friendly_name: "Blind kitchen door down"
-        value_template: "{{ is_state('switch.modbus_switch_06', 'on') }}"
-        turn_on:
-        - service: switch.turn_on
-          data:
-            entity_id: switch.modbus_switch_06
-        - delay:
-            milliseconds: 250
-        - service: switch.turn_off
-          data:
-            entity_id: switch.modbus_switch_06
-        turn_off:
-        - service: switch.turn_off
-          data:
-            entity_id: switch.modbus_switch_06
-        icon_template: "mdi:blinds"
+          - action: switch.turn_off
+            data:
+              entity_id: switch.modbus_switch_04
 
-      blind_kitchen_left_up:
-        friendly_name: "Blind kitchen left up"
-        value_template: "{{ is_state('switch.modbus_switch_07', 'on') }}"
+      - default_entity_id: switch.blind_kitchen_door_up
+        name: "Blind kitchen door up"
+        state: "{{ is_state('switch.modbus_switch_05', 'on') }}"
+        icon: "mdi:blinds"
         turn_on:
-        - service: switch.turn_on
-          data:
-            entity_id: switch.modbus_switch_07
-        - delay:
-            milliseconds: 250
-        - service: switch.turn_off
-          data:
-            entity_id: switch.modbus_switch_07
+          - action: switch.turn_on
+            data:
+              entity_id: switch.modbus_switch_05
+          - delay:
+              milliseconds: 250
+          - action: switch.turn_off
+            data:
+              entity_id: switch.modbus_switch_05
         turn_off:
-        - service: switch.turn_off
-          data:
-            entity_id: switch.modbus_switch_07
-        icon_template: "mdi:blinds"
-      blind_kitchen_left_down:
-        friendly_name: "Blind kitchen left down"
-        value_template: "{{ is_state('switch.modbus_switch_08', 'on') }}"
+          - action: switch.turn_off
+            data:
+              entity_id: switch.modbus_switch_05
+      - default_entity_id: switch.blind_kitchen_door_down
+        name: "Blind kitchen door down"
+        state: "{{ is_state('switch.modbus_switch_06', 'on') }}"
+        icon: "mdi:blinds"
         turn_on:
-        - service: switch.turn_on
-          data:
-            entity_id: switch.modbus_switch_08
-        - delay:
-            milliseconds: 250
-        - service: switch.turn_off
-          data:
-            entity_id: switch.modbus_switch_08
+          - action: switch.turn_on
+            data:
+              entity_id: switch.modbus_switch_06
+          - delay:
+              milliseconds: 250
+          - action: switch.turn_off
+            data:
+              entity_id: switch.modbus_switch_06
         turn_off:
-        - service: switch.turn_off
-          data:
-            entity_id: switch.modbus_switch_08
-        icon_template: "mdi:blinds"
+          - action: switch.turn_off
+            data:
+              entity_id: switch.modbus_switch_06
 
-      blind_kitchen_right_up:
-        friendly_name: "Blind kitchen right up"
-        value_template: "{{ is_state('switch.modbus_switch_09', 'on') }}"
+      - default_entity_id: switch.blind_kitchen_left_up
+        name: "Blind kitchen left up"
+        state: "{{ is_state('switch.modbus_switch_07', 'on') }}"
+        icon: "mdi:blinds"
         turn_on:
-        - service: switch.turn_on
-          data:
-            entity_id: switch.modbus_switch_09
-        - delay:
-            milliseconds: 250
-        - service: switch.turn_off
-          data:
-            entity_id: switch.modbus_switch_09
+          - action: switch.turn_on
+            data:
+              entity_id: switch.modbus_switch_07
+          - delay:
+              milliseconds: 250
+          - action: switch.turn_off
+            data:
+              entity_id: switch.modbus_switch_07
         turn_off:
-        - service: switch.turn_off
-          data:
-            entity_id: switch.modbus_switch_09
-        icon_template: "mdi:blinds"
-      blind_kitchen_right_down:
-        friendly_name: "Blind kitchen right down"
-        value_template: "{{ is_state('switch.modbus_switch_10', 'on') }}"
+          - action: switch.turn_off
+            data:
+              entity_id: switch.modbus_switch_07
+      - default_entity_id: switch.blind_kitchen_left_down
+        name: "Blind kitchen left down"
+        state: "{{ is_state('switch.modbus_switch_08', 'on') }}"
+        icon: "mdi:blinds"
         turn_on:
-        - service: switch.turn_on
-          data:
-            entity_id: switch.modbus_switch_10
-        - delay:
-            milliseconds: 250
-        - service: switch.turn_off
-          data:
-            entity_id: switch.modbus_switch_10
+          - action: switch.turn_on
+            data:
+              entity_id: switch.modbus_switch_08
+          - delay:
+              milliseconds: 250
+          - action: switch.turn_off
+            data:
+              entity_id: switch.modbus_switch_08
         turn_off:
-        - service: switch.turn_off
-          data:
-            entity_id: switch.modbus_switch_10
-        icon_template: "mdi:blinds"
+          - action: switch.turn_off
+            data:
+              entity_id: switch.modbus_switch_08
 
-      blind_bedroom_up:
-        friendly_name: "Blind bedroom up"
-        value_template: "{{ is_state('switch.modbus_switch_11', 'on') }}"
+      - default_entity_id: switch.blind_kitchen_right_up
+        name: "Blind kitchen right up"
+        state: "{{ is_state('switch.modbus_switch_09', 'on') }}"
+        icon: "mdi:blinds"
         turn_on:
-        - service: switch.turn_on
-          data:
-            entity_id: switch.modbus_switch_11
-        - delay:
-            milliseconds: 250
-        - service: switch.turn_off
-          data:
-            entity_id: switch.modbus_switch_11
+          - action: switch.turn_on
+            data:
+              entity_id: switch.modbus_switch_09
+          - delay:
+              milliseconds: 250
+          - action: switch.turn_off
+            data:
+              entity_id: switch.modbus_switch_09
         turn_off:
-        - service: switch.turn_off
-          data:
-            entity_id: switch.modbus_switch_11
-        icon_template: "mdi:blinds"
-      blind_bedroom_down:
-        friendly_name: "Blind bedroom down"
-        value_template: "{{ is_state('switch.modbus_switch_12', 'on') }}"
+          - action: switch.turn_off
+            data:
+              entity_id: switch.modbus_switch_09
+      - default_entity_id: switch.blind_kitchen_right_down
+        name: "Blind kitchen right down"
+        state: "{{ is_state('switch.modbus_switch_10', 'on') }}"
+        icon: "mdi:blinds"
         turn_on:
-        - service: switch.turn_on
-          data:
-            entity_id: switch.modbus_switch_12
-        - delay:
-            milliseconds: 250
-        - service: switch.turn_off
-          data:
-            entity_id: switch.modbus_switch_12
+          - action: switch.turn_on
+            data:
+              entity_id: switch.modbus_switch_10
+          - delay:
+              milliseconds: 250
+          - action: switch.turn_off
+            data:
+              entity_id: switch.modbus_switch_10
         turn_off:
-        - service: switch.turn_off
-          data:
-            entity_id: switch.modbus_switch_12
-        icon_template: "mdi:blinds"
+          - action: switch.turn_off
+            data:
+              entity_id: switch.modbus_switch_10
 
-      blind_all_up:
-        friendly_name: "All blinds up"
-        value_template: "{{ is_state('switch.modbus_switch_13', 'on') }}"
+      - default_entity_id: switch.blind_bedroom_up
+        name: "Blind bedroom up"
+        state: "{{ is_state('switch.modbus_switch_11', 'on') }}"
+        icon: "mdi:blinds"
         turn_on:
-        - service: switch.turn_on
-          data:
-            entity_id: switch.modbus_switch_13
-        - delay:
-            milliseconds: 250
-        - service: switch.turn_off
-          data:
-            entity_id: switch.modbus_switch_13
+          - action: switch.turn_on
+            data:
+              entity_id: switch.modbus_switch_11
+          - delay:
+              milliseconds: 250
+          - action: switch.turn_off
+            data:
+              entity_id: switch.modbus_switch_11
         turn_off:
-        - service: switch.turn_off
-          data:
-            entity_id: switch.modbus_switch_13
-        icon_template: "mdi:blinds"
-      blind_all_down:
-        friendly_name: "All Blinds down"
-        value_template: "{{ is_state('switch.modbus_switch_14', 'on') }}"
+          - action: switch.turn_off
+            data:
+              entity_id: switch.modbus_switch_11
+      - default_entity_id: switch.blind_bedroom_down
+        name: "Blind bedroom down"
+        state: "{{ is_state('switch.modbus_switch_12', 'on') }}"
+        icon: "mdi:blinds"
         turn_on:
-        - service: switch.turn_on
-          data:
-            entity_id: switch.modbus_switch_14
-        - delay:
-            milliseconds: 250
-        - service: switch.turn_off
-          data:
-            entity_id: switch.modbus_switch_14
+          - action: switch.turn_on
+            data:
+              entity_id: switch.modbus_switch_12
+          - delay:
+              milliseconds: 250
+          - action: switch.turn_off
+            data:
+              entity_id: switch.modbus_switch_12
         turn_off:
-        - service: switch.turn_off
-          data:
-            entity_id: switch.modbus_switch_14
-        icon_template: "mdi:blinds"
+          - action: switch.turn_off
+            data:
+              entity_id: switch.modbus_switch_12
 
-logbook:
-  exclude:
-    entities:
-      - sensor.modbus_sensor_01
-      - sensor.modbus_sensor_02
-      - sensor.modbus_sensor_03
-      - sensor.modbus_sensor_04
-      - sensor.modbus_sensor_05
-      - sensor.modbus_sensor_06
-      - switch.modbus_switch_01
-      - switch.modbus_switch_02
-      - switch.modbus_switch_03
-      - switch.modbus_switch_04
-      - switch.modbus_switch_05
-      - switch.modbus_switch_06
-      - switch.modbus_switch_07
-      - switch.modbus_switch_08
-      - switch.modbus_switch_09
-      - switch.modbus_switch_10
-      - switch.modbus_switch_11
-      - switch.modbus_switch_12
-      - switch.modbus_switch_13
-      - switch.modbus_switch_14
+      - default_entity_id: switch.blind_all_up
+        name: "All blinds up"
+        state: "{{ is_state('switch.modbus_switch_13', 'on') }}"
+        icon: "mdi:blinds"
+        turn_on:
+          - action: switch.turn_on
+            data:
+              entity_id: switch.modbus_switch_13
+          - delay:
+              milliseconds: 250
+          - action: switch.turn_off
+            data:
+              entity_id: switch.modbus_switch_13
+        turn_off:
+          - action: switch.turn_off
+            data:
+              entity_id: switch.modbus_switch_13
+      - default_entity_id: switch.blind_all_down
+        name: "All Blinds down"
+        state: "{{ is_state('switch.modbus_switch_14', 'on') }}"
+        icon: "mdi:blinds"
+        turn_on:
+          - action: switch.turn_on
+            data:
+              entity_id: switch.modbus_switch_14
+          - delay:
+              milliseconds: 250
+          - action: switch.turn_off
+            data:
+              entity_id: switch.modbus_switch_14
+        turn_off:
+          - action: switch.turn_off
+            data:
+              entity_id: switch.modbus_switch_14

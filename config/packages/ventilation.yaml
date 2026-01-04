@@ -5,18 +5,17 @@
 ########
 
 # A home assistant fan entity to control the Wohnraumlüftung
-fan:
-  - platform: template
-    fans:
-      ventilation_fan:
-        friendly_name: "Ventilator Wohnraumlüftung"
-        value_template: >-
+template:
+  - fan:
+      - default_entity_id: fan.ventilation_fan
+        name: "Ventilator Wohnraumlüftung"
+        state: >-
           {% if states('switch.ventilation_relay_1') == 'on' %}
             off
           {% else %}
             on
           {% endif %}
-        percentage_template: >-
+        percentage: >-
           {% if states('switch.ventilation_relay_1') == 'on' %}
             0
           {% elif states('switch.ventilation_relay_2') == 'on' %}
@@ -27,15 +26,15 @@ fan:
             33
           {% endif %}
         turn_on:
-          service: switch.turn_off
+          action: switch.turn_off
           data:
             entity_id: switch.ventilation_relay_1
         turn_off:
-          service: switch.turn_on
+          action: switch.turn_on
           data:
             entity_id: switch.ventilation_relay_1
         set_percentage:
-          service_template: >-
+          action: >-
             {% if percentage  == 0 %}
               script.ventilation_fan_off
             {% elif percentage  <= 33 %}
@@ -48,13 +47,11 @@ fan:
 
 # One sensor to display the state of the Wohnraumlüftung
 # for logbook and history - oldfashioned with state
-sensor:
-  - platform: template
-    sensors:
-      ventilation_state:
-        friendly_name: "Wohnraumlüftung"
-        icon_template: mdi:fan
-        value_template: >-
+  - sensor:
+      - default_entity_id: sensor.ventilation_state
+        name: "Wohnraumlüftung"
+        icon: mdi:fan
+        state: >-
           {% if states('switch.ventilation_relay_1') == 'on' %}
             off
           {% elif states('switch.ventilation_relay_2') == 'on' %}
@@ -129,24 +126,6 @@ automation:
       target:
         entity_id: fan.ventilation_fan
     mode: single
-
-# Exclude the low level entities from logbook and history
-logbook:
-  exclude:
-    entities:
-      - automation.wohnraumluftung_ein
-      - automation.wohnraumluftung_aus
-      - script.ventilation_fan_off
-      - script.ventilation_fan_1
-      - script.ventilation_fan_2
-      - script.ventilation_fan_3
-      - sensor.ventilation_esphome_version
-      - switch.ventilation_reboot
-      - switch.ventilation_relay_1
-      - switch.ventilation_relay_2
-      - switch.ventilation_relay_3
-      - switch.ventilation_relay_4
-      - fan.ventilation_fan
 
 #logger:
 #  logs:

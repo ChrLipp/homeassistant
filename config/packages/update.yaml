@@ -3,19 +3,11 @@ input_text:
     name: Last known (and notified) version available for update
     icon: mdi:message-settings-variant-outline
 
-sensor:
-# Beginning from 2022.3.x you have to remove the platform after it was imported into the GUI 
-#  - platform: version
-#    name: Current HA version
-#    source: local
-#  - platform: version
-#    name: Last HA version
-#    source: container
-  - platform: template
-    sensors:
-      update_available:
-        friendly_name: "Home assistant update available"
-        value_template: >-
+template:
+  - sensor:
+      - default_entity_id: sensor.update_available
+        name: "Home assistant update available"
+        state: >-
           {% if is_state("sensor.last_ha_version", "unknown") %}
             false
           {% elif is_state("sensor.last_ha_version", "unavailable") %}
@@ -59,16 +51,3 @@ automation:
   - data:
       message: 'Meister, *{{ states("sensor.hacs")}}* HACS update(s) ist/sind verfügbar'
     service: notify.telegram_admin
-
-logbook:
-  exclude:
-    entities:
-      - automation.notify_hacs_update_available
-      - automation.notify_update_available
-      - binary_sensor.last_ha_version_update_available
-      - binary_sensor.home_assistant_versions_update_available
-      - input_text.last_known_version_update
-      - sensor.current_ha_version
-      - sensor.last_ha_version
-      - sensor.hacs
-      - sensor.update_available

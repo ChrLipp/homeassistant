@@ -1,28 +1,24 @@
-# Error State
-#
-# lastErrorCode | lastErrorMessage
-#             2 | No loop signal (Kein Schleifensignal)
-#            10 | Upside down (Umgedreht)
-#            13 | No drive (kein Antrieb)
-#
 # Docking station: flashing blue light (damaged wire)
 #                  flashing green light (power save mode, removed Automower during recharging, insert Automower into docking station again will fix it)
+#
+# Provde a generic camera with name camera.miki_map
+#
 
 automation:
 - id: '1583509362752'
   alias: 'Notify: Miki error'
   description: Telegram notification when Miki encounters an error
   trigger:
-  - entity_id: vacuum.miki
+  - entity_id: sensor.miki_fehler
     platform: state
-    to: 'error'
+    from: 'no_error'
     for: "00:01:00"
   action:
   - data_template:
-      message: "*Achtung:* Miki hat ein Problem!"
+      message: "*Achtung:* Miki hat ein Problem! ({{ states('sensor.miki_fehler') }})"
       data:
         parse_mode: markdown
     service: notify.telegram_all
   - data_template:
-      message: "Achtung: Miki hat ein Problem!"
+      message: "Achtung: Miki hat ein Problem! ({{ states('sensor.miki_fehler') }})"
     service: system_log.write

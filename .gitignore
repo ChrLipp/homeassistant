@@ -2,6 +2,7 @@
 *.log
 *.log.1
 *.log.fault
+/export
 
 # Ignore folders
 .storage
@@ -9,6 +10,7 @@
 .google.token
 #tts/
 #custom_components/.translations
+/config/.ha_run.lock
 
 # Ignore these YAML files with secret data/credentials
 secrets.yaml

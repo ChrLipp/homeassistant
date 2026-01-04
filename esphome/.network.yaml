@@ -3,6 +3,7 @@ wifi:
   ssid: !secret wlan_ssid
   password: !secret wlan_password
   domain: .lan
+  min_auth_mode: WPA2
   
   # Static IP
   manual_ip:

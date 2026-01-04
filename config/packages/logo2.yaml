@@ -162,267 +162,221 @@ modbus:
         write_type: coil
 
 # Template switches for direct use (250ms pulse)
-switch:
-  - platform: template
-    switches:
-
-      terrace_light:
-        friendly_name: "Terrasse Licht"
-        value_template: "{{ is_state('binary_sensor.logo2_q01', 'on') }}"
-        turn_on:
-        - service: switch.turn_on
-          data:
-            entity_id: switch.logo2_ni01
-        - delay:
-            milliseconds: 250
-        - service: switch.turn_off
-          data:
-            entity_id: switch.logo2_ni01
-        turn_off:
-        - service: switch.turn_on
-          data:
-            entity_id: switch.logo2_ni01
-        - delay:
-            milliseconds: 250
-        - service: switch.turn_off
-          data:
-            entity_id: switch.logo2_ni01
-        icon_template: >-
+template:
+  - switch:
+      - default_entity_id: switch.terrace_light
+        name: "Terrasse Licht"
+        state: "{{ is_state('binary_sensor.logo2_q01', 'on') }}"
+        icon: >-
           {% if is_state('binary_sensor.logo2_q01', 'on') %}
             mdi:lightbulb-on
           {% else %}
             mdi:lightbulb-off
           {% endif %}
-      terrace_socket:
-        friendly_name: "Terrasse Strom"
-        value_template: "{{ is_state('binary_sensor.logo2_q02', 'on') }}"
         turn_on:
-        - service: switch.turn_on
-          data:
-            entity_id: switch.logo2_ni02
-        - delay:
-            milliseconds: 250
-        - service: switch.turn_off
-          data:
-            entity_id: switch.logo2_ni02
+          - action: switch.turn_on
+            data:
+              entity_id: switch.logo2_ni01
+          - delay:
+              milliseconds: 250
+          - action: switch.turn_off
+            data:
+              entity_id: switch.logo2_ni01
         turn_off:
-        - service: switch.turn_on
-          data:
-            entity_id: switch.logo2_ni02
-        - delay:
-            milliseconds: 250
-        - service: switch.turn_off
-          data:
-            entity_id: switch.logo2_ni02
-        icon_template: >-
+          - action: switch.turn_on
+            data:
+              entity_id: switch.logo2_ni01
+          - delay:
+              milliseconds: 250
+          - action: switch.turn_off
+            data:
+              entity_id: switch.logo2_ni01
+      - default_entity_id: switch.terrace_socket
+        name: "Terrasse Strom"
+        state: "{{ is_state('binary_sensor.logo2_q02', 'on') }}"
+        icon: >-
           {% if is_state('binary_sensor.logo2_q02', 'on') %}
             mdi:power-plug
           {% else %}
             mdi:power-plug-outline
           {% endif %}
-      garden_light_back:
-        friendly_name: "Licht hinten"
-        value_template: "{{ is_state('binary_sensor.logo2_q03', 'on') }}"
         turn_on:
-        - service: switch.turn_on
-          data:
-            entity_id: switch.logo2_ni03
-        - delay:
-            milliseconds: 250
-        - service: switch.turn_off
-          data:
-            entity_id: switch.logo2_ni03
+          - action: switch.turn_on
+            data:
+              entity_id: switch.logo2_ni02
+          - delay:
+              milliseconds: 250
+          - action: switch.turn_off
+            data:
+              entity_id: switch.logo2_ni02
         turn_off:
-        - service: switch.turn_on
-          data:
-            entity_id: switch.logo2_ni03
-        - delay:
-            milliseconds: 250
-        - service: switch.turn_off
-          data:
-            entity_id: switch.logo2_ni03
-        icon_template: >-
+          - action: switch.turn_on
+            data:
+              entity_id: switch.logo2_ni02
+          - delay:
+              milliseconds: 250
+          - action: switch.turn_off
+            data:
+              entity_id: switch.logo2_ni02
+      - default_entity_id: switch.garden_light_back
+        name: "Licht hinten"
+        state: "{{ is_state('binary_sensor.logo2_q03', 'on') }}"
+        icon: >-
           {% if is_state('binary_sensor.logo2_q03', 'on') %}
             mdi:lightbulb-on
           {% else %}
             mdi:lightbulb-off
           {% endif %}
-      garden_light_front:
-        friendly_name: "Licht vorne"
-        value_template: "{{ is_state('binary_sensor.logo2_q04', 'on') }}"
         turn_on:
-        - service: switch.turn_on
-          data:
-            entity_id: switch.logo2_ni04
-        - delay:
-            milliseconds: 250
-        - service: switch.turn_off
-          data:
-            entity_id: switch.logo2_ni04
+          - action: switch.turn_on
+            data:
+              entity_id: switch.logo2_ni03
+          - delay:
+              milliseconds: 250
+          - action: switch.turn_off
+            data:
+              entity_id: switch.logo2_ni03
         turn_off:
-        - service: switch.turn_on
-          data:
-            entity_id: switch.logo2_ni04
-        - delay:
-            milliseconds: 250
-        - service: switch.turn_off
-          data:
-            entity_id: switch.logo2_ni04
-        icon_template: >-
+          - action: switch.turn_on
+            data:
+              entity_id: switch.logo2_ni03
+          - delay:
+              milliseconds: 250
+          - action: switch.turn_off
+            data:
+              entity_id: switch.logo2_ni03
+      - default_entity_id: switch.garden_light_front
+        name: "Licht vorne"
+        state: "{{ is_state('binary_sensor.logo2_q04', 'on') }}"
+        icon: >-
           {% if is_state('binary_sensor.logo2_q04', 'on') %}
             mdi:lightbulb-on
           {% else %}
             mdi:lightbulb-off
           {% endif %}
-      terrace_flower_light:
-        friendly_name: "Terrasse Blumenlicht"
-        value_template: "{{ is_state('binary_sensor.logo2_q05', 'on') }}"
         turn_on:
-        - service: switch.turn_on
-          data:
-            entity_id: switch.logo2_ni05
-        - delay:
-            milliseconds: 250
-        - service: switch.turn_off
-          data:
-            entity_id: switch.logo2_ni05
+          - action: switch.turn_on
+            data:
+              entity_id: switch.logo2_ni04
+          - delay:
+              milliseconds: 250
+          - action: switch.turn_off
+            data:
+              entity_id: switch.logo2_ni04
         turn_off:
-        - service: switch.turn_on
-          data:
-            entity_id: switch.logo2_ni05
-        - delay:
-            milliseconds: 250
-        - service: switch.turn_off
-          data:
-            entity_id: switch.logo2_ni05
-        icon_template: >-
+          - action: switch.turn_on
+            data:
+              entity_id: switch.logo2_ni04
+          - delay:
+              milliseconds: 250
+          - action: switch.turn_off
+            data:
+              entity_id: switch.logo2_ni04
+      - default_entity_id: switch.terrace_flower_light
+        name: "Terrasse Blumenlicht"
+        state: "{{ is_state('binary_sensor.logo2_q05', 'on') }}"
+        icon: >-
           {% if is_state('binary_sensor.logo2_q05', 'on') %}
             mdi:lightbulb-on
           {% else %}
             mdi:lightbulb-off
           {% endif %}
-      pool_light:
-        friendly_name: "Pool Licht"
-        value_template: "{{ is_state('binary_sensor.logo2_q06', 'on') }}"
         turn_on:
-        - service: switch.turn_on
-          data:
-            entity_id: switch.logo2_ni06
-        - delay:
-            milliseconds: 250
-        - service: switch.turn_off
-          data:
-            entity_id: switch.logo2_ni06
+          - action: switch.turn_on
+            data:
+              entity_id: switch.logo2_ni05
+          - delay:
+              milliseconds: 250
+          - action: switch.turn_off
+            data:
+              entity_id: switch.logo2_ni05
         turn_off:
-        - service: switch.turn_on
-          data:
-            entity_id: switch.logo2_ni06
-        - delay:
-            milliseconds: 250
-        - service: switch.turn_off
-          data:
-            entity_id: switch.logo2_ni06
-        icon_template: >-
+          - action: switch.turn_on
+            data:
+              entity_id: switch.logo2_ni05
+          - delay:
+              milliseconds: 250
+          - action: switch.turn_off
+            data:
+              entity_id: switch.logo2_ni05
+      - default_entity_id: switch.pool_light
+        name: "Pool Licht"
+        state: "{{ is_state('binary_sensor.logo2_q06', 'on') }}"
+        icon: >-
           {% if is_state('binary_sensor.logo2_q06', 'on') %}
             mdi:lightbulb-on
           {% else %}
             mdi:lightbulb-off
           {% endif %}
-      pool_light_chain:
-        friendly_name: "Lichterkette"
-        value_template: "{{ is_state('binary_sensor.logo2_q07', 'on') }}"
         turn_on:
-        - service: switch.turn_on
-          data:
-            entity_id: switch.logo2_ni07
-        - delay:
-            milliseconds: 250
-        - service: switch.turn_off
-          data:
-            entity_id: switch.logo2_ni07
+          - action: switch.turn_on
+            data:
+              entity_id: switch.logo2_ni06
+          - delay:
+              milliseconds: 250
+          - action: switch.turn_off
+            data:
+              entity_id: switch.logo2_ni06
         turn_off:
-        - service: switch.turn_on
-          data:
-            entity_id: switch.logo2_ni07
-        - delay:
-            milliseconds: 250
-        - service: switch.turn_off
-          data:
-            entity_id: switch.logo2_ni07
-        icon_template: >-
+          - action: switch.turn_on
+            data:
+              entity_id: switch.logo2_ni06
+          - delay:
+              milliseconds: 250
+          - action: switch.turn_off
+            data:
+              entity_id: switch.logo2_ni06
+      - default_entity_id: switch.pool_light_chain
+        name: "Lichterkette"
+        state: "{{ is_state('binary_sensor.logo2_q07', 'on') }}"
+        icon: >-
           {% if is_state('binary_sensor.logo2_q07', 'on') %}
             mdi:lightbulb-on
           {% else %}
             mdi:lightbulb-off
           {% endif %}
-      pool_counter_current_system:
-        friendly_name: "Gegenstromanlage"
-        value_template: "{{ is_state('binary_sensor.logo2_q20', 'on') }}"
         turn_on:
-        - service: switch.turn_on
-          data:
-            entity_id: switch.logo2_ni20
-        - delay:
-            milliseconds: 250
-        - service: switch.turn_off
-          data:
-            entity_id: switch.logo2_ni20
+          - action: switch.turn_on
+            data:
+              entity_id: switch.logo2_ni07
+          - delay:
+              milliseconds: 250
+          - action: switch.turn_off
+            data:
+              entity_id: switch.logo2_ni07
         turn_off:
-        - service: switch.turn_on
-          data:
-            entity_id: switch.logo2_ni20
-        - delay:
-            milliseconds: 250
-        - service: switch.turn_off
-          data:
-            entity_id: switch.logo2_ni20
-        icon_template: >-
+          - action: switch.turn_on
+            data:
+              entity_id: switch.logo2_ni07
+          - delay:
+              milliseconds: 250
+          - action: switch.turn_off
+            data:
+              entity_id: switch.logo2_ni07
+      - default_entity_id: switch.pool_counter_current_system
+        name: "Gegenstromanlage"
+        state: "{{ is_state('binary_sensor.logo2_q20', 'on') }}"
+        icon: >-
           {% if is_state('binary_sensor.logo2_q20', 'on') %}
             mdi:waves
           {% else %}
             mdi:wave
           {% endif %}
-
-logbook:
-  exclude:
-    entities:
-      - binary_sensor.logo2_q01
-      - binary_sensor.logo2_q02
-      - binary_sensor.logo2_q03
-      - binary_sensor.logo2_q04
-      - binary_sensor.logo2_q05
-      - binary_sensor.logo2_q06
-      - binary_sensor.logo2_q07
-      - binary_sensor.logo2_q08
-      - binary_sensor.logo2_q09
-      - binary_sensor.logo2_q10
-      - binary_sensor.logo2_q11
-      - binary_sensor.logo2_q12
-      - binary_sensor.logo2_q13
-      - binary_sensor.logo2_q14
-      - binary_sensor.logo2_q15
-      - binary_sensor.logo2_q16
-      - binary_sensor.logo2_q17
-      - binary_sensor.logo2_q18
-      - binary_sensor.logo2_q19
-      - binary_sensor.logo2_q20
-      - switch.logo2_ni01
-      - switch.logo2_ni02
-      - switch.logo2_ni03
-      - switch.logo2_ni04
-      - switch.logo2_ni05
-      - switch.logo2_ni06
-      - switch.logo2_ni07
-      - switch.logo2_ni08
-      - switch.logo2_ni09
-      - switch.logo2_ni10
-      - switch.logo2_ni11
-      - switch.logo2_ni12
-      - switch.logo2_ni13
-      - switch.logo2_ni14
-      - switch.logo2_ni15
-      - switch.logo2_ni16
-      - switch.logo2_ni17
-      - switch.logo2_ni18
-      - switch.logo2_ni19
-      - switch.logo2_ni20
+        turn_on:
+          - action: switch.turn_on
+            data:
+              entity_id: switch.logo2_ni20
+          - delay:
+              milliseconds: 250
+          - action: switch.turn_off
+            data:
+              entity_id: switch.logo2_ni20
+        turn_off:
+          - action: switch.turn_on
+            data:
+              entity_id: switch.logo2_ni20
+          - delay:
+              milliseconds: 250
+          - action: switch.turn_off
+            data:
+              entity_id: switch.logo2_ni20

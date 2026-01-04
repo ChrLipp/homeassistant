@@ -18,8 +18,6 @@ views:
             secondary_info: last-changed
           - entity: person.elias
             secondary_info: last-changed
-          - entity: person.jessica
-            secondary_info: last-changed
       - entity: weather.home
         type: weather-forecast
       - type: "custom:atomic-calendar-revive"
@@ -106,10 +104,8 @@ views:
           - entity: switch.plug_12
             name: Arbeitszimmer
           - type: divider
-          - entity: switch.plug_04
-            name: Kellerabgang
-          - entity: switch.plug_07
-            name: Küche Tisch
+          - entity: switch.shellyplusplugs_e465b84329a8_switch_0
+            name: Christbaum
           - entity: switch.plug_10
             name: Terrasse Weihnachtsbaum
           - type: divider
@@ -125,14 +121,9 @@ views:
           - entity: switch.shellyplusplugs_d48afc7ae358_switch_0
             name: Lichterkette Schlafzimmer
           - type: divider
-          - entity: switch.plug_13
-            name: Anna-Mavie Stern
-          - entity: switch.plug_15_switch_0
-            name: Elias Stern
-          - type: divider
           - entity: switch.plug_17_switch_0
             name: Toaster
-          - entity: switch.plug_01
+          - entity: switch.plug_01_switch_0
             name: Rennrad Ventilator
         title: Schaltbare Steckdosen
         show_header_toggle: false
@@ -199,6 +190,7 @@ views:
                 type: entity-button
                 icon: 'mdi:gate'
               - entity: cover.garage_christian
+                name: Garage Christian
                 show_icon: true
                 show_name: true
                 state_color: true
@@ -217,6 +209,7 @@ views:
                 type: entity-button
                 icon: 'mdi:gate'
               - entity: cover.garage_anita
+                name: Garage Anita
                 show_icon: true
                 show_name: true
                 state_color: true
@@ -227,11 +220,15 @@ views:
         title: Abfahrt
         type: horizontal-stack
       - cards:
+        - type: picture-entity
+          entity: camera.miki_map
+          show_name: false
+          show_state: false
         - type: entities
           entities:
-            - entity: vacuum.miki
+            - entity: lawn_mower.miki
               name: Status Miki
-            - entity: sensor.miki_next_start
+            - entity: sensor.miki_nachster_start
               name: Nächster Start
         type: vertical-stack
       - type: entities
@@ -239,6 +236,7 @@ views:
           - switch.terrace_light
           - switch.terrace_socket
           - type: divider
+          - switch.terrace_flower_light
           - switch.pool_light_chain
           - type: divider
           - switch.pool_light
@@ -281,4 +279,10 @@ views:
             type: entity-button
             state_color: true
         title: Computer
+        type: horizontal-stack
+      - cards:
+          - entity: input_boolean.weihnachtsmodus
+            type: entity-button
+            state_color: true
+        title: Besondere Zustände
         type: horizontal-stack

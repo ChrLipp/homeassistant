@@ -1,40 +1,38 @@
-sensor:
-  - platform: template
-    sensors:
-      cover_all:
-        friendly_name: "Alle Rollos"
-        value_template: >-
+template:
+  - sensor:
+      - default_entity_id: sensor.cover_all
+        name: "Alle Rollos"
+        state: >-
           {% if (states('sensor.modbus_sensor_01')|int == 1) and (states('sensor.modbus_sensor_02')|int == 1) and
                 (states('sensor.modbus_sensor_03')|int == 1) and (states('sensor.modbus_sensor_04')|int == 1) and
                 (states('sensor.modbus_sensor_05')|int == 1) and (states('sensor.modbus_sensor_06')|int == 1) %}
             0
-          {% elif (states('sensor.modbus_sensor_01')|int == 1) and (states('sensor.modbus_sensor_02')|int == 1) and
-                  (states('sensor.modbus_sensor_03')|int == 1) and (states('sensor.modbus_sensor_04')|int == 1) and
-                  (states('sensor.modbus_sensor_05')|int == 1) and (states('sensor.modbus_sensor_06')|int == 1) %}
-            100
-          {% else %}
-            50
-          {% endif %}
-      cover_rain:
-        friendly_name: "Rollos bei Regen"
-        value_template: >-
-          {% if (states('sensor.modbus_sensor_01')|int == 1) and (states('sensor.modbus_sensor_02')|int == 1) and
-                (states('sensor.modbus_sensor_03')|int == 1) and (states('sensor.modbus_sensor_04')|int == 1) %}
-            0
-          {% elif (states('sensor.modbus_sensor_01')|int == 1) and (states('sensor.modbus_sensor_02')|int == 1) and
-                  (states('sensor.modbus_sensor_03')|int == 1) and (states('sensor.modbus_sensor_04')|int == 1) %}
+          {% elif (states('sensor.modbus_sensor_01')|int == 2) and (states('sensor.modbus_sensor_02')|int == 2) and
+                  (states('sensor.modbus_sensor_03')|int == 2) and (states('sensor.modbus_sensor_04')|int == 2) and
+                  (states('sensor.modbus_sensor_05')|int == 2) and (states('sensor.modbus_sensor_06')|int == 2) %}
             100
           {% else %}
             50
           {% endif %}
 
-cover:
-  - platform: template
-    covers:
-      kitchen_left_window:
+      - default_entity_id: sensor.cover_rain
+        name: "Rollos bei Regen"
+        state: >-
+          {% if (states('sensor.modbus_sensor_01')|int == 1) and (states('sensor.modbus_sensor_02')|int == 1) and
+                (states('sensor.modbus_sensor_03')|int == 1) and (states('sensor.modbus_sensor_04')|int == 1) %}
+            0
+          {% elif (states('sensor.modbus_sensor_01')|int == 2) and (states('sensor.modbus_sensor_02')|int == 2) and
+                  (states('sensor.modbus_sensor_03')|int == 2) and (states('sensor.modbus_sensor_04')|int == 2) %}
+            100
+          {% else %}
+            50
+          {% endif %}
+
+  - cover:
+      - default_entity_id: cover.kitchen_left_window
+        name: "Küche links (Tisch)"
         device_class: shutter
-        friendly_name: "Küche links (Tisch)"
-        position_template: >-
+        position: >-
           {% if states('sensor.modbus_sensor_01')|int == 1 %}
             0
           {% elif states('sensor.modbus_sensor_01')|int == 2 %}
@@ -43,17 +41,18 @@ cover:
             50
           {% endif %}
         open_cover:
-          service: switch.turn_on
+          action: switch.turn_on
           data:
             entity_id: switch.blind_kitchen_left_up
         close_cover:
-          service: switch.turn_on
+          action: switch.turn_on
           data:
             entity_id: switch.blind_kitchen_left_down
-      kitchen_right_window:
+
+      - default_entity_id: cover.kitchen_right_window
+        name: "Küche rechts (Geschirrspüler)"
         device_class: shutter
-        friendly_name: "Küche rechts (Geschirrspüler)"
-        position_template: >-
+        position: >-
           {% if states('sensor.modbus_sensor_04')|int == 1 %}
             0
           {% elif states('sensor.modbus_sensor_04')|int == 2 %}
@@ -62,17 +61,18 @@ cover:
             50
           {% endif %}
         open_cover:
-          service: switch.turn_on
+          action: switch.turn_on
           data:
             entity_id: switch.blind_kitchen_right_up
         close_cover:
-          service: switch.turn_on
+          action: switch.turn_on
           data:
             entity_id: switch.blind_kitchen_right_down
-      kitchen_window:
+
+      - default_entity_id: cover.kitchen_window
+        name: "Küche Fenster"
         device_class: shutter
-        friendly_name: "Küche Fenster"
-        position_template: >-
+        position: >-
           {% if (states('sensor.modbus_sensor_01')|int == 1) and (states('sensor.modbus_sensor_04')|int == 1) %}
             0
           {% elif (states('sensor.modbus_sensor_01')|int == 2) and (states('sensor.modbus_sensor_04')|int == 2) %}
@@ -81,21 +81,22 @@ cover:
             50
           {% endif %}
         open_cover:
-          service: switch.turn_on
+          action: switch.turn_on
           data:
             entity_id:
               - switch.blind_kitchen_left_up
               - switch.blind_kitchen_right_up
         close_cover:
-          service: switch.turn_on
+          action: switch.turn_on
           data:
             entity_id:
               - switch.blind_kitchen_left_down
               - switch.blind_kitchen_right_down
-      kitchen_door:
+
+      - default_entity_id: cover.kitchen_door
+        name: "Küche Balkon"
         device_class: shutter
-        friendly_name: "Küche Balkon"
-        position_template: >-
+        position: >-
           {% if states('sensor.modbus_sensor_06')|int == 1 %}
             0
           {% elif states('sensor.modbus_sensor_06')|int == 2 %}
@@ -104,17 +105,18 @@ cover:
             50
           {% endif %}
         open_cover:
-          service: switch.turn_on
+          action: switch.turn_on
           data:
             entity_id: switch.blind_kitchen_door_up
         close_cover:
-          service: switch.turn_on
+          action: switch.turn_on
           data:
             entity_id: switch.blind_kitchen_door_down
-      livingroom_window:
+
+      - default_entity_id: cover.livingroom_window
+        name: "Wohnzimmer Fenster"
         device_class: shutter
-        friendly_name: "Wohnzimmer Fenster"
-        position_template: >-
+        position: >-
           {% if states('sensor.modbus_sensor_03')|int == 1 %}
             0
           {% elif states('sensor.modbus_sensor_03')|int == 2 %}
@@ -123,17 +125,18 @@ cover:
             50
           {% endif %}
         open_cover:
-          service: switch.turn_on
+          action: switch.turn_on
           data:
             entity_id: switch.blind_livingroom_window_up
         close_cover:
-          service: switch.turn_on
+          action: switch.turn_on
           data:
             entity_id: switch.blind_livingroom_window_down
-      livingroom_door:
+
+      - default_entity_id: cover.livingroom_door
+        name: "Wohnzimmer Balkon"
         device_class: shutter
-        friendly_name: "Wohnzimmer Balkon"
-        position_template: >-
+        position: >-
           {% if states('sensor.modbus_sensor_05')|int == 1 %}
             0
           {% elif states('sensor.modbus_sensor_05')|int == 2 %}
@@ -142,17 +145,18 @@ cover:
             50
           {% endif %}
         open_cover:
-          service: switch.turn_on
+          action: switch.turn_on
           data:
             entity_id: switch.blind_livingroom_door_up
         close_cover:
-          service: switch.turn_on
+          action: switch.turn_on
           data:
             entity_id: switch.blind_livingroom_door_down
-      bedroom_window:
+
+      - default_entity_id: cover.bedroom_window
+        name: "Schlafzimmer Fenster"
         device_class: shutter
-        friendly_name: "Schlafzimmer Fenster"
-        position_template: >-
+        position: >-
           {% if states('sensor.modbus_sensor_02')|int == 1 %}
             0
           {% elif states('sensor.modbus_sensor_02')|int == 2 %}
@@ -161,31 +165,33 @@ cover:
             50
           {% endif %}
         open_cover:
-          service: switch.turn_on
+          action: switch.turn_on
           data:
             entity_id: switch.blind_bedroom_up
         close_cover:
-          service: switch.turn_on
+          action: switch.turn_on
           data:
             entity_id: switch.blind_bedroom_down
-      all:
+
+      - default_entity_id: cover.all
+        name: "Alle Rollos"
         device_class: shutter
-        friendly_name: "Alle Rollos"
-        position_template: "{{ states('sensor.cover_all')|float(50) }}"
+        position: "{{ states('sensor.cover_all')|float(50) }}"
         open_cover:
-          service: switch.turn_on
+          action: switch.turn_on
           data:
             entity_id: switch.blind_all_up
         close_cover:
-          service: switch.turn_on
+          action: switch.turn_on
           data:
             entity_id: switch.blind_all_down
-      rain:
+
+      - default_entity_id: cover.rain
+        name: "Rollos bei Regen"
         device_class: shutter
-        friendly_name: "Rollos bei Regen"
-        position_template: "{{ states('sensor.cover_rain')|float(50) }}"
+        position: "{{ states('sensor.cover_rain')|float(50) }}"
         open_cover:
-          service: switch.turn_on
+          action: switch.turn_on
           data:
             entity_id:
               - switch.blind_kitchen_left_up
@@ -193,7 +199,7 @@ cover:
               - switch.blind_livingroom_window_up
               - switch.blind_bedroom_up
         close_cover:
-          service: switch.turn_on
+          action: switch.turn_on
           data:
             entity_id:
               - switch.blind_kitchen_left_down
@@ -234,12 +240,3 @@ automation:
     - service: cover.close_cover
       entity_id: cover.livingroom_door
   mode: single
-
-logbook:
-  exclude:
-    entities:
-      - cover.all
-      - cover.kitchen_window
-      - cover.rain
-      - sensor.cover_all
-      - sensor.cover_rain

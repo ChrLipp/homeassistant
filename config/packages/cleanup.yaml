@@ -1,9 +1,0 @@
-# Some exclusions from logbook and history for entities,
-# which are not existing anymore or should not exist
-
-logbook:
-  exclude:
-    entities:
-      - automation.covers_down_on_sundown
-      - automation.neue_automatisierung
-      - govee.state

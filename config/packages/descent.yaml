@@ -1,122 +1,124 @@
-cover:
-  - platform: template
-    covers:
-      descent_anita_bike:
+template:
+  - cover:
+      - default_entity_id: cover.descent_anita_bike
+        name: "Descent Anita for bike"
         device_class: garage
-        friendly_name: "Descent Anita for bike"
-        value_template: >-
+        state: >-
           {% if is_state('cover.garage_anita', 'open') %}
             open
           {% else %}
             closed
           {% endif %}
-        open_cover:
-        - service: cover.toggle
-          data:
-            entity_id: cover.garage_anita
-        - service: switch.turn_on
-          data:
-            entity_id: switch.fence_right
-        close_cover:
-        - service: cover.toggle
-          data:
-            entity_id: cover.garage_anita
-        - service: switch.turn_on
-          data:
-            entity_id: switch.fence_right
-        icon_template: >-
+        icon: >-
           {% if is_state('cover.garage_door', 'closed') %}
             mdi:garage
           {% else %}
             mdi:garage-open
           {% endif %}
-      descent_anita_car:
+        open_cover:
+          - action: cover.toggle
+            data:
+              entity_id: cover.garage_anita
+          - action: switch.turn_on
+            data:
+              entity_id: switch.fence_right
+        close_cover:
+          - action: cover.toggle
+            data:
+              entity_id: cover.garage_anita
+          - action: switch.turn_on
+            data:
+              entity_id: switch.fence_right
+
+      - default_entity_id: cover.descent_anita_car
+        name: "Descent Anita for car"
         device_class: garage
-        friendly_name: "Descent Anita for car"
-        value_template: >-
+        state: >-
           {% if is_state('cover.garage_anita', 'open') %}
             open
           {% else %}
             closed
           {% endif %}
-        open_cover:
-        - service: cover.toggle
-          data:
-            entity_id: cover.garage_anita
-        - service: switch.turn_on
-          data:
-            entity_id: switch.fence_left
-        close_cover:
-        - service: cover.toggle
-          data:
-            entity_id: cover.garage_anita
-        - service: switch.turn_on
-          data:
-            entity_id: switch.fence_left
-        icon_template: >-
+        icon: >-
           {% if is_state('cover.garage_door', 'closed') %}
             mdi:garage
           {% else %}
             mdi:garage-open
           {% endif %}
-      descent_christian_bike:
+        open_cover:
+          - action: cover.toggle
+            data:
+              entity_id: cover.garage_anita
+          - action: switch.turn_on
+            data:
+              entity_id: switch.fence_left
+        close_cover:
+          - action: cover.toggle
+            data:
+              entity_id: cover.garage_anita
+          - action: switch.turn_on
+            data:
+              entity_id: switch.fence_left
+
+      - default_entity_id: cover.descent_christian_bike
+        name: "Descent Christian for bike"
         device_class: garage
-        friendly_name: "Descent Christian for bike"
-        value_template: >-
+        state: >-
           {% if is_state('cover.garage_christian', 'open') %}
             open
           {% else %}
             closed
           {% endif %}
-        open_cover:
-        - service: cover.toggle
-          data:
-            entity_id: cover.garage_christian
-        - service: switch.turn_on
-          data:
-            entity_id: switch.fence_right
-        close_cover:
-        - service: cover.toggle
-          data:
-            entity_id: cover.garage_christian
-        - service: switch.turn_on
-          data:
-            entity_id: switch.fence_right
-        icon_template: >-
+        icon: >-
           {% if is_state('cover.garage_door', 'closed') %}
             mdi:garage
           {% else %}
             mdi:garage-open
           {% endif %}
-      descent_christian_car:
+        open_cover:
+          - action: cover.toggle
+            data:
+              entity_id: cover.garage_christian
+          - action: switch.turn_on
+            data:
+              entity_id: switch.fence_right
+        close_cover:
+          - action: cover.toggle
+            data:
+              entity_id: cover.garage_christian
+          - action: switch.turn_on
+            data:
+              entity_id: switch.fence_right
+
+      - default_entity_id: cover.descent_christian_car
+        name: "Descent Christian for car"
         device_class: garage
-        friendly_name: "Descent Christian for car"
-        value_template: >-
+        state: >-
           {% if is_state('cover.garage_christian', 'open') %}
             open
           {% else %}
             closed
           {% endif %}
-        open_cover:
-        - service: cover.toggle
-          data:
-            entity_id: cover.garage_christian
-        - service: switch.turn_on
-          data:
-            entity_id: switch.fence_left
-        close_cover:
-        - service: cover.toggle
-          data:
-            entity_id: cover.garage_christian
-        - service: switch.turn_on
-          data:
-            entity_id: switch.fence_left
-        icon_template: >-
+        icon: >-
           {% if is_state('cover.garage_door', 'closed') %}
             mdi:garage
           {% else %}
             mdi:garage-open
           {% endif %}
+        open_cover:
+          - action: cover.toggle
+            data:
+              entity_id: cover.garage_christian
+          - action: switch.turn_on
+            data:
+              entity_id: switch.fence_left
+        close_cover:
+          - action: cover.toggle
+            data:
+              entity_id: cover.garage_christian
+          - action: switch.turn_on
+            data:
+              entity_id: switch.fence_left
 
 automation:
 - id: '1711985708694'
@@ -134,11 +136,3 @@ automation:
       entity_id: cover.descent_christian_car
     data: {}
   mode: single
-
-logbook:
-  exclude:
-    entities:
-      - cover.descent_anita_bike
-      - cover.descent_anita_car
-      - cover.descent_christian_bike
-      - cover.descent_christian_car

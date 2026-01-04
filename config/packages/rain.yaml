@@ -18,18 +18,15 @@
 #     Use the current value only to set it to zero
 #     otherwise ignore value (just use the old value)
 
-
-binary_sensor:
-- platform: template
-  sensors:
-    is_wet_outside:
-      friendly_name: Is it wet outside?
+template:
+  - binary_sensor:
+    - default_entity_id: binary_sensor.is_wet_outside
       delay_off:
         minutes: 30
-      value_template: >-
+      name: Is it wet outside?
+      state: >-
         {{ states('sensor.netatmo_rain_changes')|float(0) >= 0.1 }}
 
-template:
   - trigger:
     - platform: state
       entity_id:
@@ -57,7 +54,7 @@ template:
             100.0
           {% endif %}
         unit_of_measurement: mm
-        icon: mdi:weather-rainy 
+        icon: mdi:weather-rainy
         state_class: measurement
 
 automation:
@@ -86,15 +83,3 @@ automation:
   - service: notify.telegram_admin
     data:
       message: Meister, Regen ist vorbei und Gras ist trocken.
-
-logbook:
-  exclude:
-    entities:
-      - automation.rain_ends
-      - automation.rain_starts
-      - sensor.netatmo_pottelsdorf_humidity
-      - sensor.netatmo_pottelsdorf_pressure
-      - sensor.netatmo_pottelsdorf_rain
-      - sensor.netatmo_pottelsdorf_rain_today
-      - sensor.netatmo_pottelsdorf_temperature
-      - sensor.netatmo_pottelsdorf_wind_strength

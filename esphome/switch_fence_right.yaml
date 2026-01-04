@@ -54,12 +54,16 @@ switch:
     name: ${short_name} Relay
     id: relay
     internal: true
+    # PREVENTS TRIGGER ON BOOT:
+    restore_mode: ALWAYS_OFF 
 
 # This creates the actual fence switch in HA. The state is based on the contact sensor.
 # Closing the switch simply turns the relay on/off with a delay in between.
   - platform: template
     name: $short_name
     id: template_switch
+    # PREVENTS TRIGGER ON DISCONNECT/RECONNECT:
+    restore_mode: DISABLED
     lambda: "return id(relay).state;"
     turn_on_action:
       - switch.turn_on: relay
