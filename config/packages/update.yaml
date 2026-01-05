@@ -39,15 +39,17 @@ automation:
       entity_id: input_text.last_known_version_update
       value: '{{ states(''sensor.last_ha_version'') }}'
 
+
 - id: '1620058754239'
   alias: 'Notify: HACS update available'
   description: Sends a telegram message when a HACS update is available
   mode: single
   trigger:
-  - platform: state
-    entity_id: sensor.hacs
-    from: '0'
+    - platform: state
+      entity_id: update.hacs_update
+      from: 'off'
+      to: 'on'
   action:
-  - data:
-      message: 'Meister, *{{ states("sensor.hacs")}}* HACS update(s) ist/sind verfügbar'
-    service: notify.telegram_admin
+    - service: notify.telegram_admin
+      data:
+        message: Meister, die HACS version *{{ state_attr('update.hacs_update', 'latest_version')}}* ist verfügbar. Derzeit läuft die Version {{ state_attr('update.hacs_update', 'installed_version')}}.

@@ -12,9 +12,3 @@ notify:
   - name: telegram_admin
     platform: telegram
     chat_id: !secret telegram_chat_id_2
-    
-logbook:
-  exclude:
-    entities:
-      - persistent_notification.config_entry_discovery
-      - persistent_notification.http_login
