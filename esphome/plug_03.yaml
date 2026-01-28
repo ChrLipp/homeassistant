@@ -1,11 +1,11 @@
 # Name: Jules V
 # Energy Monitoring Smart Plug with button, blue and red LED.
 
+
 substitutions:
-  device_name: plug-03
-  device_description: Stecker 03
-  friendly_name: Plug 03
-  short_name: Plug 03
-  ip_adress: 10.0.0.203
+  device_name: plug-03                                                    # Device name, prefix for all sub-componentes
+  device_friendly_name: Plug 03                                           # Must be the same as device name, but in a better readable form
+  device_description: Stecker 03                                          # Description for device web page
+  ip_adress: 10.0.0.203                                                   # IP adress
 
 <<: !include .yules.yaml

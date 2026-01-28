@@ -10,15 +10,15 @@
 
 
 substitutions:
-  device_name: power-01
-  device_description: Power device 01
-  friendly_name: Power 01
-  short_name: power_01
-  ip_adress: 10.0.0.204
+  device_name: power-01                                                   # Device name, prefix for all sub-componentes
+  device_friendly_name: Power 01                                          # Must be the same as device name, but in a better readable form
+  device_description: Power Device 01 - Status Schwimmbadheizung          # Description for device web page
+  ip_adress: 10.0.0.204                                                   # IP adress
 
 esphome:
   name: ${device_name}
   comment: ${device_description}
+  friendly_name: ${device_friendly_name}
 
 esp8266:
   board: esp01_1m
@@ -26,15 +26,12 @@ esp8266:
 # Network settings
 <<: !include .network.yaml
 
-# Enable logging
-logger:
-
 switch:
 # Relay action
 - platform: gpio
-  name: ${friendly_name}
   pin: GPIO12
   id: relay1
+  name: None
   restore_mode: ALWAYS_OFF
 
 binary_sensor:
@@ -44,9 +41,9 @@ binary_sensor:
   pin:
     number: GPIO13
     inverted: True
-  name: "Switch ${short_name}"
   id: switch1
+  name: "Switch"
   on_press:
     then:
       - switch.toggle: relay1
-  internal: true
+  internal: True

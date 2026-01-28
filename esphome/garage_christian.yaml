@@ -17,15 +17,15 @@
 
 
 substitutions:
-  device_name: switch-garage-christian
-  device_description: Schalter Garagentor Christian
-  friendly_name: Switch Garage Christian
-  short_name: Garage Christian
-  ip_adress: 10.0.0.217
+  device_name: garage-christian                                           # Device name, prefix for all sub-componentes
+  device_friendly_name: Garage Christian                                  # Must be the same as device name, but in a better readable form
+  device_description: Schalter Garage Christian                           # Description for device web page
+  ip_adress: 10.0.0.217                                                   # IP adress
 
 esphome:
   name: ${device_name}
   comment: ${device_description}
+  friendly_name: ${device_friendly_name}
 
 esp8266:
   board: esp01_1m
@@ -40,20 +40,18 @@ packages:
 binary_sensor:
   - platform: gpio
     pin: GPIO5
-    name: "Garage Door Contact Sensor"
     id: contact_sensor
-#    internal: true
-#    filters:
-#      - invert:
+    name: "Contact Sensor"
+    internal: True
 
 # The relay in the Shelly 1 that will deliver the pulse to
 # the garage door opener (not exposed to HA)
 switch:
   - platform: gpio
     pin: GPIO4
-    name: "Garage Door Relay"
     id: relay
-    internal: true
+    name: "Relay"
+    internal: True
 
 # This creates the actual garage door in HA. The state is based
 # on the contact sensor. Opening/closing the garage door simply
@@ -61,8 +59,8 @@ switch:
 cover:
   - platform: template
     device_class: garage
-    name: $short_name
     id: template_cov
+    name: None
     lambda: |-
       if (id(contact_sensor).state) {
         return COVER_OPEN;

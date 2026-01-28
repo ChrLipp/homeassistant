@@ -17,15 +17,15 @@
 
 
 substitutions:
-  device_name: switch-fence-right
-  device_description: Schalter Tor Abfahrt Fußgänger
-  friendly_name: Switch Fence Right
-  short_name: Fence Right
-  ip_adress: 10.0.0.220
+  device_name: fence-left                                                 # Device name, prefix for all sub-componentes
+  device_friendly_name: Fence Left                                        # Must be the same as device name, but in a better readable form
+  device_description: Schalter Tor Abfahrt für beide Flügel (Auto)        # Description for device web page
+  ip_adress: 10.0.0.219                                                   # IP adress
 
 esphome:
   name: ${device_name}
   comment: ${device_description}
+  friendly_name: ${device_friendly_name}
 
 esp8266:
   board: esp01_1m
@@ -39,9 +39,9 @@ packages:
 binary_sensor:
   - platform: gpio
     pin: GPIO5
-    name: ${short_name} Relay Pulse Switch Sensor
     id: contact_sensor
-    internal: false
+    name: Relay Pulse Switch Sensor
+    internal: True
     on_state:
       then:
         - switch.turn_on: template_switch
@@ -51,17 +51,17 @@ binary_sensor:
 switch:
   - platform: gpio
     pin: GPIO4
-    name: ${short_name} Relay
     id: relay
-    internal: true
+    name: Relay
+    internal: True
     # PREVENTS TRIGGER ON BOOT:
     restore_mode: ALWAYS_OFF 
 
 # This creates the actual fence switch in HA. The state is based on the contact sensor.
 # Closing the switch simply turns the relay on/off with a delay in between.
   - platform: template
-    name: $short_name
     id: template_switch
+    name: None
     # PREVENTS TRIGGER ON DISCONNECT/RECONNECT:
     restore_mode: DISABLED
     lambda: "return id(relay).state;"

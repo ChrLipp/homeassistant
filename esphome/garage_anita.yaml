@@ -17,15 +17,15 @@
 
 
 substitutions:
-  device_name: switch-garage-anita
-  device_description: Schalter Garagentor Anita
-  friendly_name: Switch Garage Anita
-  short_name: Garage Anita
-  ip_adress: 10.0.0.218
+  device_name: garage-anita                                               # Device name, prefix for all sub-componentes
+  device_friendly_name: Garage Anita                                      # Must be the same as device name, but in a better readable form
+  device_description: Schalter Garage Anita                               # Description for device web page
+  ip_adress: 10.0.0.218                                                   # IP adress
 
 esphome:
   name: ${device_name}
   comment: ${device_description}
+  friendly_name: ${device_friendly_name}
 
 esp8266:
   board: esp01_1m
@@ -40,9 +40,9 @@ packages:
 binary_sensor:
   - platform: gpio
     pin: GPIO5
-    name: "Garage Door Contact Sensor"
     id: contact_sensor
-#    internal: true
+    name: "Contact Sensor"
+    internal: True
 #    filters:
 #      - invert:
 
@@ -51,9 +51,9 @@ binary_sensor:
 switch:
   - platform: gpio
     pin: GPIO4
-    name: "Garage Door Relay"
     id: relay
-    internal: true
+    name: "Relay"
+    internal: True
 
 # This creates the actual garage door in HA. The state is based
 # on the contact sensor. Opening/closing the garage door simply
@@ -61,8 +61,8 @@ switch:
 cover:
   - platform: template
     device_class: garage
-    name: $short_name
     id: template_cov
+    name: None
     lambda: |-
       if (id(contact_sensor).state) {
         return COVER_OPEN;

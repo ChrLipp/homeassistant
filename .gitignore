@@ -45,3 +45,7 @@ secrets.yaml
 
 # Backups
 /siemens_logo/UDF.rar
+
+# Playgrounds
+/config_old
+/config_new

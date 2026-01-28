@@ -15,7 +15,7 @@ wifi:
 
   # Enable fallback hotspot (captive portal) in case wifi connection fails
   ap:
-    ssid: "${short_name} AP"
+    ssid: "AP"
     password: !secret captive_password
 
 # Start a WiFi hotspot on WiFi connection errors
@@ -38,11 +38,11 @@ web_server:
 sensor:
 # report WLAN strength
   - platform: wifi_signal
-    name: "${short_name} Signal"
+    name: "Signal"
     update_interval: 60s
 # Reports how long the device has been powered (in minutes)
   - platform: uptime
-    name: "${short_name} Uptime"
+    name: "Uptime"
     filters:
       - lambda: return x / 60.0;
     unit_of_measurement: min
@@ -50,9 +50,9 @@ sensor:
 text_sensor:
 # Reports the ESPHome Version with compile date
   - platform: version
-    name: "${short_name} ESPHome Version"
+    name: "ESPHome Version"
 
 switch:
 # Allow rebooting per switch
   - platform: restart
-    name: "${short_name} Restart"
+    name: "Restart"

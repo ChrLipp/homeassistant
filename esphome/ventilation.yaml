@@ -4,15 +4,15 @@
 # Config: https://esphome-configs.io/devices/sonoff-4ch-pro-r2/
 
 substitutions:
-  device_name: switch-ventilation
-  device_description: Schalter Kontrollierte Wohnraumlüftung
-  friendly_name: Switch ventilation
-  short_name: ventilation
-  ip_adress: 10.0.0.205
+  device_name: ventilation                                                # Device name, prefix for all sub-componentes
+  device_friendly_name: Ventilation                                       # Must be the same as device name, but in a better readable form
+  device_description: Schalter Kontrollierte Wohnraumlüftung              # Description for device web page
+  ip_adress: 10.0.0.205                                                   # IP adress
 
 esphome:
   name: ${device_name}
   comment: ${device_description}
+  friendly_name: ${device_friendly_name}
 
 esp8266:
   board: esp01_1m
@@ -23,6 +23,7 @@ packages:
 
 binary_sensor:
   - platform: gpio
+    name: "Button 1"
     on_press:
       then:
         - switch.toggle: relay1
@@ -30,9 +31,9 @@ binary_sensor:
       number: GPIO0
       mode: INPUT_PULLUP
       inverted: True
-    name: "${short_name} Button 1"
-    internal: true
+    internal: True
   - platform: gpio
+    name: "Button 2"
     on_press:
       then:
         - switch.toggle: relay2
@@ -40,9 +41,9 @@ binary_sensor:
       number: GPIO9
       mode: INPUT_PULLUP
       inverted: True
-    name: "${short_name} Button 2"
-    internal: true
+    internal: True
   - platform: gpio
+    name: "Button 3"
     on_press:
       then:
         - switch.toggle: relay3
@@ -50,9 +51,9 @@ binary_sensor:
       number: GPIO10
       mode: INPUT_PULLUP
       inverted: True
-    name: "${short_name} Button 3"
-    internal: true
+    internal: True
   - platform: gpio
+    name: "Button 4"
     on_press:
       then:
         - switch.toggle: relay4
@@ -60,32 +61,31 @@ binary_sensor:
       number: GPIO14
       mode: INPUT_PULLUP
       inverted: True
-    name: "${short_name} Button 4"
-    internal: true
+    internal: True
 
 switch:
   - platform: gpio
     id: relay1
-    name: "${short_name} Relay 1"
+    name: "Relay 1"
     pin: GPIO12
     icon: mdi:electric-switch
     interlock: &interlock_group [relay1, relay2, relay3]
     restore_mode: ALWAYS_ON
   - platform: gpio
     id: relay2
-    name: "${short_name} Relay 2"
+    name: "Relay 2"
     pin: GPIO5
     icon: mdi:electric-switch
     interlock: *interlock_group
   - platform: gpio
     id: relay3
-    name: "${short_name} Relay 3"
+    name: "Relay 3"
     pin: GPIO4
     icon: mdi:electric-switch
     interlock: *interlock_group
   - platform: gpio
     id: relay4
-    name: "${short_name} Relay 4"
+    name: "Relay 4"
     pin: GPIO15
     icon: mdi:electric-switch
 

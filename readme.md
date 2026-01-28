@@ -40,4 +40,6 @@
 
 ## Fixed
 
-- Tried to fix fence ghost execution
+- Fixed fence ghost execution
+- Adapted new ESPHome naming schema
+- Renamed Shelly hosts
