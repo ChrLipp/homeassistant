@@ -1,67 +1,54 @@
-template:
-  - sensor:
-      - default_entity_id: sensor.gelbersack_text
-        name: "Gelber Sack - am {{ state_attr('sensor.waste_gelber_sack', 'display_date') }}"
-        state: "{{ state_attr('sensor.waste_gelber_sack', 'display_text') }}"
-        icon: mdi:sack
-      - default_entity_id: sensor.papiertonne_text
-        name: "Papier - am {{ state_attr('sensor.waste_papier', 'display_date') }}"
-        state: "{{ state_attr('sensor.waste_papier', 'display_text') }}"
-        icon: mdi:delete-empty        
-      - default_entity_id: sensor.restmuell_text
-        name: "Restmüll - am {{ state_attr('sensor.waste_restmull', 'display_date') }}"
-        state: "{{ state_attr('sensor.waste_restmull', 'display_text') }}"
-        icon: mdi:trash-can-outline
+#
+# Configuration for waste integration, see https://github.com/ChrLipp/waste_at_bmv
+#
 
+# Integration configuration
 sensor:
-  - platform: waste_at_bmv
-    ort: !secret bmv_ort
-    strasse: !secret bmv_strasse
-    hausnummer: !secret bmv_hausnummer
+- platform: waste_at_bmv
+  ort: !secret bmv_ort
+  strasse: !secret bmv_strasse
+  hausnummer: !secret bmv_hausnummer
 
+# Display values, information is in the name AND in the value (eg. name = "Gelber Sack - am Fr, 20.02.", value="16 Tage").
+# Special handling with unique_id and default_entity_id, since the changeing name would lead to changing entity_id's.
+template:
+- sensor:
+  - default_entity_id: sensor.gelbersack_text
+    unique_id: sensor_gelbersack_text
+    name: "Gelber Sack - am {{ state_attr('sensor.waste_gelber_sack', 'display_date') }}"
+    state: "{{ state_attr('sensor.waste_gelber_sack', 'display_text') }}"
+    icon: mdi:sack
+  - default_entity_id: sensor.papiertonne_text
+    unique_id: sensor_papiertonne_text
+    name: "Papier - am {{ state_attr('sensor.waste_papier', 'display_date') }}"
+    state: "{{ state_attr('sensor.waste_papier', 'display_text') }}"
+    icon: mdi:delete-empty
+  - default_entity_id: sensor.restmull_text
+    unique_id: sensor_restmuell_text
+    name: "Restmüll - am {{ state_attr('sensor.waste_restmull', 'display_date') }}"
+    state: "{{ state_attr('sensor.waste_restmull', 'display_text') }}"
+    icon: mdi:trash-can-outline
+
+# Notify if they collect waste tomorrow
 automation:
-- id: '1583509362749'
-  alias: 'Notify: Garbage (Gelber Sack)'
-  description: Telegram notification when garbage "Gelber Sack" is collected tomorrow
+- id: 'notify_garbage'
+  alias: 'Notify: Garbage'
   trigger:
-  - at: '19:00'
-    platform: time
-  condition:
-  - condition: template
-    value_template: "{{ state_attr('sensor.waste_gelber_sack', 'days') == 1 }}"
+  - platform: time
+    at: '19:00'
   action:
-  - data:
-      message: "*Gelber Sack* rausbringen. Abholung *morgen* ( {{state_attr('sensor.waste_gelber_sack', 'display_date')}})"
-      data:
-        parse_mode: markdown
-    service: notify.telegram_all
-- id: '1583509362750'
-  alias: 'Notify: Garbage (Papier)'
-  description: Telegram notification when garbage "Papier" is collected tomorrow
-  trigger:
-  - at: '19:00'
-    platform: time
-  condition:
-  - condition: template
-    value_template: "{{ state_attr('sensor.waste_papier', 'days') == 1 }}"
-  action:
-  - data:
-      message: "*Papier* rausbringen. Abholung *morgen* ( {{state_attr('sensor.waste_papier', 'display_date')}})"
-      data:
-        parse_mode: markdown
-    service: notify.telegram_all
-- id: '1583509362751'
-  alias: 'Notify: Garbage (Restmüll)'
-  description: Telegram notification when garbage "Restmüll" is collected tomorrow
-  trigger:
-  - at: '19:00'
-    platform: time
-  condition:
-  - condition: template
-    value_template: "{{ state_attr('sensor.waste_restmull', 'days') == 1 }}"
-  action:
-  - data:
-      message: "*Restmüll* rausbringen. Abholung *morgen* ( {{state_attr('sensor.waste_restmull', 'display_date')}})"
-      data:
-        parse_mode: markdown
-    service: notify.telegram_all
+  - repeat:
+      for_each:
+      - { name: 'Gelber Sack', sensor: 'sensor.waste_gelber_sack' }
+      - { name: 'Papier', sensor: 'sensor.waste_papier' }
+      - { name: 'Restmüll', sensor: 'sensor.waste_restmull' }
+      sequence:
+      - if:
+        - condition: template
+          value_template: "{{ state_attr(repeat.item.sensor, 'days') == 1 }}"
+        then:
+        - service: notify.telegram_all
+          data:
+            message: "*{{ repeat.item.name }}* rausbringen. Abholung *morgen* ({{ state_attr(repeat.item.sensor, 'display_date') }})"
+            data:
+              parse_mode: markdown

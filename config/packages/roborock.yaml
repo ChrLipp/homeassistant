@@ -11,9 +11,8 @@ camera:
       - calibration_points
 
 automation:
-  - id: '1632073736357'
-    alias: Disable vacuum camera update when docked
-    description: ''
+  - id: 'disable_vacuum_camera_update'
+    alias: 'Service: disable vacuum camera update when docked'
     use_blueprint:
       path: PiotrMachowski/disable_vacuum_camera_update_when_docked.yaml
       input:

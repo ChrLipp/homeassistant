@@ -1,7 +1,14 @@
+#
+# Dadurch, dass ich Netzwerk im Poolraum gebraucht habe, habe ich eine zweipolige Stromleitung zur Übertragung des Netzwerkes über Fritz! Powerline benutzt.
+# Den Ersatz der Leitung habe ich wie folgt durchgeführt:
+# - Im Technikraum gibt es den switch.power_01, der am Strom hängt, wenn geheizt werden soll
+# - Dann registriert er sich über WLAN beim HomeAssistant
+# - Die folgende Automatisierung läuft an und schaltet ein Relay im Heizungskeller
+#
+
 automation:
-- id: '1626674872893'
+- id: 'pool_heater_on'
   alias: Pool heater on
-  description: When pool pump requests the heater, power01 becomes available
   trigger:
   - platform: state
     entity_id: switch.power_01
@@ -12,9 +19,8 @@ automation:
       entity_id: switch.ventilation_relay_4
   mode: single
 
-- id: '1626674977154'
+- id: 'pool_heater_off'
   alias: Pool heater off
-  description: When pool pump stops to request the heater, power01 becomes unavailable
   trigger:
   - platform: state
     entity_id: switch.power_01

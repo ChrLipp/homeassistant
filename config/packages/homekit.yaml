@@ -1,7 +1,27 @@
 # Apple homekit settings
 homekit:
-  filter:
-    include_entities:
-      - cover.garage_anita
-      - cover.garage_christian
-      - light.elias_light
+  - port: 51827
+    filter:
+      include_entities:
+        - cover.garage_anita
+        - cover.garage_christian
+        - cover.fence_car
+        - cover.fence_bike
+        - cover.descent_anita_car
+        - cover.descent_christian_car
+        - light.elias_light
+    entity_config:
+      cover.garage_anita:
+        name: "Garage Anita"
+      cover.garage_christian:
+        name: "Garage Christian"
+      cover.descent_anita_car:
+        name: "Abfahrt Anita"
+      cover.descent_christian_car:
+        name: "Abfahrt Christian"
+      cover.fence_car:
+        name: "Großes Tor"
+      cover.fence_bike:
+        name: "Kleines Tor"
+      light.elias_light:
+        name: "Elias Licht"

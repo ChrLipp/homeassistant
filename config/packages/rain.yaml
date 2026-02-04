@@ -58,7 +58,7 @@ template:
         state_class: measurement
 
 automation:
-- id: '1653639569445'
+- id: 'rain_starts'
   alias: Rain starts
   description: Triggers when rain start is detected
   trigger:
@@ -71,7 +71,7 @@ automation:
     data:
       message: Meister, es beginnt zu regnen!
 
-- id: '1653640337733'
+- id: 'rain_ends'
   alias: Rain ends
   description: Triggers 30 minutes after rain
   trigger:

@@ -1,10 +1,6 @@
+#
 # Alarm clock for Elias
 #
-# Needs the following sensor
-# sensor:
-#  - platform: time_date
-#    display_options:
-#     - 'time'
 
 input_boolean:
   elias_alarm_switch:
@@ -17,41 +13,28 @@ input_datetime:
     has_time: true
     icon: mdi:alarm
 
-script:
-  elias_not_at_home:
-    sequence:
-      - choose:
-          - conditions:
-              - condition: state
-                entity_id: person.elias
-                state: 'not_home'
-            sequence:
-              - service: notify.telegram_all
-                data:
-                  message: Elias ist nicht zuhause, aber sein Wecker ist eingeschalten.
-        default: []
-    
 automation:
-- id: '1587219866687'
-  alias: 'Service: alarm Elias'
-  description: Execute the alarm for Elias
-  trigger:
-    platform: template
-    value_template: "{{ states('sensor.time') == (state_attr('input_datetime.elias_alarm_time', 'timestamp') | int | timestamp_custom('%H:%M', False)) }}"
-  condition:
-  - condition: state
-    entity_id: input_boolean.elias_alarm_switch
-    state: 'on'
-  action:
-  - service: light.turn_on
-    data:
-      entity_id: light.elias_light
-  - service: script.elias_not_at_home
+  - id: 'elias_alarm_clock'
+    alias: 'Service: alarm Elias'
+    trigger:
+      - platform: time
+        at: input_datetime.elias_alarm_time
+    condition:
+      - condition: state
+        entity_id: input_boolean.elias_alarm_switch
+        state: 'on'
+    action:
+      # Schritt 1: Licht an (egal ob Elias da ist oder nicht)
+      - action: light.turn_on
+        target:
+          entity_id: light.elias_light
 
-logbook:
-  exclude:
-    entities:
-      - automation.service_alarm_elias
-      - input_boolean.elias_alarm_switch
-      - input_datetime.elias_alarm_time
-      - script.elias_not_at_home
+      # Schritt 2: Warnen, wenn Elias nicht da ist (kann auch falsch sein)
+      - if:
+          - condition: state
+            entity_id: person.elias
+            state: 'not_home'
+        then:
+          - action: notify.telegram_all
+            data:
+              message: Elias ist nicht zuhause, aber sein Wecker hat gerade das Licht aufgedreht.

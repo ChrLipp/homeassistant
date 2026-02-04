@@ -32,14 +32,14 @@ views:
         entities:
         - entity: sensor.gelbersack_text
         - entity: sensor.papiertonne_text
-        - entity: sensor.restmuell_text
+        - entity: sensor.restmull_text
       - type: "custom:horizon-card"
         darkMode: true
       - type: entities
         title: Belüftung
         show_header_toggle: false
         entities:
-        - entity: fan.ventilation_fan
+        - entity: fan.ventilation
           type: custom:fan-percent-button-row
           name: Wohnraumlüftung
           customHiText: 3
@@ -280,9 +280,8 @@ views:
             state_color: true
         title: Computer
         type: horizontal-stack
-      - cards:
+      - type: entities
+        entities:
           - entity: input_boolean.weihnachtsmodus
-            type: entity-button
-            state_color: true
-        title: Besondere Zustände
-        type: horizontal-stack
+            name: Weihnachtsmodus
+        title: 'Optionen: Modus'

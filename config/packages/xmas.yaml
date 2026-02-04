@@ -1,15 +1,19 @@
-automation:
-- id: '1606158583656'
-  alias: 'Service: turn on x-mas lights'
-  description: 'Schaltet die Weihnachtsbeleuchtung ein'
-  trigger:
-  - platform: sun
-    event: sunset
-  action:
-    service: switch.turn_on
-    entity_id:
-      - switch.shellyplusplugs_e86beae2f644_switch_0
+#
+# Weihnachtsbeleuchtung
+#
+
+# Die Stecker hier zuordnen
+group:
+  weihnachtsbeleuchtung_wohnzimmer:
+    name: "Weihnachtsbeleuchtung Wohnzimmer"
+    entities:
       - switch.plug_03
+      - switch.shellyplusplugs_e465b84329a8_switch_0
+
+  weihnachtsbeleuchtung_rest:
+    name: "Weihnachtsbeleuchtung Rest"
+    entities:
+      - switch.shellyplusplugs_e86beae2f644_switch_0
       - switch.plug_04
       - switch.plug_05
       - switch.plug_06
@@ -20,43 +24,56 @@ automation:
       - switch.plug_12
       - switch.plug_13
       - switch.shellyplusplugs_d48afc7ae358_switch_0
-      - switch.shellyplusplugs_e465b84329a8_switch_0
       - switch.plug_15_switch_0
 
-- id: '1606158583657'
+input_boolean:
+  weihnachtsmodus:
+    name: Gibt an, ob der Weihnachtsmodus aktiv ist
+    icon: mdi:pine-tree
+
+automation:
+- id: 'turn_on_xmas_lights'
+  alias: 'Service: turn on x-mas lights'
+  trigger:
+  - platform: sun
+    event: sunset
+  action:
+    action: switch.turn_on
+    target:
+      entity_id:
+        - group.weihnachtsbeleuchtung_wohnzimmer
+        - group.weihnachtsbeleuchtung_rest
+
+- id: 'turn_off_xmas_lights'
   alias: 'Service: turn off x-mas lights'
-  description: 'Schaltet die Weihnachtsbeleuchtung aus'
   trigger:
   - platform: time
-    at: '23:00'
+    at: '23:00:00'
   action:
-    - service: cover.close_cover
-      entity_id: cover.bedroom_window
-    - service: cover.close_cover
-      entity_id: cover.livingroom_window
+    - action: cover.close_cover
+      target:
+        entity_id:
+          - cover.bedroom_window
+          - cover.livingroom_window
     - delay: '00:00:15'
-    - service: switch.turn_off
-      entity_id:
-        - switch.shellyplusplugs_e86beae2f644_switch_0
-        - switch.plug_04
-        - switch.plug_05
-        - switch.plug_06
-        - switch.plug_07
-        - switch.plug_09
-        - switch.plug_10
-        - switch.plug_11
-        - switch.plug_12
-        - switch.plug_13
-        - switch.shellyplusplugs_d48afc7ae358_switch_0
-        - switch.plug_15_switch_0
+    - action: switch.turn_off
+      target:
+        entity_id: group.weihnachtsbeleuchtung_rest
 
-#
+- id: 'turn_off_xmas_lights_living_room'
+  alias: 'Service: turn off x-mas lights in the living room'
+  trigger:
+  - platform: time
+    at: '00:00:00'
+  action:
+    - action: switch.turn_off
+      target:
+        entity_id: group.weihnachtsbeleuchtung_wohnzimmer
+
 # Weihnachtsmodus aktivieren / deaktivieren
 # In Einstellungen - Geräte & Dienste - Helfer neuen Helfer erstellen: Schalter wähle (ist typ inpt_boolean), Name ohne diesen Prefix festlegen. In diesem Fall hei0t die Variable input_boolean.weihnachtsmodus
-#
-- id: '1764184774275'
+- id: 'change_xmas_mode'
   alias: 'Service: change x-mas Mode'
-  description: 'Aktiviert/Deaktiviert  den Weihnachtsmodus'
   triggers:
   - trigger: state
     entity_id:
@@ -69,15 +86,15 @@ automation:
             entity_id: input_boolean.weihnachtsmodus
             state: 'on'
         sequence:
-          - service: automation.turn_off
-            data:
+          - action: automation.turn_off
+            target:
               entity_id: automation.garden_covers_down_on_sundown
-          - service: automation.turn_on
-            data:
-              entity_id: automation.service_turn_off_x_mas_lights
-          - service: automation.turn_on
-            data:
-              entity_id: automation.service_turn_on_x_mas_lights
+          - action: automation.turn_on
+            target:
+              entity_id: automation.turn_on_xmas_lights
+          - action: automation.turn_on
+            target:
+              entity_id: automation.turn_off_xmas_lights_living_room
 
       # --- DEAKTIVIERUNG (Wenn input_boolean.weihnachtsmodus von ON auf OFF geht) ---
       - conditions:
@@ -85,29 +102,13 @@ automation:
             entity_id: input_boolean.weihnachtsmodus
             state: 'off'
         sequence:
-          - service: automation.turn_on
-            data:
+          - action: automation.turn_on
+            target:
               entity_id: automation.garden_covers_down_on_sundown
-          - service: automation.turn_off
-            data:
-              entity_id: automation.service_turn_off_x_mas_lights
-          - service: automation.turn_off
-            data:
-              entity_id: automation.service_turn_on_x_mas_lights
-    default: []
+          - action: automation.turn_off
+            target:
+              entity_id: automation.turn_on_xmas_lights
+          - action: automation.turn_off
+            target:
+              entity_id: automation.turn_off_xmas_lights_living_room
   mode: single
-
-#
-# Wohnzimmer verdunkeln
-#
-- id: '1606158583658'
-  alias: 'Service: turn off x-mas lights in the living room'
-  description: 'Schaltet die Weihnachtsbeleuchtung im "Wohnzimmer aus'
-  trigger:
-  - platform: time
-    at: '0:00'
-  action:
-    - service: switch.turn_off
-      entity_id:
-        - switch.plug_03
-        - switch.shellyplusplugs_e465b84329a8_switch_0

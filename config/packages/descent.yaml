@@ -1,138 +1,108 @@
 template:
   - cover:
-      - default_entity_id: cover.descent_anita_bike
-        name: "Descent Anita for bike"
-        device_class: garage
+      # Cover für Zaun oben
+      - name: "Fence Car"
+        unique_id: fence_car
+        device_class: gate
         state: >-
-          {% if is_state('cover.garage_anita', 'open') %}
-            open
-          {% else %}
-            closed
-          {% endif %}
-        icon: >-
-          {% if is_state('cover.garage_door', 'closed') %}
-            mdi:garage
-          {% else %}
-            mdi:garage-open
-          {% endif %}
+          {{ "open" if is_state('switch.fence_left', 'on') else "closed" }}
         open_cover:
-          - action: cover.toggle
-            data:
-              entity_id: cover.garage_anita
           - action: switch.turn_on
-            data:
-              entity_id: switch.fence_right
-        close_cover:
-          - action: cover.toggle
-            data:
-              entity_id: cover.garage_anita
-          - action: switch.turn_on
-            data:
-              entity_id: switch.fence_right
-
-      - default_entity_id: cover.descent_anita_car
-        name: "Descent Anita for car"
-        device_class: garage
-        state: >-
-          {% if is_state('cover.garage_anita', 'open') %}
-            open
-          {% else %}
-            closed
-          {% endif %}
-        icon: >-
-          {% if is_state('cover.garage_door', 'closed') %}
-            mdi:garage
-          {% else %}
-            mdi:garage-open
-          {% endif %}
-        open_cover:
-          - action: cover.toggle
-            data:
-              entity_id: cover.garage_anita
-          - action: switch.turn_on
-            data:
+            target:
               entity_id: switch.fence_left
         close_cover:
-          - action: cover.toggle
-            data:
+          - action: switch.turn_on
+            target:
+              entity_id: switch.fence_left
+
+      - name: "Fence Bike"
+        unique_id: fence_bike
+        device_class: gate
+        state: >-
+          {{ "open" if is_state('switch.fence_right', 'on') else "closed" }}
+        open_cover:
+          - action: switch.turn_on
+            target:
+              entity_id: switch.fence_right
+        close_cover:
+          - action: switch.turn_on
+            target:
+              entity_id: switch.fence_right
+
+      # Kombination (oben und unten) für Anitas Garage
+      - name: "Descent Anita Bike"
+        unique_id: descent_anita_bike
+        device_class: garage
+        state: "{{ states('cover.garage_anita') }}"
+        open_cover:
+          - action: cover.open_cover
+            target:
               entity_id: cover.garage_anita
           - action: switch.turn_on
-            data:
-              entity_id: switch.fence_left
-
-      - default_entity_id: cover.descent_christian_bike
-        name: "Descent Christian for bike"
-        device_class: garage
-        state: >-
-          {% if is_state('cover.garage_christian', 'open') %}
-            open
-          {% else %}
-            closed
-          {% endif %}
-        icon: >-
-          {% if is_state('cover.garage_door', 'closed') %}
-            mdi:garage
-          {% else %}
-            mdi:garage-open
-          {% endif %}
-        open_cover:
-          - action: cover.toggle
-            data:
-              entity_id: cover.garage_christian
-          - action: switch.turn_on
-            data:
+            target:
               entity_id: switch.fence_right
         close_cover:
-          - action: cover.toggle
-            data:
-              entity_id: cover.garage_christian
+          - action: cover.close_cover
+            target:
+              entity_id: cover.garage_anita
           - action: switch.turn_on
-            data:
+            target:
               entity_id: switch.fence_right
 
-      - default_entity_id: cover.descent_christian_car
-        name: "Descent Christian for car"
+      - name: "Descent Anita Car"
+        unique_id: descent_anita_car
         device_class: garage
-        state: >-
-          {% if is_state('cover.garage_christian', 'open') %}
-            open
-          {% else %}
-            closed
-          {% endif %}
-        icon: >-
-          {% if is_state('cover.garage_door', 'closed') %}
-            mdi:garage
-          {% else %}
-            mdi:garage-open
-          {% endif %}
+        state: "{{ states('cover.garage_anita') }}"
         open_cover:
-          - action: cover.toggle
-            data:
-              entity_id: cover.garage_christian
+          - action: cover.open_cover
+            target:
+              entity_id: cover.garage_anita
           - action: switch.turn_on
-            data:
+            target:
               entity_id: switch.fence_left
         close_cover:
-          - action: cover.toggle
-            data:
-              entity_id: cover.garage_christian
+          - action: cover.close_cover
+            target:
+              entity_id: cover.garage_anita
           - action: switch.turn_on
-            data:
+            target:
               entity_id: switch.fence_left
 
-automation:
-- id: '1711985708694'
-  alias: 'Action: Christian car'
-  description: 'iOS Steuerung für Garagentor Christian'
-  trigger:
-  - platform: event
-    event_data:
-      actionID: 027BB736-3075-402F-92BB-1DE0EFEF3681
-    event_type: ios.action_fired
-  condition: []
-  action:
-  - service: cover.toggle
-    target:
-      entity_id: cover.descent_christian_car
-    data: {}
-  mode: single
+      # Kombination (oben und unten) für Christians Garage
+      - name: "Descent Christian Bike"
+        unique_id: descent_christian_bike
+        device_class: garage
+        state: "{{ states('cover.garage_christian') }}"
+        open_cover:
+          - action: cover.open_cover
+            target:
+              entity_id: cover.garage_christian
+          - action: switch.turn_on
+            target:
+              entity_id: switch.fence_right
+        close_cover:
+          - action: cover.close_cover
+            target:
+              entity_id: cover.garage_christian
+          - action: switch.turn_on
+            target:
+              entity_id: switch.fence_right
+
+      - name: "Descent Christian Car"
+        unique_id: descent_christian_car
+        device_class: garage
+        state: "{{ states('cover.garage_christian') }}"
+        open_cover:
+          - action: cover.open_cover
+            target:
+              entity_id: cover.garage_christian
+          - action: switch.turn_on
+            target:
+              entity_id: switch.fence_left
+        close_cover:
+          - action: cover.close_cover
+            target:
+              entity_id: cover.garage_christian
+          - action: switch.turn_on
+            target:
+              entity_id: switch.fence_left

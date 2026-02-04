@@ -1,11 +1,14 @@
 # Filter to: home kann entfernt werden, wenn man die anderen Meldungen auch haben möchte.
 # Weitere Personen können einfach hinzugefügt werden.
 # Siehe https://community.home-assistant.io/t/error-rendering-data-template-undefinederror-dict-object-has-no-attribute-from-state/325386/12
+#
+# Achtung: es kommt zu einem Fehler, wenn die Automation manuell ausgeführt wird, anstatt dass ein echter Statuswechsel ausgelöset wird.
+# Fehler: UndefinedError: 'dict object' has no attribute 'from_state'
+# Automationen, die das trigger-Objekt nutzen, dürfen nicht über den „Ausführen“-Button, sondern durch Ändern des Statuses der Person unter Entwicklerwerkzeuge -> Zustände manuell von not_home auf home setzen.
 
 automation:
-- id: '1681559151264'
+- id: 'family_member_at_home'
   alias: 'Notify: Familienmitglied kommt heim'
-  description: ''
   trigger:
   - platform: state
     entity_id:
@@ -13,7 +16,12 @@ automation:
     to: home
     for:
       minutes: 2
-  condition: "{{ trigger.to_state.state != trigger.from_state.state }}"
+  conditions:
+  - condition: template
+    value_template: "{{ trigger.to_state.state != trigger.from_state.state }}"
+  - condition: time
+    after: "22:00:00"
+    before: "07:00:00"
   action:
   - variables:
       old: "{{ trigger.from_state.state }}"

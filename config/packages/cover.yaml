@@ -1,6 +1,7 @@
 template:
   - sensor:
       - default_entity_id: sensor.cover_all
+        unique_id: sensor_cover_all
         name: "Alle Rollos"
         state: >-
           {% if (states('sensor.modbus_sensor_01')|int == 1) and (states('sensor.modbus_sensor_02')|int == 1) and
@@ -16,6 +17,7 @@ template:
           {% endif %}
 
       - default_entity_id: sensor.cover_rain
+        unique_id: sensor_cover_rain
         name: "Rollos bei Regen"
         state: >-
           {% if (states('sensor.modbus_sensor_01')|int == 1) and (states('sensor.modbus_sensor_02')|int == 1) and
@@ -30,6 +32,7 @@ template:
 
   - cover:
       - default_entity_id: cover.kitchen_left_window
+        unique_id: cover_kitchen_left_window
         name: "Küche links (Tisch)"
         device_class: shutter
         position: >-
@@ -50,6 +53,7 @@ template:
             entity_id: switch.blind_kitchen_left_down
 
       - default_entity_id: cover.kitchen_right_window
+        unique_id: cover_kitchen_right_window
         name: "Küche rechts (Geschirrspüler)"
         device_class: shutter
         position: >-
@@ -70,6 +74,7 @@ template:
             entity_id: switch.blind_kitchen_right_down
 
       - default_entity_id: cover.kitchen_window
+        unique_id: cover_kitchen_window
         name: "Küche Fenster"
         device_class: shutter
         position: >-
@@ -94,6 +99,7 @@ template:
               - switch.blind_kitchen_right_down
 
       - default_entity_id: cover.kitchen_door
+        unique_id: cover_kitchen_door
         name: "Küche Balkon"
         device_class: shutter
         position: >-
@@ -114,6 +120,7 @@ template:
             entity_id: switch.blind_kitchen_door_down
 
       - default_entity_id: cover.livingroom_window
+        unique_id: cover_livingroom_window
         name: "Wohnzimmer Fenster"
         device_class: shutter
         position: >-
@@ -134,6 +141,7 @@ template:
             entity_id: switch.blind_livingroom_window_down
 
       - default_entity_id: cover.livingroom_door
+        unique_id: cover_livingroom_door
         name: "Wohnzimmer Balkon"
         device_class: shutter
         position: >-
@@ -154,6 +162,7 @@ template:
             entity_id: switch.blind_livingroom_door_down
 
       - default_entity_id: cover.bedroom_window
+        unique_id: cover_bedroom_window
         name: "Schlafzimmer Fenster"
         device_class: shutter
         position: >-
@@ -174,6 +183,7 @@ template:
             entity_id: switch.blind_bedroom_down
 
       - default_entity_id: cover.all
+        unique_id: cover_all
         name: "Alle Rollos"
         device_class: shutter
         position: "{{ states('sensor.cover_all')|float(50) }}"
@@ -187,6 +197,7 @@ template:
             entity_id: switch.blind_all_down
 
       - default_entity_id: cover.rain
+        unique_id: cover_rain
         name: "Rollos bei Regen"
         device_class: shutter
         position: "{{ states('sensor.cover_rain')|float(50) }}"
@@ -208,35 +219,34 @@ template:
               - switch.blind_bedroom_down
 
 automation:
-- id: '1606158583703'
-  alias: Garden covers down on sundown
-  description: 'Fährt die Rollos zum Garten am Abend runter'
-  trigger:
-#    - platform: template
-#      value_template: "{{ not is_state('sensor.logo3_naq1', 'unavailable') and states('sensor.time') > '15:00' and states('sensor.logo3_naq1') | int < 10 }}"
-    - platform: numeric_state
-      entity_id: sun.sun
-      value_template: "{{ state_attr('sun.sun', 'elevation') }}"
-      below: -6.00
-  action:
-    - service: cover.close_cover
-      entity_id: cover.bedroom_window
-    - service: cover.close_cover
-      entity_id: cover.livingroom_window
-  mode: single
-- id: '1620112221379'
-  alias: Neighbors covers down on sundown
-  description: 'Fährt die Rollos zum Nachbarn am Abend runter'
-  trigger:
-#    - platform: template
-#      value_template: "{{ not is_state('sensor.logo3_naq1', 'unavailable') and states('sensor.time') > '15:00' and states('sensor.logo3_naq1') | int < 600 }}"
-    - platform: numeric_state
-      entity_id: sun.sun
-      value_template: "{{ state_attr('sun.sun', 'elevation') }}"
-      below: -3.40
-  action:
-    - service: cover.close_cover
-      entity_id: cover.kitchen_window
-    - service: cover.close_cover
-      entity_id: cover.livingroom_door
-  mode: single
+  - id: 'garden_covers_down'
+    alias: "Service: garden covers down on sundown"
+    trigger:
+#      - platform: template
+#        value_template: "{{ not is_state('sensor.logo3_naq1', 'unavailable') and states('sensor.time') > '15:00' and states('sensor.logo3_naq1') | int < 10 }}"
+      - platform: numeric_state
+        entity_id: sun.sun
+        value_template: "{{ state_attr('sun.sun', 'elevation') }}"
+        below: -6.00
+    action:
+      - service: cover.close_cover
+        entity_id: cover.bedroom_window
+      - service: cover.close_cover
+        entity_id: cover.livingroom_window
+    mode: single
+  
+  - id: 'neighbors_covers_down'
+    alias: "Service: neighbors covers down on sundown"
+    trigger:
+#      - platform: template
+#        value_template: "{{ not is_state('sensor.logo3_naq1', 'unavailable') and states('sensor.time') > '15:00' and states('sensor.logo3_naq1') | int < 600 }}"
+      - platform: numeric_state
+        entity_id: sun.sun
+        value_template: "{{ state_attr('sun.sun', 'elevation') }}"
+        below: -3.40
+    action:
+      - service: cover.close_cover
+        entity_id: cover.kitchen_window
+      - service: cover.close_cover
+        entity_id: cover.livingroom_door
+    mode: single

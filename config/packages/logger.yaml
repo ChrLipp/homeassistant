@@ -1,10 +1,14 @@
 logger:
   default: info
+
+  # ATTENTION
+  # - If you comment out any logger, then you must also comment out the logs: node.
+  #   Otherwise Home assistant will not start and the "check config" runs forever.
+  # - If no logger is activated, remove the logs: node.
+  # - Best solution: Localtuya is verbose, so keep this entry forever and forget the rest.
   logs:
     custom_components.localtuya.common: error
 
-# ATTENTION: if you comment out every logger, then you must also comment out the logs: node.
-# Otherwise Home assistant will not start and the "check config" runs forever.
   
 #    custom_components.automower: debug
 #    homeassistant.components.device_tracker: debug
@@ -24,3 +28,6 @@ logger:
 #    homeassistant.components.fritz: debug
 #    fritzconnection: debug
 #    fritzprofiles: debug
+
+#    Homekit
+#    homeassistant.components.homekit: debug

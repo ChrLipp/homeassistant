@@ -10,6 +10,5 @@ group:
     name: Garmin
     entities:
       - cover.descent_christian_bike
-      - cover.descent_christian_car
-      - cover.garage_anita
+      - cover.descent_anita_bike
 

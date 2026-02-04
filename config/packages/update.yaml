@@ -1,55 +1,51 @@
 input_text:
   last_known_version_update:
     name: Last known (and notified) version available for update
-    icon: mdi:message-settings-variant-outline
+    icon: mdi:message-settings-outline
 
 template:
-  - sensor:
-      - default_entity_id: sensor.update_available
-        name: "Home assistant update available"
+  - binary_sensor:
+      - name: HA Update available for Notification
         state: >-
-          {% if is_state("sensor.last_ha_version", "unknown") %}
-            false
-          {% elif is_state("sensor.last_ha_version", "unavailable") %}
-            false
-          {% elif states("sensor.last_ha_version") ==  states("input_text.last_known_version_update") %}
-            false
-          {% elif is_state("binary_sensor.home_assistant_versions_update_available", "on") %}
-            true
-          {% else %}
-            false
-          {% endif %}
+          {% set last_ver = states('sensor.last_ha_version') %}
+          {% set notified_ver = states('input_text.last_known_version_update') %}
+          {% set update_avail = is_state('binary_sensor.home_assistant_versions_update_available', 'on') %}
+          
+          {# Prüfe ob Werte valide sind und ob die Version neu ist #}
+          {{ has_value('sensor.last_ha_version') and update_avail and last_ver != notified_ver }}
 
 automation:
-- id: '1582890671844'
-  alias: 'Notify: Update Available'
-  description: Sends a telegram message when an update is available
-  mode: single
-  trigger:
-  - platform: state
-    entity_id: sensor.update_available
-    from: 'false'
-    to: 'true'
-  action:
-  - data:
-      message: Meister, die Home Assistant version *{{ states("sensor.last_ha_version")}}* ist verfügbar. Derzeit läuft die Version {{ states("sensor.current_ha_version")}}.
-    service: notify.telegram_admin
-  - service: input_text.set_value
-    data_template:
-      entity_id: input_text.last_known_version_update
-      value: '{{ states(''sensor.last_ha_version'') }}'
+  - id: 'notify_ha_update'
+    alias: 'Notify: HA update Available'
+    mode: single
+    trigger:
+      - platform: state
+        entity_id: binary_sensor.ha_update_available_for_notification
+        from: 'off'
+        to: 'on'
+    action:
+      - service: notify.telegram_admin
+        data:
+          message: >-
+            Meister, die Home Assistant Version *{{ states('sensor.last_ha_version') }}* ist verfügbar. 
+            Derzeit läuft {{ states('sensor.current_ha_version') }}.
+      - service: input_text.set_value
+        target:
+          entity_id: input_text.last_known_version_update
+        data:
+          value: "{{ states('sensor.last_ha_version') }}"
 
-
-- id: '1620058754239'
-  alias: 'Notify: HACS update available'
-  description: Sends a telegram message when a HACS update is available
-  mode: single
-  trigger:
-    - platform: state
-      entity_id: update.hacs_update
-      from: 'off'
-      to: 'on'
-  action:
-    - service: notify.telegram_admin
-      data:
-        message: Meister, die HACS version *{{ state_attr('update.hacs_update', 'latest_version')}}* ist verfügbar. Derzeit läuft die Version {{ state_attr('update.hacs_update', 'installed_version')}}.
+  - id: 'notify_hacs_update'
+    alias: 'Notify: HACS update available'
+    mode: single
+    trigger:
+      - platform: state
+        entity_id: update.hacs_update # Nutzt die moderne Update-Entität
+        from: 'off'
+        to: 'on'
+    action:
+      - service: notify.telegram_admin
+        data:
+          message: >-
+            Meister, die HACS version *{{ state_attr('update.hacs_update', 'latest_version') }}* ist verfügbar. 
+            Derzeit läuft die Version {{ state_attr('update.hacs_update', 'installed_version') }}).

@@ -1,5 +1,5 @@
 automation:
-- id: '1583510362752'
+- id: 'turn_off_toaster'
   alias: 'Service: turn off toaster after 20 minutes'
   mode: restart
   trigger:
