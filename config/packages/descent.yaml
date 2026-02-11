@@ -4,8 +4,14 @@ template:
       - name: "Fence Car"
         unique_id: fence_car
         device_class: gate
+        availability: >-
+          {{ states('switch.fence_left') not in ['unavailable', 'unknown'] }}
         state: >-
-          {{ "open" if is_state('switch.fence_left', 'on') else "closed" }}
+          {% if is_state('switch.fence_left', 'on') %}
+            open
+          {% else %}
+            closed
+          {% endif %}
         open_cover:
           - action: switch.turn_on
             target:
@@ -18,8 +24,14 @@ template:
       - name: "Fence Bike"
         unique_id: fence_bike
         device_class: gate
+        availability: >-
+          {{ states('switch.fence_right') not in ['unavailable', 'unknown'] }}
         state: >-
-          {{ "open" if is_state('switch.fence_right', 'on') else "closed" }}
+          {% if is_state('switch.fence_right', 'on') %}
+            open
+          {% else %}
+            closed
+          {% endif %}
         open_cover:
           - action: switch.turn_on
             target:
@@ -33,7 +45,11 @@ template:
       - name: "Descent Anita Bike"
         unique_id: descent_anita_bike
         device_class: garage
-        state: "{{ states('cover.garage_anita') }}"
+        availability: >-
+          {{ states('cover.garage_anita') not in ['unavailable', 'unknown'] 
+             and states('switch.fence_right') not in ['unavailable', 'unknown'] }}
+        state: >-
+          {{ states('cover.garage_anita') }}
         open_cover:
           - action: cover.open_cover
             target:
@@ -52,7 +68,11 @@ template:
       - name: "Descent Anita Car"
         unique_id: descent_anita_car
         device_class: garage
-        state: "{{ states('cover.garage_anita') }}"
+        availability: >-
+          {{ states('cover.garage_anita') not in ['unavailable', 'unknown'] 
+             and states('switch.fence_left') not in ['unavailable', 'unknown'] }}
+        state: >-
+          {{ states('cover.garage_anita') }}
         open_cover:
           - action: cover.open_cover
             target:
@@ -72,7 +92,11 @@ template:
       - name: "Descent Christian Bike"
         unique_id: descent_christian_bike
         device_class: garage
-        state: "{{ states('cover.garage_christian') }}"
+        availability: >-
+          {{ states('cover.garage_christian') not in ['unavailable', 'unknown'] 
+             and states('switch.fence_right') not in ['unavailable', 'unknown'] }}
+        state: >-
+          {{ states('cover.garage_christian') }}
         open_cover:
           - action: cover.open_cover
             target:
@@ -91,7 +115,11 @@ template:
       - name: "Descent Christian Car"
         unique_id: descent_christian_car
         device_class: garage
-        state: "{{ states('cover.garage_christian') }}"
+        availability: >-
+          {{ states('cover.garage_christian') not in ['unavailable', 'unknown'] 
+             and states('switch.fence_left') not in ['unavailable', 'unknown'] }}
+        state: >-
+          {{ states('cover.garage_christian') }}
         open_cover:
           - action: cover.open_cover
             target:

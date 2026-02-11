@@ -18,8 +18,24 @@ views:
             secondary_info: last-changed
           - entity: person.elias
             secondary_info: last-changed
-      - entity: weather.home
-        type: weather-forecast
+      - type: vertical-stack
+        cards:
+          - entity: weather.forecast_home
+            type: weather-forecast
+            name: Wettervorhersage
+          - type: entities
+            title: Wetter aktuell
+            entities:
+              - entity: sensor.poettelsdorf_temperatur
+                name: Temperatur
+              - entity: sensor.poettelsdorf_luftfeuchtigkeit
+                name: Luftfeuchtigkeit
+              - entity: sensor.poettelsdorf_niederschlagsmenge
+                name: Regenmenge
+              - entity: sensor.poettelsdorf_niederschlagsmenge_heute
+                name: Regenmenge heute
+              - entity: sensor.poettelsdorf_windgeschwindigkeit
+                name: Windgeschwindigkeit
       - type: "custom:atomic-calendar-revive"
         fullDayEventText: "Ganzer Tag"
         noEventsForNextDaysText: "Keine Ereignisse in den nächsten Tagen"
@@ -67,7 +83,7 @@ views:
         - entity: media_player.fernseher_wohnzimmer
           type: media-control
           name: TV Samsung
-        - entity: media_player.vu_solo4k
+        - entity: media_player.vusolo4k
           type: media-control
           name: VU Solo 4K
         - entity: media_player.onkyo
@@ -88,47 +104,34 @@ views:
         image: /local/image/roborock.png
         attributes:
           main_brush:
+            key: restkapazitat_der_hauptburste
             label: 'Hauptbürste: '
           side_brush:
+            key: restkapazitat_der_seitenburste
             label: 'Seitenbürste: '
+          filter:
+            key: filter_restkapazitat
+          sensor:
+            key: bis_sensorreinigung_verbleibend
       - type: picture-entity
         entity: camera.sunny
         show_name: false
         show_state: false
       - type: entities
         entities:
-          - entity: switch.plug_06
-            name: Eingang Stern
-          - entity: switch.plug_05
-            name: Eingangstür
-          - entity: switch.plug_12
-            name: Arbeitszimmer
-          - type: divider
-          - entity: switch.shellyplusplugs_e465b84329a8_switch_0
-            name: Christbaum
-          - entity: switch.plug_10
-            name: Terrasse Weihnachtsbaum
-          - type: divider
           - entity: switch.plug_03
             name: Wohnzimmer Lichterkette
-          - entity: switch.plug_11
-            name: Wohnzimmer Stern
-          - type: divider
-          - entity: switch.plug_09
-            name: Christbaum Vorraum 1.Stock
-          - entity: switch.shellyplusplugs_e86beae2f644_switch_0
-            name: Schlafzimmer Stern
-          - entity: switch.shellyplusplugs_d48afc7ae358_switch_0
+          - entity: switch.plug_02
             name: Lichterkette Schlafzimmer
           - type: divider
-          - entity: switch.plug_17_switch_0
+          - entity: switch.plug_17
             name: Toaster
-          - entity: switch.plug_01_switch_0
+          - entity: switch.plug_01
             name: Rennrad Ventilator
         title: Schaltbare Steckdosen
         show_header_toggle: false
       - cards:
-          - entity: light.elias_light
+          - entity: light.elias
             hold_action:
               action: more-info
             name: Elias Zimmer
@@ -170,8 +173,8 @@ views:
         title: Schlafzimmmer
         hours_to_show: 24
         entities:
-          - entity: sensor.alarm_clock_4d44_temperature
-            name: Wecker
+          - entity: sensor.alarm_clock_christian_temperature
+            name: Wecker Christian
 
   - title: Garten
     icon: 'mdi:tree'

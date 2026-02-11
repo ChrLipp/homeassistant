@@ -8,7 +8,7 @@
 
 automation:
 - id: 'pool_heater_on'
-  alias: Pool heater on
+  alias: Service: Pool heater on
   trigger:
   - platform: state
     entity_id: switch.power_01
@@ -20,7 +20,7 @@ automation:
   mode: single
 
 - id: 'pool_heater_off'
-  alias: Pool heater off
+  alias: Service: Pool heater off
   trigger:
   - platform: state
     entity_id: switch.power_01

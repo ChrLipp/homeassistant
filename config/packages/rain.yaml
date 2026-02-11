@@ -17,6 +17,11 @@
 #   elif trigger.entity_id == 'sensor.netatmo_pottelsdorf_rain'
 #     Use the current value only to set it to zero
 #     otherwise ignore value (just use the old value)
+#
+# How to set the GPS 
+# - Go to https://weathermap.netatmo.com/ to see the sensors near you
+# - To to https://mymaps.google.com/ , enter points and draw a rectangle
+# - Enter rectangle in the Netatmo config
 
 template:
   - binary_sensor:
@@ -30,10 +35,10 @@ template:
   - trigger:
     - platform: state
       entity_id:
-        - sensor.netatmo_pottelsdorf_rain_today
+        - sensor.poettelsdorf_niederschlagsmenge_heute
     - platform: state
       entity_id:
-        - sensor.netatmo_pottelsdorf_rain
+        - sensor.poettelsdorf_niederschlagsmenge
     - platform: homeassistant
       event: start
     sensor:
@@ -41,10 +46,10 @@ template:
         state: >
           {% if trigger.platform == 'homeassistant' %}
             0.0
-          {% elif trigger.entity_id == 'sensor.netatmo_pottelsdorf_rain_today' %}
+          {% elif trigger.entity_id == 'sensor.poettelsdorf_niederschlagsmenge_heute' %}
             {% set delta = (trigger.to_state.state|float(0) - trigger.from_state.state|float(0))| round(1) %}
             {{ delta if delta > 0.0 else 0.0 }}
-          {% elif trigger.entity_id == 'sensor.netatmo_pottelsdorf_rain' %}
+          {% elif trigger.entity_id == 'sensor.poettelsdorf_niederschlagsmenge' %}
             {% if trigger.to_state.state|float(0) == 0.0 %}
               0.0
             {% else %}
@@ -59,8 +64,7 @@ template:
 
 automation:
 - id: 'rain_starts'
-  alias: Rain starts
-  description: Triggers when rain start is detected
+  alias: Notify: Rain starts
   trigger:
   - platform: state
     entity_id: binary_sensor.is_wet_outside
@@ -72,8 +76,7 @@ automation:
       message: Meister, es beginnt zu regnen!
 
 - id: 'rain_ends'
-  alias: Rain ends
-  description: Triggers 30 minutes after rain
+  alias: Notify: Rain ends
   trigger:
   - platform: state
     entity_id: binary_sensor.is_wet_outside

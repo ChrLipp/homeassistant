@@ -27,7 +27,7 @@ automation:
       # Schritt 1: Licht an (egal ob Elias da ist oder nicht)
       - action: light.turn_on
         target:
-          entity_id: light.elias_light
+          entity_id: light.elias
 
       # Schritt 2: Warnen, wenn Elias nicht da ist (kann auch falsch sein)
       - if:

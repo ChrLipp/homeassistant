@@ -9,7 +9,7 @@ homekit:
         - cover.fence_bike
         - cover.descent_anita_car
         - cover.descent_christian_car
-        - light.elias_light
+        - light.elias
     entity_config:
       cover.garage_anita:
         name: "Garage Anita"

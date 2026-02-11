@@ -1,1 +1,0 @@
-"""The waste AT_BMV (Austria, Burgenländischer Müllverband www.bmv.at) component."""
