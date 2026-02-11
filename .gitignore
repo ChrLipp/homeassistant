@@ -49,3 +49,6 @@ secrets.yaml
 # Playgrounds
 /config_old
 /config_new
+
+# HACS
+/config/custom_components
