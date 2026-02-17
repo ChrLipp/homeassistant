@@ -4,8 +4,8 @@
 # - my discussion with the autor at https://github.com/Thomas55555/aioautomower/discussions/672#discussioncomment-15454901
 # - Which attributes do we need:
 #   - Standbild-URL aus secrets.yaml
-#   - Bildfrequenz: 0,05Hz = alle 20s
-#   - Neuabruf auf URL-Änderung beschränken: JA, um unnötige Aufrufe zu vermeiden (zB wenn Automower im Dock ist)
+#   - Bildfrequenz: 0,03Hz = alle 33s (führt bei 10h zu 1080 Calls/Tag) - Quota bei Google habe ich auf 1100 gesetzt
+#   - Neuabruf auf URL-Änderung beschränken: JA, um unnötige Aufrufe zu vermeiden (wenn Automower im Dock ist oder auf derselben Stelle steht)
 #   - SSL-Zertifikat überprüfen: NEIN, da HA manchmal pingelig ist
 #   - Rest ignorieren
 

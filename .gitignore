@@ -51,4 +51,6 @@ secrets.yaml
 /config_new
 
 # HACS
-/config/custom_components
+/config/custom_components/
+/config/www/*
+!/config/www/image/
