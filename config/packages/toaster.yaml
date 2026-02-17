@@ -17,8 +17,7 @@ automation:
       then:
         - service: switch.turn_off
           entity_id: switch.plug_17_switch_0
-        - data:
+        - action: notify.send_message
+          data:
+            entity_id: notify.telegram_all
             message: "Toaster wurde nach 20 Minuten automatisch ausgeschalten. *Aufpassen!*"
-            data:
-              parse_mode: markdown
-          service: notify.telegram_all

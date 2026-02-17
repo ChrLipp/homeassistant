@@ -18,3 +18,22 @@ automation:
       input:
         vacuum: vacuum.sunny
         camera: camera.sunny
+
+  - id: 'notify_sunny_error'
+    alias: 'Notify: Sunny error'
+    trigger:
+      - entity_id: vacuum.sunny
+        platform: state
+        to: 'error'
+        for: "00:00:03"
+    action:
+      - action: notify.send_message
+        data:
+          entity_id: notify.telegram_all
+          message: >-
+            {% set error = state_attr('vacuum.sunny', 'error') %}
+            {% set error_map = {
+              'Clean main brush': 'Die Hauptbürste hat sich verheddert. Hauptbürste und Bürstenhalterung entfernen und reinigen.',
+              'None': 'Fehlalarm, eh alles gut.'
+            } %}
+            *Achtung:* Sunny hat ein Problem! ({{ error_map.get(error, error) }})

@@ -38,4 +38,5 @@
 
 ## Fixed
 
-- 	
+- Telegram Notification adopted
+- Various Migration bug fixes

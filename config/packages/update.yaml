@@ -1,3 +1,12 @@
+# Update notification.
+#
+# Requisite:
+# - Install Version Integration
+#   Einstellungen > Geräte & Dienste.
+# - Add integration twice:
+#   - Instance 1: Source Local Installation (current running version): sensor.current_version
+#   - Instance 2: Source Docker Hub (version available online): binary_sensor.docker_hub_update_available and sensor.docker_hub
+
 input_text:
   last_known_version_update:
     name: Last known (and notified) version available for update
@@ -7,12 +16,12 @@ template:
   - binary_sensor:
       - name: HA Update available for Notification
         state: >-
-          {% set last_ver = states('sensor.last_ha_version') %}
+          {% set last_ver = states('sensor.docker_hub') %}
           {% set notified_ver = states('input_text.last_known_version_update') %}
-          {% set update_avail = is_state('binary_sensor.home_assistant_versions_update_available', 'on') %}
+          {% set update_avail = is_state('binary_sensor.docker_hub_update_available', 'on') %}
           
           {# Prüfe ob Werte valide sind und ob die Version neu ist #}
-          {{ has_value('sensor.last_ha_version') and update_avail and last_ver != notified_ver }}
+          {{ has_value('sensor.docker_hub') and update_avail and last_ver != notified_ver }}
 
 automation:
   - id: 'notify_ha_update'
@@ -24,16 +33,17 @@ automation:
         from: 'off'
         to: 'on'
     action:
-      - service: notify.telegram_admin
+      - action: notify.send_message
         data:
+          entity_id: notify.telegram_admin
           message: >-
-            Meister, die Home Assistant Version *{{ states('sensor.last_ha_version') }}* ist verfügbar. 
-            Derzeit läuft {{ states('sensor.current_ha_version') }}.
+            Meister, die Home Assistant Version *{{ states('sensor.docker_hub') }}* ist verfügbar. 
+            Derzeit läuft die Version *{{ states('sensor.current_version') }}*.
       - service: input_text.set_value
         target:
           entity_id: input_text.last_known_version_update
         data:
-          value: "{{ states('sensor.last_ha_version') }}"
+          value: "{{ states('sensor.docker_hub') }}"
 
   - id: 'notify_hacs_update'
     alias: 'Notify: HACS update available'
@@ -44,8 +54,10 @@ automation:
         from: 'off'
         to: 'on'
     action:
-      - service: notify.telegram_admin
+      - action: notify.send_message
         data:
+          entity_id: notify.telegram_admin
           message: >-
             Meister, die HACS version *{{ state_attr('update.hacs_update', 'latest_version') }}* ist verfügbar. 
-            Derzeit läuft die Version {{ state_attr('update.hacs_update', 'installed_version') }}).
+            Derzeit läuft die Version *{{ state_attr('update.hacs_update', 'installed_version') }}*.
+

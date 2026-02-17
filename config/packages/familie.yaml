@@ -27,8 +27,9 @@ automation:
       old: "{{ trigger.from_state.state }}"
       new: "{{ trigger.to_state.state }}"
       person: "{{ trigger.to_state.name }}"
-  - service: notify.telegram_admin
+  - service: notify.send_message
     data:
+      entity_id: notify.telegram_admin
       message: >
         {% if new == "not_home" and old == "home"%}
           {{ person }} ist weg gegangen.
@@ -39,6 +40,4 @@ automation:
         {% else %}
           {{ person }} ist in {{ new }} angekommen.
         {% endif %}
-      data:
-        parse_mode: markdown
   mode: single

@@ -47,8 +47,8 @@ automation:
         - condition: template
           value_template: "{{ state_attr(repeat.item.sensor, 'days') == 1 }}"
         then:
-        - service: notify.telegram_all
+        - action: notify.send_message
           data:
+            entity_id: notify.telegram_all
             message: "*{{ repeat.item.name }}* rausbringen. Abholung *morgen* ({{ state_attr(repeat.item.sensor, 'display_date') }})"
-            data:
-              parse_mode: markdown
+

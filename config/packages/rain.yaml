@@ -64,25 +64,27 @@ template:
 
 automation:
 - id: 'rain_starts'
-  alias: Notify: Rain starts
+  alias: 'Notify: Rain starts'
   trigger:
   - platform: state
     entity_id: binary_sensor.is_wet_outside
     from: 'off'
     to: 'on'
   action:
-  - service: notify.telegram_admin
+  - action: notify.send_message
     data:
+      entity_id: notify.telegram_admin
       message: Meister, es beginnt zu regnen!
 
 - id: 'rain_ends'
-  alias: Notify: Rain ends
+  alias: 'Notify: Rain ends'
   trigger:
   - platform: state
     entity_id: binary_sensor.is_wet_outside
     from: 'on'
     to: 'off'
   action:
-  - service: notify.telegram_admin
+  - action: notify.send_message
     data:
+      entity_id: notify.telegram_admin
       message: Meister, Regen ist vorbei und Gras ist trocken.
