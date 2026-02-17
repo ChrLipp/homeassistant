@@ -33,7 +33,6 @@ automation:
           message: >-
             {% set error = state_attr('vacuum.sunny', 'error') %}
             {% set error_map = {
-              'Clean main brush': 'Die Hauptbürste hat sich verheddert. Hauptbürste und Bürstenhalterung entfernen und reinigen.',
-              'None': 'Fehlalarm, eh alles gut.'
+              'Clean main brush': 'Die Hauptbürste hat sich verheddert. Hauptbürste und Bürstenhalterung entfernen und reinigen.'
             } %}
-            *Achtung:* Sunny hat ein Problem! ({{ error_map.get(error, error) }})
+            Achtung: *Sunny* hat ein Problem! ({{ error_map.get(error, error if error not in [none, 'unknown', 'None'] else 'Fehlalarm, alles gut') }})

@@ -229,9 +229,9 @@ views:
           show_state: false
         - type: entities
           entities:
-            - entity: lawn_mower.miki
+            - entity: lawn_mower.automower
               name: Status Miki
-            - entity: sensor.miki_nachster_start
+            - entity: sensor.automower_nachster_start
               name: Nächster Start
         type: vertical-stack
       - type: entities

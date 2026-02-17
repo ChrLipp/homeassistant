@@ -28,8 +28,6 @@
   - [Govee](https://github.com/LaggAt/hacs-govee)
 - Migrate LocalTuya to ESPhome
 - Integrate electricity costs
-- Husquarna Automower map
-  - [Husqvarna Automower](https://github.com/Thomas55555/husqvarna_automower)
 - Switch from Google Cast to Onkyo integration
 - Repair temperature sensors
 - Automate cover Elias
@@ -38,5 +36,4 @@
 
 ## Fixed
 
-- Telegram Notification adopted
-- Various Migration bug fixes
+- Integrated AutoMower and AutoMower map

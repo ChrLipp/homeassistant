@@ -1,24 +1,33 @@
-# Docking station: flashing blue light (damaged wire)
-#                  flashing green light (power save mode, removed Automower during recharging, insert Automower into docking station again will fix it)
-#
 # Provde a generic camera with name camera.miki_map
-#
+# - see original doku at https://github.com/Thomas55555/husqvarna_automower/blob/main/MAP_GUIDE.md
+# - see camera generation in markdown at https://github.com/walthowd/ha-automower/blob/master/info.md
+# - my discussion with the autor at https://github.com/Thomas55555/aioautomower/discussions/672#discussioncomment-15454901
+# - Which attributes do we need:
+#   - Standbild-URL aus secrets.yaml
+#   - Bildfrequenz: 0,05Hz = alle 20s
+#   - Neuabruf auf URL-Änderung beschränken: JA, um unnötige Aufrufe zu vermeiden (zB wenn Automower im Dock ist)
+#   - SSL-Zertifikat überprüfen: NEIN, da HA manchmal pingelig ist
+#   - Rest ignorieren
 
 automation:
-- id: '1583509362752'
-  alias: 'Notify: Miki error'
-  description: Telegram notification when Miki encounters an error
-  trigger:
-  - entity_id: sensor.miki_fehler
-    platform: state
-    from: 'no_error'
-    for: "00:01:00"
-  action:
-  - data_template:
-      message: "*Achtung:* Miki hat ein Problem! ({{ states('sensor.miki_fehler') }})"
-      data:
-        parse_mode: markdown
-    service: notify.telegram_all
-  - data_template:
-      message: "Achtung: Miki hat ein Problem! ({{ states('sensor.miki_fehler') }})"
-    service: system_log.write
+  - id: 'notify_miki_error'
+    alias: 'Notify: Miki error'
+    trigger:
+      - entity_id: sensor.automower_fehler
+        platform: state
+        from: 'no_error'
+        for: "00:01:00"
+    action:
+      - action: notify.send_message
+        data:
+          entity_id: notify.telegram_all
+          
+          message: >-
+            {% set error = states('sensor.automower_fehler') %}
+            {% set error_map = {
+              'off': 'Ausgeschalten, gar nicht verfügbar - Fehlalarm?'
+            } %}
+            Achtung: *Miki* hat ein Problem! ({{ error_map.get(error, error) }})
+      - service: system_log.write
+        data_template:
+          message: "Achtung: Miki hat ein Problem! ({{ states('sensor.automower_fehler') }})"
