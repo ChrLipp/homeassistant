@@ -4,6 +4,8 @@
 
 ##  HACS
 
+HA needs the following integrations and frontend components. They are not included in this repository, so you have to install them manually.
+
 - [HACS (Home Assistant Community Store)](https://github.com/hacs/integration)
   - Integrations
     - [iPhone Device Tracker](https://github.com/mudape/iphonedetect)
@@ -33,7 +35,9 @@
 - Automate cover Elias
 - Samsung TV
   - [SamsungTV Smart](https://github.com/ollo69/ha-samsungtv-smart)
+- Homekit for family
 
 ## Fixed
 
-- Integrated AutoMower and AutoMower map
+- Removed HACS Frontend Code from GIT repository
+- Google Kalender angebunden, Automatisierung für tägliche Benachrichtigung

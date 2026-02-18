@@ -42,6 +42,8 @@ views:
         untilText: "bis"
         entities:
         - entity: calendar.familie
+        - entity: calendar.geburtstage
+        - entity: calendar.feiertage_in_osterreich
       - type: entities
         title: Abfalltermine
         show_header_toggle: false

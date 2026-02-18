@@ -1,0 +1,53 @@
+automation:
+  - id: 'notify_calendar_entry'
+    alias: "Notify: Morgendliche Kalender Benachrichtigung"
+    trigger:
+      - platform: time
+        at: "08:00:00"
+    action:
+      # Wir setzen den Start auf jeweils 1s vor den Anfang des heutigen Tages und das Ende auf Mitternacht
+      # Ganztägige Termine gehen bei Google von 0:00:00 bis 0:00:00, diese würden sonst doppelt ausgegeben werden
+      - action: calendar.get_events
+        target:
+          entity_id: 
+            - calendar.familie
+            - calendar.geburtstage
+        data:
+          start_date_time: "{{ today_at('00:00:01') }}"
+          end_date_time: "{{ today_at('23:59:59') }}"
+        response_variable: agenda
+    
+      # Da wir beide Kalender gleichzeitig abgefragt haben, prüfen wir die Ergebnisse
+      - if:
+          - condition: template
+            value_template: >
+              {{ agenda['calendar.familie'].events | count > 0 or 
+                 agenda['calendar.geburtstage'].events | count > 0 }}
+        then:
+          - action: notify.send_message
+            data:
+              entity_id: notify.telegram_all
+              message: |
+                *Was steht heute an?*
+                
+                {% set fam = agenda['calendar.familie'].events -%}
+                {%- if fam | count > 0 -%}
+                Familien-Kalender
+                {%- for event in fam %}
+                {%- if event.start | length == 10 %}
+                - Ganztägig: {{ event.summary }}
+                {%- else %}
+                - {{ event.start | as_timestamp | timestamp_custom('%H:%M') }}-{{ event.end | as_timestamp | timestamp_custom('%H:%M') }}: {{ event.summary }}
+                {%- endif %}
+                {%- endfor %}
+                {%- endif %}
+
+                {%- set bday = agenda['calendar.geburtstage'].events -%}
+                {%- if bday | count > 0 %}
+                
+                Geburtstage
+                {% for event in bday %}
+                - {{ event.summary }}
+                {%- endfor %}
+                {%- endif -%}
+    mode: single
