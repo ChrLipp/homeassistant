@@ -28,11 +28,9 @@ automation:
             data:
               entity_id: notify.telegram_all
               message: |
-                *Was steht heute an?*
-                
-                {% set fam = agenda['calendar.familie'].events -%}
+                Was steht heute an?
+                {%- set fam = agenda['calendar.familie'].events -%}
                 {%- if fam | count > 0 -%}
-                Familien-Kalender
                 {%- for event in fam %}
                 {%- if event.start | length == 10 %}
                 - Ganztägig: {{ event.summary }}
@@ -40,13 +38,10 @@ automation:
                 - {{ event.start | as_timestamp | timestamp_custom('%H:%M') }}-{{ event.end | as_timestamp | timestamp_custom('%H:%M') }}: {{ event.summary }}
                 {%- endif %}
                 {%- endfor %}
-                {%- endif %}
-
+                {%- endif -%}
                 {%- set bday = agenda['calendar.geburtstage'].events -%}
-                {%- if bday | count > 0 %}
-                
-                Geburtstage
-                {% for event in bday %}
+                {%- if bday | count > 0 -%}
+                {%- for event in bday %}
                 - {{ event.summary }}
                 {%- endfor %}
                 {%- endif -%}

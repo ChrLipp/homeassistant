@@ -22,7 +22,7 @@ HA needs the following integrations and frontend components. They are not includ
 ## Integrate KI
 
 - [Home Assistant MCP Server](https://homeassistant-ai.github.io/ha-mcp/).
-  I choose Claude Desktop with [Home Assistant Agent Skills](https://github.com/homeassistant-ai/skills)
+  I choose Claude Desktop with [Home Assistant Agent Skills](https://github.com/homeassistant-ai/skills) and MCP Server as a Docker image next to Home Assistant.
 
 ##  Open issues and known problems
 
@@ -32,12 +32,16 @@ HA needs the following integrations and frontend components. They are not includ
 - Integrate electricity costs
 - Switch from Google Cast to Onkyo integration
 - Repair temperature sensors
-- Automate cover Elias
+- Repare and automate cover Elias
 - Samsung TV
   - [SamsungTV Smart](https://github.com/ollo69/ha-samsungtv-smart)
 - Homekit for family
+- BMW integration
 
 ## Fixed
 
-- Removed HACS Frontend Code from GIT repository
-- Google Kalender angebunden, Automatisierung für tägliche Benachrichtigung
+- Installed MCP Server as a docker image, introduced .env file
+- Upgraded HA to 2026.2.3
+- fixed lovelace changes
+- Adopted calendar notification
+- Added temperatur history graph

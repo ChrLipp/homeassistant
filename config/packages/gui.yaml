@@ -2,7 +2,14 @@ frontend:
   themes: !include_dir_merge_named ../themes
 
 lovelace:
-  mode: yaml
+  resource_mode: yaml
+  dashboards:
+    lovelace:
+      mode: yaml
+      filename: ui-lovelace.yaml
+      title: Overview
+      icon: mdi:view-dashboard
+      show_in_sidebar: true
   resources:
     - type: module
       url: /hacsfiles/lovelace-time-picker-card/time-picker-card.js

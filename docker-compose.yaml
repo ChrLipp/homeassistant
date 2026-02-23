@@ -4,23 +4,32 @@ services:
   home_assistant:
     container_name: HomeAssistant
     image: homeassistant/home-assistant:stable
+    restart: unless-stopped
     volumes:
       - /volume1/docker/homeassistant/config:/config
     # host for network discovery, see https://www.home-assistant.io/integrations/discovery/
     network_mode: host
     environment:
       - TZ=Europe/Vienna
-    restart: unless-stopped
 
   esphome:
     container_name: ESPHome
     image: esphome/esphome
+    restart: unless-stopped
     volumes:
       - /volume1/docker/homeassistant/esphome:/config
       - /etc/localtime:/etc/localtime:ro
     network_mode: host
     environment:
       - TZ=Europe/Vienna
+
+  ha-mcp:
+    container_name: ha-mcp
+    image: ghcr.io/homeassistant-ai/ha-mcp:latest
     restart: unless-stopped
-
-
+    command: ha-mcp-web
+    ports:
+      - "8086:8086"
+    environment:
+      - HOMEASSISTANT_URL=${HOMEASSISTANT_URL}
+      - HOMEASSISTANT_TOKEN=${HOMEASSISTANT_TOKEN}

@@ -36,6 +36,12 @@ views:
                 name: Regenmenge heute
               - entity: sensor.poettelsdorf_windgeschwindigkeit
                 name: Windgeschwindigkeit
+          - type: history-graph
+            title: Temperatur 24h
+            hours_to_show: 24
+            entities:
+              - entity: sensor.poettelsdorf_temperatur
+                name: Temperatur
       - type: "custom:atomic-calendar-revive"
         fullDayEventText: "Ganzer Tag"
         noEventsForNextDaysText: "Keine Ereignisse in den nächsten Tagen"

@@ -14,11 +14,11 @@
 
 # Ignore these YAML files with secret data/credentials
 secrets.yaml
+/.env
 /config/google_calendars.yaml
 /config/govee_learning.yaml
 /config/ip_bans.yaml
 /config/known_devices.yaml
-#/config/tv-token.txt
 
 # Database
 /config/home-assistant_v2.db
