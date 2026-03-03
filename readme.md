@@ -37,11 +37,10 @@ HA needs the following integrations and frontend components. They are not includ
   - [SamsungTV Smart](https://github.com/ollo69/ha-samsungtv-smart)
 - Homekit for family
 - BMW integration
+- Modi (Weihnachten, Schwimmbad) sauber aufsetzen
 
 ## Fixed
 
-- Installed MCP Server as a docker image, introduced .env file
-- Upgraded HA to 2026.2.3
-- fixed lovelace changes
-- Adopted calendar notification
-- Added temperatur history graph
+- Automatisierungen, erster Buchstabe nach Service/Notify groß
+- Notification, wenn Garagentor länger als 10 Minuten offen ist
+- Tägliche Kalender-Erinnerung weniger verbose (Mehrtägige Termine nur einmal)

@@ -15,7 +15,7 @@ input_datetime:
 
 automation:
   - id: 'elias_alarm_clock'
-    alias: 'Service: alarm Elias'
+    alias: 'Service: Alarmlarm Elias'
     trigger:
       - platform: time
         at: input_datetime.elias_alarm_time

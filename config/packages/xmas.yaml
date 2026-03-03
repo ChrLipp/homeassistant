@@ -33,7 +33,7 @@ input_boolean:
 
 automation:
 - id: 'turn_on_xmas_lights'
-  alias: 'Service: turn on x-mas lights'
+  alias: 'Service: Turn on x-mas lights'
   trigger:
   - platform: sun
     event: sunset
@@ -45,7 +45,7 @@ automation:
         - group.weihnachtsbeleuchtung_rest
 
 - id: 'turn_off_xmas_lights'
-  alias: 'Service: turn off x-mas lights'
+  alias: 'Service: Turn off x-mas lights'
   trigger:
   - platform: time
     at: '23:00:00'
@@ -61,7 +61,7 @@ automation:
         entity_id: group.weihnachtsbeleuchtung_rest
 
 - id: 'turn_off_xmas_lights_living_room'
-  alias: 'Service: turn off x-mas lights in the living room'
+  alias: 'Service: Turn off x-mas lights in the living room'
   trigger:
   - platform: time
     at: '00:00:00'
@@ -73,7 +73,7 @@ automation:
 # Weihnachtsmodus aktivieren / deaktivieren
 # In Einstellungen - Geräte & Dienste - Helfer neuen Helfer erstellen: Schalter wähle (ist typ inpt_boolean), Name ohne diesen Prefix festlegen. In diesem Fall hei0t die Variable input_boolean.weihnachtsmodus
 - id: 'change_xmas_mode'
-  alias: 'Service: change x-mas Mode'
+  alias: 'Service: Change x-mas Mode'
   triggers:
   - trigger: state
     entity_id:

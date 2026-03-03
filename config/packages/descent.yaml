@@ -134,3 +134,18 @@ template:
           - action: switch.turn_on
             target:
               entity_id: switch.fence_left
+
+automation:
+- id: 'notify_garage_christian'
+  alias: "Notify: Garagentor Christian offen"
+  trigger:
+    - platform: state
+      entity_id: cover.garage_christian
+      to: "open"
+      for:
+        minutes: 10
+  action:
+    - action: notify.send_message
+      data:
+        entity_id: notify.telegram_all
+        message: "Achtung: Das Garagentor von Christian ist seit über 10 Minuten offen!"

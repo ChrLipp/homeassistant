@@ -220,7 +220,7 @@ template:
 
 automation:
   - id: 'garden_covers_down'
-    alias: "Service: garden covers down on sundown"
+    alias: "Service: Garden covers down on sundown"
     trigger:
 #      - platform: template
 #        value_template: "{{ not is_state('sensor.logo3_naq1', 'unavailable') and states('sensor.time') > '15:00' and states('sensor.logo3_naq1') | int < 10 }}"
@@ -236,7 +236,7 @@ automation:
     mode: single
   
   - id: 'neighbors_covers_down'
-    alias: "Service: neighbors covers down on sundown"
+    alias: "Service: Neighbors covers down on sundown"
     trigger:
 #      - platform: template
 #        value_template: "{{ not is_state('sensor.logo3_naq1', 'unavailable') and states('sensor.time') > '15:00' and states('sensor.logo3_naq1') | int < 600 }}"
