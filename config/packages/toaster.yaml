@@ -4,7 +4,7 @@ automation:
   mode: restart
   trigger:
     platform: state
-    entity_id: switch.plug_17_switch_0
+    entity_id: switch.plug_17
     to: 'on'
   action:
     - delay:
@@ -12,11 +12,11 @@ automation:
     - if:
         - alias: "If toaster is still running"
           condition: state
-          entity_id: switch.plug_17_switch_0
+          entity_id: switch.plug_17
           state: 'on'
       then:
         - service: switch.turn_off
-          entity_id: switch.plug_17_switch_0
+          entity_id: switch.plug_17
         - action: notify.send_message
           data:
             entity_id: notify.telegram_all
