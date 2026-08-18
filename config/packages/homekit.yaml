@@ -23,5 +23,5 @@ homekit:
         name: "Großes Tor"
       cover.fence_bike:
         name: "Kleines Tor"
-      light.elias_light:
+      light.elias:
         name: "Elias Licht"

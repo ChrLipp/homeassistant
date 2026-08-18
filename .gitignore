@@ -11,6 +11,7 @@
 #tts/
 #custom_components/.translations
 /config/.ha_run.lock
+/config/.cache/
 
 # Ignore these YAML files with secret data/credentials
 secrets.yaml
@@ -35,6 +36,10 @@ secrets.yaml
 .DS_Store
 
 # ESPHome
+/esphome/.device-builder.json
+/esphome/.device-builder.json.lock
+/esphome/.device-builder-peer-link-key.bin
+/esphome/.device-builder-preferences.json
 /esphome/.gitignore
 .esphome
 **/.pioenvs/
@@ -54,3 +59,6 @@ secrets.yaml
 /config/custom_components/
 /config/www/*
 !/config/www/image/
+
+# MCP
+/config/.ha_mcp

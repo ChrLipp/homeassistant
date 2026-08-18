@@ -42,11 +42,12 @@ automation:
                 {%- if fam | count > 0 -%}
                   {%- for event in fam %}
                     {%- if event.start[:10] == today %}
+                      {%- set eventLength = (as_datetime(event.end) - as_datetime(event.start)).days %}
                       {%- if event.start | length == 10 %}
-                        {%- set eventLength = (as_datetime(event.end) - as_datetime(event.start)).days %}
                 - Ganztägig: {{ event.summary }}{{ " (" ~ eventLength ~ " Tage)" if eventLength > 1 else "" }}
                       {%- else %}
-                - {{ event.start | as_timestamp | timestamp_custom('%H:%M') }}-{{ event.end | as_timestamp | timestamp_custom('%H:%M') }}: {{ event.summary }}
+                        {%- set end = as_datetime(event.end) %}
+                  - {{ event.start | as_timestamp | timestamp_custom('%H:%M') }}{{" bis "~end.strftime('%d.%m') ~ " " if eventLength > 0 else "-" }}{{ event.end | as_timestamp | timestamp_custom('%H:%M') }}: {{ event.summary }}{{ " (" ~ eventLength ~ " Tage)" if eventLength > 1 else "" }}
                       {%- endif %}
                     {%- endif %}
                   {%- endfor %}

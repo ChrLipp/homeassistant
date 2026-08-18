@@ -1,10 +1,10 @@
-#
 # Dadurch, dass ich Netzwerk im Poolraum gebraucht habe, habe ich eine zweipolige Stromleitung zur Übertragung des Netzwerkes über Fritz! Powerline benutzt.
+# Diese Leitung war früher für die Übertragung der Pool-Heizung zuständig, diese Funktion habe ich damit verloren.
 # Den Ersatz der Leitung habe ich wie folgt durchgeführt:
-# - Im Technikraum gibt es den switch.power_01, der am Strom hängt, wenn geheizt werden soll
+# - Im Pool-Technikraum gibt es den switch.power_01, der am Strom hängt, wenn geheizt werden soll
 # - Dann registriert er sich über WLAN beim HomeAssistant
 # - Die folgende Automatisierung läuft an und schaltet ein Relay im Heizungskeller
-#
+# - Das Relai führt die ursprüngliche Aktion der Heizungs-Leitung durch.
 
 automation:
 - id: 'pool_heater_on'

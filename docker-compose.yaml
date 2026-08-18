@@ -22,14 +22,3 @@ services:
     network_mode: host
     environment:
       - TZ=Europe/Vienna
-
-  ha-mcp:
-    container_name: ha-mcp
-    image: ghcr.io/homeassistant-ai/ha-mcp:latest
-    restart: unless-stopped
-    command: ha-mcp-web
-    ports:
-      - "8086:8086"
-    environment:
-      - HOMEASSISTANT_URL=${HOMEASSISTANT_URL}
-      - HOMEASSISTANT_TOKEN=${HOMEASSISTANT_TOKEN}

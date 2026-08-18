@@ -51,7 +51,6 @@ modbus:
         scan_interval: 10
         unit_of_measurement: temperature
 
-
 template:
   - sensor:
       - name: "Logo3 Temperature 1"
@@ -60,11 +59,3 @@ template:
       - name: "Logo3 Temperature 2"
         unit_of_measurement: °C
         state: "{{ states('sensor.logo3_naq4')|float / 10 }}"
-
-logbook:
-  exclude:
-    entities:
-      - sensor.logo3_naq1
-      - sensor.logo3_naq2
-      - sensor.logo3_naq3
-      - sensor.logo3_naq4

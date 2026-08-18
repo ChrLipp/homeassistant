@@ -257,20 +257,16 @@ views:
         title: Licht
         show_header_toggle: false
       - type: history-graph
-        title: Temperaturen pro Tag (Raw)
-        hours_to_show: 3
-        entities:
-          - sensor.logo3_naq3
-          - sensor.logo3_naq4
-      - type: history-graph
         title: Temperaturen pro Tag
-        hours_to_show: 3
+        hours_to_show: 24
         entities:
-          - sensor.logo3_temperature_1
-          - sensor.logo3_temperature_2
+          - entity: sensor.logo3_temperature_1
+            name: Außentemperatur
+          - entity: sensor.logo3_temperature_2
+            name: Pooltemperatur
       - type: history-graph
         title: Helligkeitsverlauf
-        hours_to_show: 3
+        hours_to_show: 24
         entities:
           - sensor.logo3_naq1
           - sensor.logo3_naq2
