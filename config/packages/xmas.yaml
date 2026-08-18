@@ -37,6 +37,10 @@ automation:
   trigger:
   - platform: sun
     event: sunset
+  condition:
+  - condition: state
+    entity_id: input_boolean.weihnachtsmodus
+    state: 'on'
   action:
     action: switch.turn_on
     target:
@@ -49,6 +53,10 @@ automation:
   trigger:
   - platform: time
     at: '23:00:00'
+  condition:
+  - condition: state
+    entity_id: input_boolean.weihnachtsmodus
+    state: 'on'
   action:
     - action: cover.close_cover
       target:
@@ -65,50 +73,11 @@ automation:
   trigger:
   - platform: time
     at: '00:00:00'
+  condition:
+  - condition: state
+    entity_id: input_boolean.weihnachtsmodus
+    state: 'on'
   action:
     - action: switch.turn_off
       target:
         entity_id: group.weihnachtsbeleuchtung_wohnzimmer
-
-# Weihnachtsmodus aktivieren / deaktivieren
-# In Einstellungen - Geräte & Dienste - Helfer neuen Helfer erstellen: Schalter wähle (ist typ inpt_boolean), Name ohne diesen Prefix festlegen. In diesem Fall hei0t die Variable input_boolean.weihnachtsmodus
-- id: 'change_xmas_mode'
-  alias: 'Service: Change x-mas Mode'
-  triggers:
-  - trigger: state
-    entity_id:
-    - input_boolean.weihnachtsmodus
-  action:
-  - choose:
-      # --- AKTIVIERUNG (Wenn input_boolean.weihnachtsmodus von OFF auf ON geht) ---
-      - conditions:
-          - condition: state
-            entity_id: input_boolean.weihnachtsmodus
-            state: 'on'
-        sequence:
-          - action: automation.turn_off
-            target:
-              entity_id: automation.garden_covers_down_on_sundown
-          - action: automation.turn_on
-            target:
-              entity_id: automation.turn_on_xmas_lights
-          - action: automation.turn_on
-            target:
-              entity_id: automation.turn_off_xmas_lights_living_room
-
-      # --- DEAKTIVIERUNG (Wenn input_boolean.weihnachtsmodus von ON auf OFF geht) ---
-      - conditions:
-          - condition: state
-            entity_id: input_boolean.weihnachtsmodus
-            state: 'off'
-        sequence:
-          - action: automation.turn_on
-            target:
-              entity_id: automation.garden_covers_down_on_sundown
-          - action: automation.turn_off
-            target:
-              entity_id: automation.turn_on_xmas_lights
-          - action: automation.turn_off
-            target:
-              entity_id: automation.turn_off_xmas_lights_living_room
-  mode: single

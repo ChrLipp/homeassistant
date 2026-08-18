@@ -1,3 +1,8 @@
+input_boolean:
+  sommermodus:
+    name: Gibt an, ob der Sommermodus aktiv ist
+    icon: mdi:pool
+
 # Dadurch, dass ich Netzwerk im Poolraum gebraucht habe, habe ich eine zweipolige Stromleitung zur Übertragung des Netzwerkes über Fritz! Powerline benutzt.
 # Diese Leitung war früher für die Übertragung der Pool-Heizung zuständig, diese Funktion habe ich damit verloren.
 # Den Ersatz der Leitung habe ich wie folgt durchgeführt:
@@ -5,7 +10,6 @@
 # - Dann registriert er sich über WLAN beim HomeAssistant
 # - Die folgende Automatisierung läuft an und schaltet ein Relay im Heizungskeller
 # - Das Relai führt die ursprüngliche Aktion der Heizungs-Leitung durch.
-
 automation:
 - id: 'pool_heater_on'
   alias: 'Service: Pool heater on'
@@ -13,6 +17,10 @@ automation:
   - platform: state
     entity_id: switch.power_01
     from: "unavailable"
+  condition:
+  - condition: state
+    entity_id: input_boolean.sommermodus
+    state: 'on'
   action:
   - service: switch.turn_on
     target:
@@ -25,8 +33,43 @@ automation:
   - platform: state
     entity_id: switch.power_01
     to: "unavailable"
+  condition:
+  - condition: state
+    entity_id: input_boolean.sommermodus
+    state: 'on'
   action:
   - service: switch.turn_off
     target:
       entity_id: switch.ventilation_relay_4
+  mode: single
+
+# Nur ein Modi erlaubt, hätte auch in xmas.yaml sein können
+# Sommer- und Weihnachtsmodus schließen sich gegenseitig aus
+- id: 'mutual_exclusive_summer_xmas'
+  alias: 'Service: Summer and x-mas mode are mutually exclusive'
+  triggers:
+  - trigger: state
+    entity_id: input_boolean.sommermodus
+    to: 'on'
+    id: 'summer_on'
+  - trigger: state
+    entity_id: input_boolean.weihnachtsmodus
+    to: 'on'
+    id: 'xmas_on'
+  action:
+  - choose:
+      - conditions:
+          - condition: trigger
+            id: 'summer_on'
+        sequence:
+          - action: input_boolean.turn_off
+            target:
+              entity_id: input_boolean.weihnachtsmodus
+      - conditions:
+          - condition: trigger
+            id: 'xmas_on'
+        sequence:
+          - action: input_boolean.turn_off
+            target:
+              entity_id: input_boolean.sommermodus
   mode: single

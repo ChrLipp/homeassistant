@@ -39,7 +39,8 @@ HA needs the following integrations and frontend components. They are not includ
 - BMW integration
 - Modi (Weihnachten, Schwimmbad) sauber aufsetzen
 - Repair light sensor
+- Integrate Weather Radar Card
 
 ## Fixed
 
-- Repair temperature sensors
+- Modi (Weihnachten, Schwimmbad) sauber aufsetzen

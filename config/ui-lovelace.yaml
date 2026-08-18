@@ -288,7 +288,10 @@ views:
         title: Computer
         type: horizontal-stack
       - type: entities
+        show_header_toggle: false
         entities:
           - entity: input_boolean.weihnachtsmodus
             name: Weihnachtsmodus
+          - entity: input_boolean.sommermodus
+            name: Poolmodus
         title: 'Optionen: Modus'

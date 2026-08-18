@@ -228,6 +228,13 @@ automation:
         entity_id: sun.sun
         value_template: "{{ state_attr('sun.sun', 'elevation') }}"
         below: -6.00
+    condition:
+      - condition: state
+        entity_id: input_boolean.weihnachtsmodus
+        state: 'off'
+      - condition: state
+        entity_id: input_boolean.sommermodus
+        state: 'off'
     action:
       - service: cover.close_cover
         entity_id: cover.bedroom_window
@@ -244,6 +251,10 @@ automation:
         entity_id: sun.sun
         value_template: "{{ state_attr('sun.sun', 'elevation') }}"
         below: -3.40
+    condition:
+      - condition: state
+        entity_id: input_boolean.sommermodus
+        state: 'off'
     action:
       - service: cover.close_cover
         entity_id: cover.kitchen_window
