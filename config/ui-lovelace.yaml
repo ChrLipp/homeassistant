@@ -326,12 +326,12 @@ views:
             entity: input_boolean.rollos_automatisch
             name: Rollos automatisch
             toggle: true
-            secondary: >-
-              Steuert, ob die Rollos abends automatisch schliessen. Aus = Rollos bleiben offen
-              (z.B. im Sommer zum Lüften).
+            secondary: |-
+              Steuert, ob die Rollos abends automatisch schliessen.
+              Aus = Rollos bleiben offen (z.B. im Sommer zum Lüften).
             card_mod:
               style: |
                 .secondary {
-                  white-space: normal !important;
+                  white-space: pre-line !important;
                 }
         title: 'Optionen: Modus'
