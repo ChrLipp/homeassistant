@@ -58,12 +58,17 @@ automation:
     entity_id: input_boolean.weihnachtsmodus
     state: 'on'
   action:
-    - action: cover.close_cover
-      target:
-        entity_id:
-          - cover.bedroom_window
-          - cover.livingroom_window
-    - delay: '00:00:15'
+    - if:
+        - condition: state
+          entity_id: input_boolean.rollos_automatisch
+          state: 'on'
+      then:
+        - action: cover.close_cover
+          target:
+            entity_id:
+              - cover.bedroom_window
+              - cover.livingroom_window
+        - delay: '00:00:15'
     - action: switch.turn_off
       target:
         entity_id: group.weihnachtsbeleuchtung_rest

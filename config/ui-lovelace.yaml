@@ -292,6 +292,8 @@ views:
         entities:
           - entity: input_boolean.weihnachtsmodus
             name: Weihnachtsmodus
-          - entity: input_boolean.sommermodus
+          - entity: input_boolean.poolmodus
             name: Poolmodus
+          - entity: input_boolean.rollos_automatisch
+            name: Rollos automatisch
         title: 'Optionen: Modus'

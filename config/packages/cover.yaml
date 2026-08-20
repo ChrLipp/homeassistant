@@ -1,3 +1,9 @@
+input_boolean:
+  rollos_automatisch:
+    name: Gibt an, ob die Rollos automatisch geschlossen werden sollen
+    icon: mdi:blinds
+    initial: true
+
 template:
   - sensor:
       - default_entity_id: sensor.cover_all
@@ -233,8 +239,8 @@ automation:
         entity_id: input_boolean.weihnachtsmodus
         state: 'off'
       - condition: state
-        entity_id: input_boolean.sommermodus
-        state: 'off'
+        entity_id: input_boolean.rollos_automatisch
+        state: 'on'
     action:
       - service: cover.close_cover
         entity_id: cover.bedroom_window
@@ -253,8 +259,8 @@ automation:
         below: -3.40
     condition:
       - condition: state
-        entity_id: input_boolean.sommermodus
-        state: 'off'
+        entity_id: input_boolean.rollos_automatisch
+        state: 'on'
     action:
       - service: cover.close_cover
         entity_id: cover.kitchen_window

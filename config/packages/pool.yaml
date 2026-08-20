@@ -1,6 +1,6 @@
 input_boolean:
-  sommermodus:
-    name: Gibt an, ob der Sommermodus aktiv ist
+  poolmodus:
+    name: Gibt an, ob der Poolmodus aktiv ist
     icon: mdi:pool
 
 # Dadurch, dass ich Netzwerk im Poolraum gebraucht habe, habe ich eine zweipolige Stromleitung zur Übertragung des Netzwerkes über Fritz! Powerline benutzt.
@@ -19,7 +19,7 @@ automation:
     from: "unavailable"
   condition:
   - condition: state
-    entity_id: input_boolean.sommermodus
+    entity_id: input_boolean.poolmodus
     state: 'on'
   action:
   - service: switch.turn_on
@@ -35,7 +35,7 @@ automation:
     to: "unavailable"
   condition:
   - condition: state
-    entity_id: input_boolean.sommermodus
+    entity_id: input_boolean.poolmodus
     state: 'on'
   action:
   - service: switch.turn_off
@@ -43,33 +43,21 @@ automation:
       entity_id: switch.ventilation_relay_4
   mode: single
 
-# Nur ein Modi erlaubt, hätte auch in xmas.yaml sein können
-# Sommer- und Weihnachtsmodus schließen sich gegenseitig aus
-- id: 'mutual_exclusive_summer_xmas'
-  alias: 'Service: Summer and x-mas mode are mutually exclusive'
-  triggers:
-  - trigger: state
-    entity_id: input_boolean.sommermodus
+# Warnt, falls der Poolmodus ausserhalb der Saison (15.10. - 15.04.) aktiviert wird
+- id: 'pool_mode_off_season_alarm'
+  alias: 'Service: Alarm when poolmodus is activated outside the season'
+  trigger:
+  - platform: state
+    entity_id: input_boolean.poolmodus
     to: 'on'
-    id: 'summer_on'
-  - trigger: state
-    entity_id: input_boolean.weihnachtsmodus
-    to: 'on'
-    id: 'xmas_on'
+  condition:
+  - condition: template
+    value_template: >-
+      {% set today = now().strftime('%m%d') | int %}
+      {{ today >= 1015 or today <= 415 }}
   action:
-  - choose:
-      - conditions:
-          - condition: trigger
-            id: 'summer_on'
-        sequence:
-          - action: input_boolean.turn_off
-            target:
-              entity_id: input_boolean.weihnachtsmodus
-      - conditions:
-          - condition: trigger
-            id: 'xmas_on'
-        sequence:
-          - action: input_boolean.turn_off
-            target:
-              entity_id: input_boolean.sommermodus
+  - action: notify.send_message
+    data:
+      entity_id: notify.telegram_admin
+      message: "Meister, der Poolmodus wurde ausserhalb der Saison (15.10. - 15.04.) aktiviert!"
   mode: single

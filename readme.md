@@ -37,10 +37,9 @@ HA needs the following integrations and frontend components. They are not includ
   - [SamsungTV Smart](https://github.com/ollo69/ha-samsungtv-smart)
 - Homekit for family
 - BMW integration
-- Modi (Weihnachten, Schwimmbad) sauber aufsetzen
 - Repair light sensor
 - Integrate Weather Radar Card
 
 ## Fixed
 
-- Modi (Weihnachten, Schwimmbad) sauber aufsetzen
+- Modi (Weihnachten, Schwimmbad, Rollo-Automatik) sauber aufsetzen
