@@ -3,6 +3,16 @@ input_boolean:
     name: Gibt an, ob der Poolmodus aktiv ist
     icon: mdi:pool
 
+template:
+  - binary_sensor:
+      - default_entity_id: binary_sensor.poolsaison
+        unique_id: binary_sensor_poolsaison
+        name: "Poolsaison"
+        icon: mdi:pool
+        state: >-
+          {% set today = now().strftime('%m%d') | int %}
+          {{ today >= 415 and today <= 1015 }}
+
 # Dadurch, dass ich Netzwerk im Poolraum gebraucht habe, habe ich eine zweipolige Stromleitung zur Übertragung des Netzwerkes über Fritz! Powerline benutzt.
 # Diese Leitung war früher für die Übertragung der Pool-Heizung zuständig, diese Funktion habe ich damit verloren.
 # Den Ersatz der Leitung habe ich wie folgt durchgeführt:
@@ -41,23 +51,4 @@ automation:
   - service: switch.turn_off
     target:
       entity_id: switch.ventilation_relay_4
-  mode: single
-
-# Warnt, falls der Poolmodus ausserhalb der Saison (15.10. - 15.04.) aktiviert wird
-- id: 'pool_mode_off_season_alarm'
-  alias: 'Service: Alarm when poolmodus is activated outside the season'
-  trigger:
-  - platform: state
-    entity_id: input_boolean.poolmodus
-    to: 'on'
-  condition:
-  - condition: template
-    value_template: >-
-      {% set today = now().strftime('%m%d') | int %}
-      {{ today >= 1015 or today <= 415 }}
-  action:
-  - action: notify.send_message
-    data:
-      entity_id: notify.telegram_admin
-      message: "Meister, der Poolmodus wurde ausserhalb der Saison (15.10. - 15.04.) aktiviert!"
   mode: single

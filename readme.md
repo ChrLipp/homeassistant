@@ -8,16 +8,18 @@ HA needs the following integrations and frontend components. They are not includ
 
 - [HACS (Home Assistant Community Store)](https://github.com/hacs/integration)
 - Integrations
+  - [HA-MCP Custom Component](https://github.com/homeassistant-ai/ha-mcp)
   - [iPhone Device Tracker](https://github.com/mudape/iphonedetect)
   - [Local Tuya](https://github.com/rospogrigio/localtuya)
   - [Waste BMV](https://github.com/ChrLipp/waste_at_bmv)
   - [Xiaomi Cloud Map Extractor](https://github.com/PiotrMachowski/Home-Assistant-custom-components-Xiaomi-Cloud-Map-Extractor)
- [HA-MCP Custom Component](https://github.com/homeassistant-ai/ha-mcp)
 - Frontend
   - [Atomic Calendar Revive](https://github.com/marksie1988/atomic-calendar-revive)
+  - [card-mod](https://github.com/thomasloven/lovelace-card-mod)
   - [Fan Percent Button Row](https://github.com/finity69x2/fan-percent-button-row)
   - [Horizon Card](https://github.com/rejuvenate/lovelace-horizon-card)
   - [Simple Vacuum Card](https://github.com/benct/lovelace-xiaomi-vacuum-card)
+  - [Template Entity Row](https://github.com/thomasloven/lovelace-template-entity-row)
   - [Time Picker Card](https://github.com/GeorgeSG/lovelace-time-picker-card)
 
 ## Integrate KI

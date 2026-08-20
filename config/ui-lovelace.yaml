@@ -290,10 +290,48 @@ views:
       - type: entities
         show_header_toggle: false
         entities:
-          - entity: input_boolean.weihnachtsmodus
+          - type: custom:template-entity-row
+            entity: input_boolean.weihnachtsmodus
             name: Weihnachtsmodus
-          - entity: input_boolean.poolmodus
+            toggle: true
+            secondary: |-
+              Schaltet abends die Weihnachtsbeleuchtung und schliesst die Rollos später.
+              Nur aktivierbar von 15.11.–31.01.
+            card_mod:
+              style: |
+                :host {
+                  pointer-events: {{ 'none' if is_state('binary_sensor.weihnachtssaison', 'off') else 'auto' }};
+                  opacity: {{ '0.4' if is_state('binary_sensor.weihnachtssaison', 'off') else '1' }};
+                }
+                .secondary {
+                  white-space: pre-line !important;
+                }
+          - type: custom:template-entity-row
+            entity: input_boolean.poolmodus
             name: Poolmodus
-          - entity: input_boolean.rollos_automatisch
+            toggle: true
+            secondary: |-
+              Schaltet die Pool-Heizung.
+              Nur aktivierbar von 15.04.–15.10.
+            card_mod:
+              style: |
+                :host {
+                  pointer-events: {{ 'none' if is_state('binary_sensor.poolsaison', 'off') else 'auto' }};
+                  opacity: {{ '0.4' if is_state('binary_sensor.poolsaison', 'off') else '1' }};
+                }
+                .secondary {
+                  white-space: pre-line !important;
+                }
+          - type: custom:template-entity-row
+            entity: input_boolean.rollos_automatisch
             name: Rollos automatisch
+            toggle: true
+            secondary: >-
+              Steuert, ob die Rollos abends automatisch schliessen. Aus = Rollos bleiben offen
+              (z.B. im Sommer zum Lüften).
+            card_mod:
+              style: |
+                .secondary {
+                  white-space: normal !important;
+                }
         title: 'Optionen: Modus'

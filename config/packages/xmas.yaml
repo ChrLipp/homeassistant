@@ -31,6 +31,16 @@ input_boolean:
     name: Gibt an, ob der Weihnachtsmodus aktiv ist
     icon: mdi:pine-tree
 
+template:
+  - binary_sensor:
+      - default_entity_id: binary_sensor.weihnachtssaison
+        unique_id: binary_sensor_weihnachtssaison
+        name: "Weihnachtssaison"
+        icon: mdi:pine-tree
+        state: >-
+          {% set today = now().strftime('%m%d') | int %}
+          {{ today >= 1115 or today <= 131 }}
+
 automation:
 - id: 'turn_on_xmas_lights'
   alias: 'Service: Turn on x-mas lights'
